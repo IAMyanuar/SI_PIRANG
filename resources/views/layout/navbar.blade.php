@@ -17,7 +17,7 @@
             <a href="index.html">
                 <b class="logo-icon">
                     <!-- Dark Logo icon -->
-                     <img src="{{ asset('assets/images/logo-poliwangi.png') }}" alt="homepage" class="dark-logo" width="200px" height="45px"/>
+                     <img src="{{ asset('assets/images/poliwangi.png') }}" alt="homepage" class="dark-logo" width="50px" height="35px"/>
                      <!-- Light Logo icon -->
                     {{-- <img src="{{ asset('assets/images/logo-poliwangi') }}" alt="homepage" class="light-logo" /> --}}
                 </b>
@@ -25,6 +25,7 @@
                 <!-- Logo text -->
                 <span class="logo-text">
                     <!-- dark Logo text -->
+                    <img src="{{ asset('assets/images/poliwangi-txt.png') }}" alt="homepage" class="dark-logo" width="140px" height="35px"/>
                     {{-- <img src="{{ asset('assets/images/logo-text.png') }}" alt="homepage" class="dark-logo" />
                     <!-- Light Logo text -->
                     <img src="{{ asset('assets/images/logo-light-text.png') }}" class="light-logo" alt="homepage" /> --}}

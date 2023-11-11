@@ -41,8 +41,8 @@
             style="no-repeat center center">
                 <div class="col-lg-4 col-md-4 bg-white rounded-5 border-2 custom-shadow custom-radius">
                     <div class="p-3">
-                        <h3 class="mt-3 text-center text-dark font-weight-medium"> Daftar</h3>
-                        <p class="text-center">Silhkan Masukan Data Anda di Bawah Untuk mendaftar</p>
+                        <h3 class="mt-3 text-center text-dark font-weight-medium">Sign Up</h3>
+                        <p class="text-center">Please enter your data below to sign up</p>
                         <form action="{{ route('register') }}" method="post">
                             @csrf
                             <div class="row">
@@ -50,39 +50,39 @@
                                     <div class="form-group">
                                         <label class="text-dark">NIM</label>
                                         <input class="form-control" name="nim" type="text"
-                                            placeholder="masukan nim" required>
+                                            placeholder="insert your nim" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label class="text-dark">Nama</label>
+                                        <label class="text-dark">Name</label>
                                         <input class="form-control" name="nama" type="text"
-                                            placeholder="masukkan nim" required>
+                                            placeholder="insert your nim" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label class="text-dark">Email</label>
                                         <input class="form-control" name="email" type="email"
-                                            placeholder="masukkan email" required>
+                                            placeholder="insert your email" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label class="text-dark">Password</label>
                                         <input class="form-control" name="password" type="password"
-                                            placeholder="masukkan password" required>
+                                            placeholder="insert your password" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label class="text-dark">No. Telp</label>
+                                        <label class="text-dark">Telp</label>
                                         <input class="form-control" name="telp" type="telp"
-                                            placeholder="masukkan no. telp" required>
+                                            placeholder="insert your telp" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12 text-center mt-5 mb-4">
-                                    <button class="btn btn-primary rounded-5 col-md-12" type="submit">Daftar</button>
+                                    <button class="btn btn-primary rounded-5 col-md-12" type="submit">Sign Up</button>
                                 </div>
                             </div>
                         </form>

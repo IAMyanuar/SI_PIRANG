@@ -41,7 +41,7 @@ class webAuthController extends Controller
             }
 
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => 'NIM or Password Incorrect']);
+            return redirect()->back()->withErrors(['error' => 'Username Or Password Incorrect']);
         }
     }
 

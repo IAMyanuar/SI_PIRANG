@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="">
-    <title>SIMPLE Store</title>
+    <title>SI PIRANG</title>
     <!-- Custom CSS -->
     <link href="{{ asset('dist/css/style.min.css') }}" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -41,30 +41,30 @@
             style="background: no-repeat center center;">
                 <div class="col-lg-4 col-md-4 bg-white rounded-5 border-2 custom-shadow custom-radius">
                     <div class="p-3">
-                        <h3 class="mt-3 text-center text-dark font-weight-medium">Masuk</h3>
-                        <p class="text-center">Masukkan data Nim dan Password.</p>
+                        <h3 class="mt-3 text-center text-dark font-weight-medium">Sign In</h3>
+                        <p class="text-center">Insert Your Username And Password.</p>
                         <form method="post">
                             @csrf
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label class="icon-user" > </label><label class="text-dark"> NIM</label>
+                                        <label class="icon-user" > </label><label class="text-dark"> Username</label>
                                         <input class="form-control" name="nim" type="text"
-                                            placeholder="Silhkan Masukkan NIM">
+                                            placeholder="Input Your Username">
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label class="icon-lock"></label><label class="text-dark"> Password</label>
                                         <input class="form-control" name="password" type="password"
-                                            placeholder="Silhkan Masukkan Password" >
+                                            placeholder="Input Your Password" >
                                     </div>
                                 </div>
                                 <div class="col-lg-12 text-center">
-                                    <button name="submit" class="btn btn-block btn-primary">Masuk</button>
+                                    <button name="submit" class="btn btn-block btn-primary">Sign In</button>
                                 </div>
                                 <div class="col-lg-12 text-center mt-4">
-                                    Tidak Memiliki Akun? <a href="{{ url('/daftar') }}" class="text-danger">Daftar</a>
+                                    Don't Have Account? <a href="{{ url('/daftar') }}" class="text-danger">Sign Up</a>
                                 </div>
                                 @if ($errors->has('error'))
                                 <div class="alert alert-danger col-lg-12 text-center mt-2">
