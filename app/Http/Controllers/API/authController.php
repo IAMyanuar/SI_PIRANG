@@ -65,20 +65,24 @@ class authController extends Controller
 
         if ( $datauser = User::where('nim', $request->nim)->where('role_user','admin')->first()) {
             $role = $datauser->role_user;
+            $nama = $datauser->nama;
             return response()->json([
                 'status' => true,
                 'massage' => 'login berhasil',
                 'role' => $role,
+                'nama' => $nama,
                 'token' => $datauser->createToken('api-product',['access-admin'])->plainTextToken
             ],200);
         }
 
         if ($datauser = User::where('nim', $request->nim)->where('role_user','user')->first()) {
             $role = $datauser->role_user;
+            $nama = $datauser->nama;
             return response()->json([
                 'status' => true,
                 'massage' => 'login berhasil',
                 'role' => $role,
+                'nama' => $nama,
                 'token' => $datauser->createToken('api-product',['access-user'])->plainTextToken
             ],200);
         }

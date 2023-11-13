@@ -72,9 +72,7 @@
             <!-- ============================================================== -->
             <li class="nav-item">
                 <a class="nav-link">
-                    <img src="{{ asset('assets/images/users/profile-pic.jpg') }}" alt="user" class="rounded-circle"
-                        width="40">
-                    <span class="ml-2 d-none d-lg-inline-block"><span>Hello,</span> <span
+                    <span class="ml-2 d-none d-lg-inline-block"><span>Hello,{{ session('nama') }}</span> <span
                             class="text-dark"></span>
                 </a>
             </li>

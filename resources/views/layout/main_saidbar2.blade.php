@@ -8,7 +8,10 @@
                 <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="/kalender" aria-expanded="false"><i data-feather="calendar" class="feather-icon"></i><span class="hide-menu">Kalender</span></a></li>
                 <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="/PengajuanPeminjaman"aria-expanded="false"><i class="icon-check"></i><span class="hide-menu">Pengajuan Peminjaman</span></a></li>
                 <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="/riwayat"aria-expanded="false"><i class="icon-notebook"></i><span class="hide-menu">Riwayat Peminjaman</span></a></li>
-                <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="/exit " aria-expanded="false"><i data-feather="log-out" class="feather-icon"></i><span class="hide-menu">Logout</span></a></li>
+                <form action="{{ route('logout') }}" method="post">
+                @csrf
+                <li class="sidebar-item"><button class="sidebar-link sidebar-link btn btn-no-outline" aria-expanded="false"><i data-feather="log-out" class="feather-icon"></i><span class="hide-menu">Logout</span></button></li>
+                </form>
             </ul>
         </nav>
         <!-- End Sidebar navigation -->
