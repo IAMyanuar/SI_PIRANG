@@ -1,7 +1,7 @@
 @extends('layout.master1')
 
 @section('title')
-    dashboard
+    SI PIRANG | Ubah Ruangan
 @stop
 
 @section('css')
@@ -37,6 +37,11 @@
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-body">
+                                    @if (session()->has('RuanganIsExist'))
+                                    <div class="alert alert-danger">
+                                        <strong>{{ session('RuanganIsExist') }}</strong>
+                                    </div>
+                                    @endif
                                     <form method="post" enctype="multipart/form-data">
                                         @csrf
                                         @method('PUT')

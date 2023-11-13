@@ -1,7 +1,7 @@
 @extends('layout.master1')
 
 @section('title')
-    dashboard
+    SI PIRANG | Tambah Ruangan
 @stop
 
 @section('css')
@@ -47,6 +47,11 @@
                                             </ul>
                                         </div>
                                     @endif
+                                    @if (session()->has('RuanganIsExist'))
+                                    <div class="alert alert-danger">
+                                        <strong>{{ session('RuanganIsExist') }}</strong>
+                                    </div>
+                                @endif
                                     <form method="post" action="{{ route('DataRuangan.store') }}"
                                         enctype="multipart/form-data">
                                         @csrf

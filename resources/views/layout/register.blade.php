@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="">
-    <title>SIMPLE Store</title>
+    <title>SI PIRANG | Register</title>
     <!-- Custom CSS -->
     <link href="{{ asset('dist/css/style.min.css') }}" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -84,6 +84,11 @@
                                 <div class="col-lg-12 text-center mt-5 mb-4">
                                     <button class="btn btn-primary rounded-5 col-md-12" type="submit">Sign Up</button>
                                 </div>
+                                @if (session()->has('error'))
+                                    <div class="alert alert-danger">
+                                        <strong>{{ session('error') }}</strong>
+                                    </div>
+                                @endif
                             </div>
                         </form>
                     </div>

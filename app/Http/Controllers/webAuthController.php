@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Auth\Events\Logout;
+use GuzzleHttp\Exception\RequestException;
 
 class webAuthController extends Controller
 {
@@ -31,19 +32,18 @@ class webAuthController extends Controller
             if ($contenarray['status'] == true && $contenarray['role'] == "user") {
                 $token = $contenarray['token'];
                 $nama = $contenarray['nama'];
-                session(['nama'=> $nama]);
-                session(['api_token'=> $token]);
+                session(['nama' => $nama]);
+                session(['api_token' => $token]);
                 return redirect('/dashboard');
             }
 
             if ($contenarray['status'] == true && $contenarray['role'] == "admin") {
                 $token = $contenarray['token'];
                 $nama = $contenarray['nama'];
-                session(['nama'=> $nama]);
-                session(['api_token'=> $token]);
+                session(['nama' => $nama]);
+                session(['api_token' => $token]);
                 return redirect('/admin/dashboard');
             }
-
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Username Or Password Incorrect']);
         }
@@ -64,6 +64,7 @@ class webAuthController extends Controller
             'password' => 'required',
             'telp' => 'required',
         ]);
+
         try {
             $options = [
                 'multipart' => [
@@ -93,35 +94,41 @@ class webAuthController extends Controller
             $client = new Client();
             $url = $apiUrl . "/api/registerUser";
             $response = $client->request('POST', $url, $options);
-            $response->getBody()->getContents();
+            $conten = $response->getBody()->getContents();
             return redirect()->to('/')
                 ->with('success', 'Pendaftaran Berhasil');
-        } catch (\Exception $e) {
-            return redirect()->back();
+
+        } catch (RequestException $e) {
+            $response = $e->getResponse();
+            $conten = $response->getBody()->getContents();
+            $contenarray = json_decode($conten, true);
+            return redirect()->back()
+                ->with('error', $contenarray['message']);
         }
     }
 
-    public function Logout(){
-    // Mendapatkan token dari sesi
-    $apiUrl = env('API_URL');
-    $apiToken = session('api_token');
+    public function Logout()
+    {
+        // Mendapatkan token dari sesi
+        $apiUrl = env('API_URL');
+        $apiToken = session('api_token');
 
-    // Mengirim permintaan POST ke API logout
-    $client = new Client();
-    $url = $apiUrl . "/api/logout"; // Ganti dengan URL logout API Anda
-    $response = $client->request('POST', $url, [
-        'headers' => [
-            'Authorization' => 'Bearer ' . $apiToken,
-        ],
-    ]);
+        // Mengirim permintaan POST ke API logout
+        $client = new Client();
+        $url = $apiUrl . "/api/logout"; // Ganti dengan URL logout API Anda
+        $response = $client->request('POST', $url, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $apiToken,
+            ],
+        ]);
 
-    if ($response->getStatusCode() === 200) {
-        // Logout berhasil, hapus token dari sesi
-        session()->forget('api_token');
-        return redirect('/')->with('success', 'Anda telah berhasil logout.');
-    } else {
-        // Handle kesalahan logout jika diperlukan
-        return redirect()->back()->with('error', 'Gagal logout.');
-    }
+        if ($response->getStatusCode() === 200) {
+            // Logout berhasil, hapus token dari sesi
+            session()->forget('api_token');
+            return redirect('/')->with('success', 'Anda telah berhasil logout.');
+        } else {
+            // Handle kesalahan logout jika diperlukan
+            return redirect()->back()->with('error', 'Gagal logout.');
+        }
     }
 }

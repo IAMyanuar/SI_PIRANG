@@ -40,6 +40,7 @@ class RuanganController extends Controller
     public function store(Request $request)
     {
         //
+        try {
         $dataruangan = new Ruangan;
         $rules = [
             'nama' => 'required',
@@ -51,7 +52,7 @@ class RuanganController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'massage' => 'prsoses tambah ruangan gagal',
+                'message' => 'prsoses tambah ruangan gagal',
                 'data' => $validator->errors()
             ], 401);
         }
@@ -66,9 +67,17 @@ class RuanganController extends Controller
         $dataruangan->save();
 
         return response()->json([
-            'status' => 'true',
-            'massage' => 'prsoses tambah ruangan berhasil',
+            'status' => true,
+            'message' => 'prsoses tambah ruangan berhasil',
         ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Ruangan sudah ada',
+            ], 401);
+        }
+
     }
 
     /**
@@ -80,12 +89,12 @@ class RuanganController extends Controller
         $data = Ruangan::find($id);
         if(empty($data)){
             return response()->json([
-                'status' => 'false',
+                'status' => false,
                 'message' => 'Data tidak ditemukan',
             ], 404);
         }
         return response()->json([
-            'status' => 'true',
+            'status' => true,
             'message' => 'Data dengan id: '.$id.' berhasil temukan',
             'data' => $data
         ], 200);
@@ -109,7 +118,7 @@ class RuanganController extends Controller
 
         if (empty($dataruangan)) {
             return response()->json([
-                'status' => 'false',
+                'status' => false,
                 'message' => 'Data tidak ditemukan',
             ], 404);
         }
@@ -154,7 +163,7 @@ class RuanganController extends Controller
         $dataruangan->save();
 
         return response()->json([
-            'status' => 'true',
+            'status' => true,
             'message' => 'Proses ubah ruangan berhasil',
             'request' => $request
         ], 200);

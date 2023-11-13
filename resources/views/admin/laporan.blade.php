@@ -1,7 +1,7 @@
 @extends('layout.master1')
 
 @section('title')
-    dashboard
+    SI PIRANG | Riwayat Peminjaman
 @stop
 
 @section('css')

@@ -90,7 +90,7 @@ class webRuanganController extends Controller
             return redirect()->to('/admin/DataRuangan')
                 ->with('success', 'ruangan ' . $validatedData['nama'] . ' berhasil ditambahkan');
         } catch (\Exception $e) {
-            return redirect()->back();
+            return redirect()->back()->with('RuanganIsExist', 'ruangan ' . $validatedData['nama'] . ' Sudah ada.');
         }
     }
 
@@ -175,7 +175,7 @@ class webRuanganController extends Controller
             return redirect()->to('/admin/DataRuangan')
                 ->with('success', 'data ruangan ' . $validatedData['nama'] . ' berhasil di ubah');
         } catch (\Exception $e) {
-            return redirect()->back();
+            return redirect()->back()->with('RuanganIsExist', 'ruangan ' . $validatedData['nama'] . ' Sudah ada.');
         }
     }
 
