@@ -88,7 +88,7 @@ class webPeminjamanController extends Controller
         $apiUrl = env('API_URL');
         $apiToken = session('api_token');
         $validatedData = $request->validate([
-            'nama_' => 'required',
+            'bukti_pendukung' => 'required',
             'fasilitas' => 'required',
             'foto' => 'required|image', // Jika Anda ingin memastikan bahwa 'foto' adalah berkas gambar.
         ]);
