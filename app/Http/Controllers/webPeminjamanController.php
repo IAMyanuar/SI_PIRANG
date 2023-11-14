@@ -84,7 +84,50 @@ class webPeminjamanController extends Controller
      */
     public function store(Request $request)
     {
-        //menambah data pengajuan
+        //menambah data pengajuan ruangan
+        $apiUrl = env('API_URL');
+        $apiToken = session('api_token');
+        $validatedData = $request->validate([
+            'nama_' => 'required',
+            'fasilitas' => 'required',
+            'foto' => 'required|image', // Jika Anda ingin memastikan bahwa 'foto' adalah berkas gambar.
+        ]);
+        try {
+            $foto = $request->file('foto');
+            $options = [
+                'multipart' => [
+                    [
+                        'name' => 'nama',
+                        'contents' => $validatedData['nama']
+                    ],
+                    [
+                        'name' => 'fasilitas',
+                        'contents' => $validatedData['fasilitas']
+                    ],
+                    [
+                        'name' => 'foto',
+                        'contents' => fopen($foto, 'r'),
+                        'filename' => $foto->getClientOriginalName(),
+                        'headers'  => [
+                            'Content-Type' => '<Content-type header>'
+                        ]
+                    ]
+                ],
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $apiToken,
+                ],
+
+            ];
+
+            $client = new Client();
+            $url = $apiUrl . "/api/peminjaman";
+            $response = $client->request('POST', $url, $options);
+            $response->getBody()->getContents();
+            return redirect()->to('/admin/DataRuangan')
+                ->with('success', 'ruangan ' . $validatedData['nama'] . ' berhasil ditambahkan');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('RuanganIsExist', 'ruangan ' . $validatedData['nama'] . ' Sudah ada.');
+        }
 
     }
 
