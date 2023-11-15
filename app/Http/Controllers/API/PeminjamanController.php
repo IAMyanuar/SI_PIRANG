@@ -49,7 +49,6 @@ class PeminjamanController extends Controller
     public function store(Request $request)
     {
         //tambah data peminjaman
-        $datapeminjaman = new Peminjaman;
         $rules= [
             'nama_lembaga' => 'required',
             'kegiatan' => 'required',
@@ -66,32 +65,63 @@ class PeminjamanController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'massage' => 'prsoses ajukan peminjaman gagal',
+                'message' => 'prsoses ajukan peminjaman gagal',
                 'data' => $validator->errors()
-            ], 401);
+            ], 422);
         }
 
 
-        $dokumen_pendukung = $request->file('dokumen_pendukung');
-        $namadokumen = time() . '.' . $dokumen_pendukung->getClientOriginalExtension();
-        $dokumen_pendukung->move(public_path('assets/images/bukti_pendukung'), $namadokumen);
-        //memasukan data ke db
-        $datapeminjaman -> nama_lembaga = $request->nama_lembaga;
-        $datapeminjaman -> kegiatan = $request->kegiatan;
-        $datapeminjaman -> tgl_mulai = $request->tgl_mulai;
-        $datapeminjaman -> tgl_selesai = $request->tgl_selesai;
-        $datapeminjaman -> feedback = $request->feedback;
-        $datapeminjaman -> user_id = $request->user_id;
-        $datapeminjaman -> id_ruangan = $request->id_ruangan;
-        $datapeminjaman -> dokumen_pendukung = $namadokumen;
-        $datapeminjaman->save();
+        $ruangan = $request -> id_ruangan;
+        $tgl_mulai = $request -> tgl_mulai;
+        $tgl_selesai = $request -> tgl_selesai;
 
-        return response()->json([
-            'status' => 'true',
-            'massage' => 'prsoses ajukan peminjaman ruangan berhasil',
-        ], 200);
+        //cek apakah sudah ada yang meminjam ruangan tsb
+        $CekDB = Peminjaman::where('id_ruangan', $ruangan)
+        ->where('status', 'approved')
+        ->where(function ($query) use ($tgl_mulai, $tgl_selesai) {
+            $query->where(function ($query) use ($tgl_mulai, $tgl_selesai) {
+                $query->whereBetween('tgl_mulai', [$tgl_mulai, $tgl_selesai])
+                      ->orWhereBetween('tgl_selesai', [$tgl_mulai, $tgl_selesai]);
+                    })
+                    ->orWhere(function ($query) use ($tgl_mulai, $tgl_selesai) {
+                        $query->where('tgl_mulai', '>=', $tgl_mulai)
+                              ->where('tgl_selesai', '<=', $tgl_selesai);
+                    });
+                })
+        ->exists();
+
+        if (!$CekDB) {
+            $datapeminjaman = new Peminjaman;
+            $datapeminjaman -> nama_lembaga = $request->nama_lembaga;
+            $datapeminjaman -> kegiatan = $request->kegiatan;
+            $datapeminjaman -> tgl_mulai = $request -> tgl_mulai;
+            $datapeminjaman -> tgl_selesai = $request -> tgl_selesai;
+            $datapeminjaman -> feedback = $request->feedback;
+            $datapeminjaman -> user_id = $request->user_id;
+            $datapeminjaman -> id_ruangan = $request -> id_ruangan;
 
 
+            if ($request->hasFile('dokumen_pendukung')) {
+                $dokumen_pendukung = $request->file('dokumen_pendukung');
+                $namadokumen = time() . '.' . $dokumen_pendukung->getClientOriginalExtension();
+                $dokumen_pendukung->move(public_path('assets/images/bukti_pendukung'), $namadokumen);
+                $datapeminjaman->dokumen_pendukung = $namadokumen;
+            }
+
+            //masukkan ke DB
+            $datapeminjaman->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'prsoses ajukan peminjaman ruangan berhasil',
+            ], 201);
+
+        }else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Ruangan sudah ada yang meminjam',
+            ], 409);
+        }
     }
 
     /**
@@ -112,7 +142,7 @@ class PeminjamanController extends Controller
 
         if(empty($datapeminjaman)){
             return response()->json([
-                'status' => 'false',
+                'status' => false,
                 'message' => 'Data tidak ditemukan',
             ], 404);
         }
@@ -147,7 +177,7 @@ class PeminjamanController extends Controller
 
         if (empty($datapeminjaman)) {
             return response()->json([
-                'status' => 'false',
+                'status' => false,
                 'message' => 'Data tidak ditemukan',
             ], 404);
         }
@@ -173,7 +203,7 @@ class PeminjamanController extends Controller
         return response()->json([
             'status' => 'true',
             'message' => 'Proses ubah ststus peminjaman berhasil',
-        ], 200);
+        ], 201);
 
     }
 
@@ -209,11 +239,17 @@ class PeminjamanController extends Controller
                     'Content-Type' => $contentType,
                     'Content-Disposition' => 'attachment; filename=' . $dokumen_pendukung,
                 ]);
+            }else {
+                // File tidak ditemukan
+                return response()->json([
+                    'status' => false,
+                    'message' => 'File tidak ditemukan',
+                ], 404);
             }
         }
 
         return response()->json([
-            'status' => 'false',
+            'status' => false,
             'message' => 'Data tidak ditemukan',
         ], 404);
 
@@ -258,6 +294,4 @@ class PeminjamanController extends Controller
             'data' => $datapeminjaman,
         ], 200);
     }
-
-
 }

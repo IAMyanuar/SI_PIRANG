@@ -54,7 +54,7 @@ class RuanganController extends Controller
                 'status' => false,
                 'message' => 'prsoses tambah ruangan gagal',
                 'data' => $validator->errors()
-            ], 401);
+            ], 422);
         }
 
         $foto = $request->file('foto');
@@ -69,13 +69,13 @@ class RuanganController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'prsoses tambah ruangan berhasil',
-        ], 200);
+        ], 201);
 
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
                 'message' => 'Ruangan sudah ada',
-            ], 401);
+            ], 409);
         }
 
     }

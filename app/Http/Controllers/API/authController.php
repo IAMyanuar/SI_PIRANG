@@ -29,7 +29,7 @@ class authController extends Controller
                     'status' => false,
                     'message' => 'prsoses validasi gagal',
                     'data' => $validator->errors()
-                ], 401);
+                ], 422); // Menggunakan kode status 422 untuk Unprocessable Entity
             }
             $datauser->nim = $request->nim;
             $datauser->nama = $request->nama;
@@ -41,7 +41,7 @@ class authController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'berhasil memasukan data baru',
-            ], 200);
+            ], 201); // Menggunakan kode status 201 Created
 
         } catch (\Illuminate\Database\QueryException $e) {
             if ($e->errorInfo[1] == 1062) {
@@ -52,7 +52,7 @@ class authController extends Controller
                 return response()->json([
                     'status' => false,
                     'message' => 'Gagal memasukan data baru. ' . ucfirst($columnName) . ' sudah terdaftar.',
-                ], 400);
+                ], 409); // Menggunakan kode status 409 Conflict
             }
         }
     }
@@ -70,14 +70,14 @@ class authController extends Controller
                 'status' => false,
                 'message' => 'login gagal',
                 'data' => $validator->errors()
-            ], 401);
+            ], 400); // Menggunakan status 400 Bad Request untuk kesalahan validasi
         }
 
         if (!Auth::attempt($request->only(['nim', 'password']))) {
             return response()->json([
                 'status' => false,
                 'message' => 'nim atau password salah',
-            ], 401);
+            ],  401); // Menggunakan status 401 Unauthorized untuk kegagalan autentikasi
         }
 
         if ($datauser = User::where('nim', $request->nim)->where('role_user', 'admin')->first()) {
@@ -108,13 +108,20 @@ class authController extends Controller
     public function Logout(Request $request)
     {
         $user = Auth::User();
-        $user->tokens->each(function ($token, $key) {
-            $token->delete();
-        });
+        if ($user) {
+            $user->tokens->each(function ($token, $key) {
+                $token->delete();
+            });
 
-        return response()->json([
-            'status' => true,
-            'message' => 'berhasil logout'
-        ], 200);
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil logout.',
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal logout. Pengguna tidak ditemukan.',
+            ], 404); // Gunakan kode status 404 Not Found jika pengguna tidak ditemukan.
+        }
     }
 }
