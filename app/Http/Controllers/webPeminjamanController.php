@@ -136,7 +136,7 @@ class webPeminjamanController extends Controller
      */
     public function show(string $id)
     {
-        //menampilkan detail peminjaman berddasarkan id
+        //menampilkan detail peminjaman berdasarkan id
         $apiUrl = env('API_URL');
         $apiToken = session('api_token');
         $client = new Client();

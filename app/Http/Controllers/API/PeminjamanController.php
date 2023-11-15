@@ -20,13 +20,23 @@ class PeminjamanController extends Controller
         // menampilkan data peminjaman statsu submitted
         $datapeminjaman = Peminjaman::join('users', 'peminjamen.user_id', '=', 'users.id')
             ->join('ruangans', 'peminjamen.id_ruangan', '=', 'ruangans.id')
-            ->select('peminjamen.id', 'users.nama as nama_user', 'peminjamen.nama_lembaga','peminjamen.kegiatan',
-            Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
-            Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
-            Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
-            Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
-                    'peminjamen.status','peminjamen.feedback','peminjamen.dokumen_pendukung',
-                    'ruangans.nama as nama_ruangan','users.nim','users.email','users.telp')->where('peminjamen.status','=','submitted')
+            ->select(
+                'peminjamen.id',
+                'users.nama as nama_user',
+                'peminjamen.nama_lembaga',
+                'peminjamen.kegiatan',
+                Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
+                Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
+                Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
+                Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
+                'peminjamen.status',
+                'peminjamen.feedback',
+                'peminjamen.dokumen_pendukung',
+                'ruangans.nama as nama_ruangan',
+                'users.nim',
+                'users.email',
+                'users.telp'
+            )->where('peminjamen.status', '=', 'submitted')
             ->get();
         return response()->json([
             'status' => true,
@@ -49,7 +59,7 @@ class PeminjamanController extends Controller
     public function store(Request $request)
     {
         //tambah data peminjaman
-        $rules= [
+        $rules = [
             'nama_lembaga' => 'required',
             'kegiatan' => 'required',
             'tgl_mulai' => 'required',
@@ -71,34 +81,34 @@ class PeminjamanController extends Controller
         }
 
 
-        $ruangan = $request -> id_ruangan;
-        $tgl_mulai = $request -> tgl_mulai;
-        $tgl_selesai = $request -> tgl_selesai;
+        $ruangan = $request->id_ruangan;
+        $tgl_mulai = $request->tgl_mulai;
+        $tgl_selesai = $request->tgl_selesai;
 
         //cek apakah sudah ada yang meminjam ruangan tsb
         $CekDB = Peminjaman::where('id_ruangan', $ruangan)
-        ->where('status', 'approved')
-        ->where(function ($query) use ($tgl_mulai, $tgl_selesai) {
-            $query->where(function ($query) use ($tgl_mulai, $tgl_selesai) {
-                $query->whereBetween('tgl_mulai', [$tgl_mulai, $tgl_selesai])
-                      ->orWhereBetween('tgl_selesai', [$tgl_mulai, $tgl_selesai]);
-                    })
+            ->where('status', 'approved')
+            ->where(function ($query) use ($tgl_mulai, $tgl_selesai) {
+                $query->where(function ($query) use ($tgl_mulai, $tgl_selesai) {
+                    $query->whereBetween('tgl_mulai', [$tgl_mulai, $tgl_selesai])
+                        ->orWhereBetween('tgl_selesai', [$tgl_mulai, $tgl_selesai]);
+                })
                     ->orWhere(function ($query) use ($tgl_mulai, $tgl_selesai) {
                         $query->where('tgl_mulai', '>=', $tgl_mulai)
-                              ->where('tgl_selesai', '<=', $tgl_selesai);
+                            ->where('tgl_selesai', '<=', $tgl_selesai);
                     });
-                })
-        ->exists();
+            })
+            ->exists();
 
         if (!$CekDB) {
             $datapeminjaman = new Peminjaman;
-            $datapeminjaman -> nama_lembaga = $request->nama_lembaga;
-            $datapeminjaman -> kegiatan = $request->kegiatan;
-            $datapeminjaman -> tgl_mulai = $request -> tgl_mulai;
-            $datapeminjaman -> tgl_selesai = $request -> tgl_selesai;
-            $datapeminjaman -> feedback = $request->feedback;
-            $datapeminjaman -> user_id = $request->user_id;
-            $datapeminjaman -> id_ruangan = $request -> id_ruangan;
+            $datapeminjaman->nama_lembaga = $request->nama_lembaga;
+            $datapeminjaman->kegiatan = $request->kegiatan;
+            $datapeminjaman->tgl_mulai = $request->tgl_mulai;
+            $datapeminjaman->tgl_selesai = $request->tgl_selesai;
+            $datapeminjaman->feedback = $request->feedback;
+            $datapeminjaman->user_id = $request->user_id;
+            $datapeminjaman->id_ruangan = $request->id_ruangan;
 
 
             if ($request->hasFile('dokumen_pendukung')) {
@@ -115,8 +125,7 @@ class PeminjamanController extends Controller
                 'status' => true,
                 'message' => 'prsoses ajukan peminjaman ruangan berhasil',
             ], 201);
-
-        }else {
+        } else {
             return response()->json([
                 'status' => false,
                 'message' => 'Ruangan sudah ada yang meminjam',
@@ -132,15 +141,25 @@ class PeminjamanController extends Controller
         //
         $datapeminjaman = Peminjaman::join('users', 'peminjamen.user_id', '=', 'users.id')
             ->join('ruangans', 'peminjamen.id_ruangan', '=', 'ruangans.id')
-            ->select('peminjamen.id', 'users.nama as nama_user', 'peminjamen.nama_lembaga','peminjamen.kegiatan',
-            Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
-            Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
-            Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
-            Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
-                    'peminjamen.status','peminjamen.feedback','peminjamen.dokumen_pendukung',
-                    'ruangans.nama as nama_ruangan','users.nim','users.email','users.telp')->find($id);
+            ->select(
+                'peminjamen.id',
+                'users.nama as nama_user',
+                'peminjamen.nama_lembaga',
+                'peminjamen.kegiatan',
+                Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
+                Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
+                Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
+                Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
+                'peminjamen.status',
+                'peminjamen.feedback',
+                'peminjamen.dokumen_pendukung',
+                'ruangans.nama as nama_ruangan',
+                'users.nim',
+                'users.email',
+                'users.telp'
+            )->find($id);
 
-        if(empty($datapeminjaman)){
+        if (empty($datapeminjaman)) {
             return response()->json([
                 'status' => false,
                 'message' => 'Data tidak ditemukan',
@@ -182,12 +201,12 @@ class PeminjamanController extends Controller
             ], 404);
         }
 
-        $rules= [
-            'status'=> 'required',
+        $rules = [
+            'status' => 'required',
         ];
 
 
-        $validator = Validator::make($request->all(),$rules);
+        $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
@@ -204,7 +223,6 @@ class PeminjamanController extends Controller
             'status' => 'true',
             'message' => 'Proses ubah ststus peminjaman berhasil',
         ], 201);
-
     }
 
     /**
@@ -215,7 +233,8 @@ class PeminjamanController extends Controller
         //
     }
 
-    public function unduhFile($id){
+    public function unduhFile($id)
+    {
         $peminjaman = Peminjaman::find($id);
         if ($peminjaman) {
             $dokumen_pendukung = $peminjaman->dokumen_pendukung;
@@ -239,7 +258,7 @@ class PeminjamanController extends Controller
                     'Content-Type' => $contentType,
                     'Content-Disposition' => 'attachment; filename=' . $dokumen_pendukung,
                 ]);
-            }else {
+            } else {
                 // File tidak ditemukan
                 return response()->json([
                     'status' => false,
@@ -252,7 +271,6 @@ class PeminjamanController extends Controller
             'status' => false,
             'message' => 'Data tidak ditemukan',
         ], 404);
-
     }
 
     public function peminjamApprove()
@@ -260,13 +278,23 @@ class PeminjamanController extends Controller
         // menampilkan data peminjaman status approve
         $datapeminjaman = Peminjaman::join('users', 'peminjamen.user_id', '=', 'users.id')
             ->join('ruangans', 'peminjamen.id_ruangan', '=', 'ruangans.id')
-            ->select('peminjamen.id', 'users.nama as nama_user', 'peminjamen.nama_lembaga','peminjamen.kegiatan',
-            Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
-            Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
-            Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
-            Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
-                    'peminjamen.status','peminjamen.feedback','peminjamen.dokumen_pendukung',
-                    'ruangans.nama as nama_ruangan','users.nim','users.email','users.telp')->where('peminjamen.status','=','approved')
+            ->select(
+                'peminjamen.id',
+                'users.nama as nama_user',
+                'peminjamen.nama_lembaga',
+                'peminjamen.kegiatan',
+                Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
+                Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
+                Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
+                Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
+                'peminjamen.status',
+                'peminjamen.feedback',
+                'peminjamen.dokumen_pendukung',
+                'ruangans.nama as nama_ruangan',
+                'users.nim',
+                'users.email',
+                'users.telp'
+            )->where('peminjamen.status', '=', 'approved')
             ->get();
         return response()->json([
             'status' => true,
@@ -280,14 +308,76 @@ class PeminjamanController extends Controller
         // menampilkan data peminjaman status approve
         $datapeminjaman = Peminjaman::join('users', 'peminjamen.user_id', '=', 'users.id')
             ->join('ruangans', 'peminjamen.id_ruangan', '=', 'ruangans.id')
-            ->select('peminjamen.id', 'users.nama as nama_user', 'peminjamen.nama_lembaga','peminjamen.kegiatan',
-            Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
-            Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
-            Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
-            Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
-                    'peminjamen.status','peminjamen.feedback','peminjamen.dokumen_pendukung',
-                    'ruangans.nama as nama_ruangan','users.nim','users.email','users.telp')->where('peminjamen.status','=','in progress')
+            ->select(
+                'peminjamen.id',
+                'users.nama as nama_user',
+                'peminjamen.nama_lembaga',
+                'peminjamen.kegiatan',
+                Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
+                Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
+                Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
+                Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
+                'peminjamen.status',
+                'peminjamen.feedback',
+                'peminjamen.dokumen_pendukung',
+                'ruangans.nama as nama_ruangan',
+                'users.nim',
+                'users.email',
+                'users.telp'
+            )
+            ->where('peminjamen.status', '=', 'in progress')
             ->get();
+        return response()->json([
+            'status' => true,
+            'message' => 'data ditemukan',
+            'data' => $datapeminjaman,
+        ], 200);
+    }
+
+    public function peminjamanByUser($id_user)
+    {
+        //menampilkan data peminjaman berdasarkan orang yang mengajukan
+        $datapeminjaman = Peminjaman::join('users', 'peminjamen.user_id', '=', 'users.id')
+            ->join('ruangans', 'peminjamen.id_ruangan', '=', 'ruangans.id')
+            ->select(
+                'peminjamen.id',
+                'users.nama as nama_user',
+                'peminjamen.nama_lembaga',
+                'peminjamen.kegiatan',
+                Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
+                Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
+                Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
+                Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
+                'peminjamen.status',
+                'peminjamen.feedback',
+                'peminjamen.dokumen_pendukung',
+                'ruangans.nama as nama_ruangan',
+                'users.nim',
+                'users.email',
+                'users.telp'
+            )
+            ->where('peminjamen.user_id', '=', $id_user)
+            ->where(function($query) {
+                // Menampilkan data dengan status "submitted", "submited", dan "in progress"
+                $query->whereIn('peminjamen.status', ['submitted', 'approved', 'in progress']);
+
+                // Menampilkan data dengan status "completed" hanya jika kolom feedback kosong
+                $query->orWhere(function($subQuery) {
+                    $subQuery->where('peminjamen.status', 'completed')
+                        ->whereNull('peminjamen.feedback');
+                });
+            })
+            ->get();
+
+        // Check if any data is found
+        if ($datapeminjaman->isEmpty()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data tidak ditemukan.',
+                'data' => null,
+            ], 404);
+        }
+
         return response()->json([
             'status' => true,
             'message' => 'data ditemukan',

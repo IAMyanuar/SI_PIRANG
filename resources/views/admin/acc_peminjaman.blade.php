@@ -159,9 +159,6 @@
 
                                                                                     <div class="modal-body">
                                                                                         <div class="text-center mt-2 mb-4">
-                                                                                            {{-- <a href="index.html" class="text-success">
-                                                                <span> logo </span>
-                                                            </a> --}}
                                                                                         </div>
 
                                                                                         <form class="pl-3 pr-3"
@@ -172,7 +169,7 @@
                                                                                             <div class="form-group">
                                                                                                 <label
                                                                                                     for="username">Berikan
-                                                                                                    Feedback</label>
+                                                                                                    Masukan atau Saran</label>
                                                                                                 <input class="form-control"
                                                                                                     name="feedback"
                                                                                                     required>

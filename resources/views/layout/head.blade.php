@@ -15,6 +15,7 @@
 <!-- Custom CSS -->
 <link href="{{ asset('dist/css/style.min.css') }}" rel="stylesheet">
 <link href="{{ asset('assets/libs/fullcalendar/dist/fullcalendar.min.css')}}" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{{ asset('assets/extra-libs/prism/prism.css') }}">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

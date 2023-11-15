@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\UserController\PeminjamanController;
 use App\Http\Controllers\webAuthController;
 use App\Http\Controllers\webRuanganController;
 use App\Http\Controllers\webPeminjamanController;
@@ -70,9 +72,9 @@ Route::get('/AjukanPeminjaman', function () {
     return view('user.ajukan_peminjaman');
 });
 
-Route::get('/PengajuanPeminjaman', function () {
-    return view('user.pengajuan_peminjaman');
-});
+// Route::get('/PengajuanPeminjaman', function () {
+//     return view('user.pengajuan_peminjaman');
+// });
 
 Route::get('/EditPeminjaman', function () {
     return view('user.edit_peminjaman');
@@ -91,7 +93,7 @@ Route::get('/detaillaporan', function () {
 });
 
 
-//fix
+//fix admin
 Route::get('/admin/DataRuangan',[webRuanganController::class,'index']); //data ruangan
 Route::get('/DataRuangan/TambahRuangan', [webRuanganController::class,'create']);
 Route::post('/DataRuangan/TambahRuangan', [webRuanganController::class,'store']);
@@ -112,4 +114,5 @@ Route::get('/',[webAuthController::class,'viewLogin']);
 Route::post('/',[webAuthController::class,'Login']);
 Route::post('/logout',[webAuthController::class,'Logout'])->name('logout');
 
-Route::resource('DataRuangan', webRuanganController::class);
+//user
+Route::get('/PengajuanPeminjaman', [PeminjamanController::class, 'peminjamanku']);

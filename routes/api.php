@@ -40,6 +40,7 @@ Route::post('tambahruangan',[RuanganController::class, 'store'])->middleware('au
 Route::get('ruangan/{id}',[RuanganController::class,'show'])->middleware('auth:sanctum','ablity:access-admin');//menampilkan data ruangan berdasarkan id
 Route::post('ruangan/{id}',[RuanganController::class,'update'])->middleware('auth:sanctum','ablity:access-admin');//edit ruangan
 
+//admin
 Route::get('peminjaman/submitted',[PeminjamanController::class, 'index'])->middleware('auth:sanctum','ablity:access-admin');//menampilkan data peminjaman yang belum disetujui
 Route::get('peminjaman/approve',[PeminjamanController::class, 'peminjamApprove'])->middleware('auth:sanctum','ablity:access-admin');//menampilkan data peminjaman approve
 Route::get('peminjaman/inprogress',[PeminjamanController::class, 'peminjamInProgress'])->middleware('auth:sanctum','ablity:access-admin');//menampilkan data peminjaman in progress
@@ -47,4 +48,7 @@ Route::get('peminjaman/{id}',[PeminjamanController::class,'show'])->middleware('
 Route::get('unduhFileDokumen/{id}',[PeminjamanController::class,'unduhFile']);//
 Route::post('peminjaman',[PeminjamanController::class, 'store']);//tambah peminjaman
 Route::put('peminjaman/{id}',[PeminjamanController::class,'updateStatus'])->middleware('auth:sanctum','ablity:access-admin');//edit Status
+
+//user
+Route::get('peminjamanbyuser/{id}',[PeminjamanController::class,'peminjamanByUser'])->middleware('auth:sanctum','ablity:access-user');//menampilkan data berdasarkan id
 

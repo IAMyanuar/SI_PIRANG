@@ -6,6 +6,7 @@
 <script src="{{ asset('dist/js/app-style-switcher.js') }}"></script>
 <script src="{{ asset('dist/js/feather.min.js') }}"></script>
 <script src="{{ asset('assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js') }}"></script>
+<script src="{{ asset('assets/extra-libs/sparkline/sparkline.js') }}"></script>
 <script src="{{ asset('dist/js/sidebarmenu.js') }}"></script>
 <!--Custom JavaScript -->
 <script src="{{ asset('dist/js/custom.min.js') }}"></script>
@@ -24,5 +25,22 @@
 <script src="{{ asset('assets/libs/fullcalendar/dist/fullcalendar.min.js') }}"></script>
 <script src="{{ asset('dist/js/pages/calendar/cal-init.js') }}"></script>
 <script src="{{ asset('dist/js/pages/calendar/time.js') }}"></script>
+<script src="{{ asset('dist/js/sidebarmenu.js') }}"></script>
+{{-- ruet --}}
+<script src="../assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+<!--Custom JavaScript -->
+<script src="{{ asset('dist/js/custom.min.js') }}"></script>
+<!-- This Page JS -->
+<script src="{{ asset('assets/extra-libs/prism/prism.js') }}"></script>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
 
-
+        // Tanggapi klik pada tombol
+        $('[data-target="#feedback-modal"]').on('click', function () {
+            // Tampilkan modal
+            $('#feedback-modal').modal('show');
+        });
+    });
+</script>
+<script src="../dist/js/custom.min.js"></script>

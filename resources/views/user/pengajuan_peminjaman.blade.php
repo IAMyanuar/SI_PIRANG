@@ -35,6 +35,22 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card">
+                                @if (session()->has('info'))
+                                    <div class="alert alert-warning">
+                                        <strong>{{ session('info') }}</strong>
+                                    </div>
+                                @endif
+                                @if (session()->has('success'))
+                                    <div class="alert alert-success">
+                                        <strong>{{ session('success') }}</strong>
+                                    </div>
+                                @endif
+                                @if (session()->has('error'))
+                                    <div class="alert alert-danger">
+                                        <strong>{{ session('error') }}</strong>
+                                    </div>
+                                @endif
+
                                 <div class="card-body">
                                     <div class="form-actions">
                                         <div class="text-right mb-3">
@@ -53,70 +69,99 @@
                                                     <th>Nama Kegiatan</th>
                                                     <th>Waktu Mulai</th>
                                                     <th>Waktu Selesai</th>
-                                                    <th>Pendukung Peminjaman</th>
                                                     <th>status</th>
                                                     <th>aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                @php
+                                                $no = 1;
+                                            @endphp
+                                            @foreach ($datapeminjaman as $item)
                                                 <tr>
-                                                    <td>1</td>
-                                                    <td>heru</td>
-                                                    <td>teknologi rekayasa</td>
-                                                    <td>rapat triwulan KWU</td>
-                                                    <td>05/07/2008 10:33 PM</td>
-                                                    <td>05/07/2008 11:33 PM</td>
-                                                    <td><button class=" btn btn-circle btn-success"><i class="fa fa-link"></button></td>
-                                                    <td>pending</td>
+                                                    <td>{{ $no++ }}</td>
+                                                    <td>{{ $item['nama_user'] }}</td>
+                                                    <td>{{ $item['nama_lembaga'] }}</td>
+                                                    <td>{{ $item['kegiatan'] }}</td>
+                                                    <td class="text-center">
+                                                        {{ date('d-m-Y', strtotime($item['tgl_mulai'])) }}
+                                                        <br>jam:{{ date('H:i', strtotime($item['jam_mulai'])) }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ date('d-m-Y', strtotime($item['tgl_selesai'])) }}
+                                                        <br>jam:
+                                                        {{ date('H:i', strtotime($item['jam_selesai'])) }}
+                                                    </td>
+                                                    <td>{{ $item['status'] }}</td>
                                                     <td>
-                                                        <a href="/EditPeminjaman" class="btn btn-warning btn-rounded">Edit</a>
-                                                        <a href="" class="btn btn-danger btn-rounded">Hapus</a>
+                                                        @if ($item['status']=='submitted')
+                                                        <a href="/EditPeminjaman" class="btn btn-warning btn-rounded" data-toggle="tooltip"
+                                                        data-placement="left" title="" data-original-title="Ubah"><i class="fas fa-edit"></i></a>
+                                                        <button type="submit" class="btn btn-danger btn-rounded" data-toggle="tooltip"
+                                                        data-placement="left" title="" data-original-title="Hapus"><i class="fas fa-trash-alt"></i></button>
+                                                        <button type="submit" class="btn btn-info btn-rounded" data-toggle="tooltip"
+                                                        data-placement="left" title="" data-original-title="Detail"><i class="fas fa-search-plus"></i></button>
+                                                        @endif
+
+                                                        @if ($item['status']=='approved')
+                                                        <button type="submit" class="btn btn-danger btn-rounded" data-toggle="tooltip"
+                                                        data-placement="left" title="" data-original-title="Hapus"><i class="fas fa-trash-alt"></i></button>
+                                                        <button type="submit" class="btn btn-info btn-rounded" data-toggle="tooltip"
+                                                        data-placement="left" title="" data-original-title="Detail"><i class="fas fa-search-plus"></i></button>
+                                                        <button type="submit" class="btn btn-success btn-rounded" data-toggle="tooltip"
+                                                        data-placement="left" title="" data-original-title="Bukti Disetujui"><i class="fas fa-clipboard-check"></i></button>
+                                                        @endif
+
+                                                        @if ($item['status']=='in progress')
+                                                        <button type="submit" class="btn btn-info btn-rounded" data-toggle="tooltip"
+                                                        data-placement="left" title="" data-original-title="Detail"><i class="fas fa-search-plus"></i></button>
+                                                        @endif
+
+                                                        @if ($item['status']=='completed')
+                                                        <button type="submit" class="btn btn-info btn-rounded" data-toggle="tooltip"
+                                                        data-placement="left" title="" data-original-title="Masukan/Saran" data-target="#feedback-modal"><i class="fas fa-comment-alt"
+                                                        ></i></button>
+                                                        <!-- feedback modal content -->
+                                                        <div id="feedback-modal" class="modal fade"
+                                                        tabindex="-1" role="dialog"
+                                                        aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+
+                                                                <div class="modal-body">
+                                                                    <div class="text-center mt-2 mb-4">
+                                                                    </div>
+
+                                                                    <form class="pl-3 pr-3"
+                                                                        action="{{ route('update-status', ['id' => $item['id'], 'status' => 'reject']) }}"
+                                                                        method="POST" id="modal-form">
+                                                                        @csrf
+                                                                        @method('PUT')
+                                                                        <div class="form-group">
+                                                                            <label
+                                                                                for="username">Berikan
+                                                                                Masukan atau Saran</label>
+                                                                            <input class="form-control"
+                                                                                name="feedback"
+                                                                                required>
+                                                                        </div>
+                                                                        <div
+                                                                            class="form-group text-center">
+                                                                            <button
+                                                                                class="btn btn-primary"
+                                                                                type="submit">Kirim</button>
+                                                                        </div>
+
+                                                                    </form>
+
+                                                                </div>
+                                                            </div><!-- /.modal-content -->
+                                                        </div><!-- /.modal-dialog -->
+                                                    </div><!-- /.modal -->
+                                                        @endif
                                                     </td>
                                                 </tr>
-                                                <tr>
-                                                    <td>2</td>
-                                                    <td>heru</td>
-                                                    <td>teknologi rekayasa</td>
-                                                    <td>rapat triwulan Geni</td>
-                                                    <td>07/07/2008 10:33 PM</td>
-                                                    <td>07/07/2008 11:33 PM</td>
-                                                    <td><button class=" btn btn-circle btn-success"><i class="fa fa-link"></button></td>
-                                                    <td>ACC</td>
-                                                    <td>
-                                                        <a class="btn btn-primary btn-rounded" href="/BuktiPeminjaman">Bukti Peminjaman</a>
-                                                    </td>
-                                                </tr>
-
-
-
-
-
-                                                {{-- <?php $nomor = 1; ?>
-                                                <?php
-                                                $ambil = $conn->query('SELECT * FROM produk LEFT JOIN kategori ON produk.id_kategori=kategori.id_kategori'); ?>
-                                                <?php while($pecah= $ambil->fetch_assoc()){ ?>
-                                                <tr>
-                                                    <td><?php echo $nomor; ?></td>
-                                                    <td><?php echo $pecah['nama_kategori']; ?></td>
-                                                    <td><?php echo $pecah['nama_produk']; ?></td>
-                                                    <td><?php echo $pecah['stok_produk']; ?></td>
-                                                    <td>Rp<?php echo number_format($pecah['harga_produk']); ?></td>
-                                                    <td><?php echo $pecah['berat']; ?> Gram</td>
-                                                    <td>
-                                                        <img src="../assets/images/foto_produk/<?php echo $pecah['foto_produk']; ?>"
-                                                            width="100">
-
-                                                    </td>
-                                                    <td><?php echo $pecah['deskripsi_produk']; ?>
-                                                    <td>
-                                                        <a href="index.php?halaman=hapusproduk&id=<?php echo $pecah['id_produk']; ?>"
-                                                            class="btn btn-rounded btn-danger">hapus</a><a
-                                                            href="index.php?halaman=ubahproduk&id=<?php echo $pecah['id_produk']; ?>"
-                                                            class="btn btn-rounded btn-warning text-white">ubah</a>
-                                                    </td>
-                                                </tr>
-                                                <?php $nomor++; ?>
-                                                <?php } ?> --}}
+                                            @endforeach
                                             </tbody>
                                         </table>
                                     </div>

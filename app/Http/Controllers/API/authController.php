@@ -83,10 +83,12 @@ class authController extends Controller
         if ($datauser = User::where('nim', $request->nim)->where('role_user', 'admin')->first()) {
             $role = $datauser->role_user;
             $nama = $datauser->nama;
+            $id_user = $datauser->id;
             return response()->json([
                 'status' => true,
                 'message' => 'login berhasil',
                 'role' => $role,
+                'id_user' => $id_user,
                 'nama' => $nama,
                 'token' => $datauser->createToken('api-product', ['access-admin'])->plainTextToken
             ], 200);
@@ -95,10 +97,12 @@ class authController extends Controller
         if ($datauser = User::where('nim', $request->nim)->where('role_user', 'user')->first()) {
             $role = $datauser->role_user;
             $nama = $datauser->nama;
+            $id_user = $datauser->id;
             return response()->json([
                 'status' => true,
                 'message' => 'login berhasil',
                 'role' => $role,
+                'id_user' => $id_user,
                 'nama' => $nama,
                 'token' => $datauser->createToken('api-product', ['access-user'])->plainTextToken
             ], 200);

@@ -31,16 +31,20 @@ class webAuthController extends Controller
 
             if ($contenarray['status'] == true && $contenarray['role'] == "user") {
                 $token = $contenarray['token'];
+                $id_user = $contenarray['id_user'];
                 $nama = $contenarray['nama'];
                 session(['nama' => $nama]);
+                session(['id_user' => $id_user]);
                 session(['api_token' => $token]);
                 return redirect('/dashboard');
             }
 
             if ($contenarray['status'] == true && $contenarray['role'] == "admin") {
                 $token = $contenarray['token'];
+                $id_user = $contenarray['id_user'];
                 $nama = $contenarray['nama'];
                 session(['nama' => $nama]);
+                session(['id_user' => $id_user]);
                 session(['api_token' => $token]);
                 return redirect('/admin/dashboard');
             }
