@@ -39,22 +39,18 @@
                                 <div class="card-body">
                                     <form action="" method="post" enctype="multipart/form-data">
                                         <div class="form-group">
+                                            <label>Nama Lembaga</label>
+                                            <input type="text" class="form-control" name="nama">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Kegiatan</label>
+                                            <input type="text" class="form-control" name="prodi">
+                                        </div>
+                                        <div class="form-group">
                                             <label>Ruangan</label>
                                             <select class="form-control" name="id_ruangan">
                                             <option value="">Pilih Ruangan</option>
                                             </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Nama</label>
-                                            <input type="text" class="form-control" name="nama">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Program Studi</label>
-                                            <input type="text" class="form-control" name="prodi">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Nama kegiatan</label>
-                                            <input type="text" class="form-control" name="kegiatan">
                                         </div>
                                         <div class="form-group">
                                             <label>Waktu Mulai</label>
