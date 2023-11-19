@@ -194,7 +194,7 @@ class webPeminjamanController extends Controller
             ],]);
 
             // Periksa respons dari API
-            if ($response->getStatusCode() === 200) {
+            if ($response->getStatusCode() === 201) {
                 return redirect()->back()->with('success', 'Status berhasil di ubah');
             } else {
                 return redirect()->back()->with('error', 'Gagal merubah status');

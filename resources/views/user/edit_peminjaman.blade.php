@@ -36,44 +36,53 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card">
+                                @if (session()->has('error'))
+                                <div class="alert alert-danger">
+                                    <strong>{{ session('error') }}</strong>
+                                </div>
+                            @endif
                                 <div class="card-body">
-                                    <form action="" method="post" enctype="multipart/form-data">
+                                    <form method="POST" enctype="multipart/form-data">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="form-group">
+                                            <label>Nama Lembaga</label>
+                                            <input type="text" class="form-control" name="nama_lembaga" value="{{ $datapeminjam['nama_lembaga'] }}" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Kegiatan</label>
+                                            <input type="text" class="form-control" name="kegiatan" value="{{ $datapeminjam['kegiatan'] }}" required>
+                                        </div>
                                         <div class="form-group">
                                             <label>Ruangan</label>
-                                            <select class="form-control" name="id_ruangan">
-                                            <option value="">Pilih Ruangan</option>
+                                            <select class="form-control" name="id_ruangan" required>
+                                                <option value="">Pilih Ruangan</option>
+                                                @foreach ($data as $dataruangan)
+                                                    <option value="{{ $dataruangan['id'] }}" {{ $datapeminjam['id_ruangan'] == $dataruangan['id'] ? 'selected' : '' }}>
+                                                        {{ $dataruangan['nama'] }}
+                                                    </option>
+                                                @endforeach
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label>Nama</label>
-                                            <input type="text" class="form-control" name="nama">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Program Studi</label>
-                                            <input type="text" class="form-control" name="prodi">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Nama kegiatan</label>
-                                            <input type="text" class="form-control" name="kegiatan">
-                                        </div>
-                                        <div class="form-group">
                                             <label>Waktu Mulai</label>
-                                            <input type="datetime-local" class="form-control" name="mulai">
+                                            <input type="datetime-local" class="form-control" name="tgl_mulai" value="{{ date('Y-m-d\TH:i', strtotime($datapeminjam['tgl_mulai'] . ' ' . $datapeminjam['jam_mulai'])) }}" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Waktu Selesai</label>
-                                            <input type="datetime-local" class="form-control" name="selesai">
+                                            <input type="datetime-local" class="form-control" name="tgl_selesai" value="{{ date('Y-m-d\TH:i', strtotime($datapeminjam['tgl_selesai'] . ' ' . $datapeminjam['jam_selesai'])) }}" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Bukti Pendukung</label>
-                                            <input type="file" name="bukti" class="form-control">
+                                            <input type="file" name="dokumen_pendukung" class="form-control" >
                                         </div>
-                                        <button class="btn-primary btn" name="submit">Simpan</button>
+                                        @if ($datapeminjam['dokumen_pendukung'] != null)
+                                        <div class="form-group">
+                                            <label>Bukti Pendukung: </label>
+                                            <img src="{{asset('assets/images/bukti_pendukung/' . $datapeminjam['dokumen_pendukung']) }}" width="600">
+                                        </div>
+                                        @endif
+                                        <button class="btn-primary btn" type="submit">Simpan</button>
                                     </form>
-                                </form>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-@endsection
+                            @endsection

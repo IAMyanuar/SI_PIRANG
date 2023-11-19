@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\UpdatePeminjamanRequest;
 use Doctrine\Inflector\Rules\English\Rules;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
 
 class PeminjamanController extends Controller
 {
@@ -153,6 +154,7 @@ class PeminjamanController extends Controller
                 'peminjamen.status',
                 'peminjamen.feedback',
                 'peminjamen.dokumen_pendukung',
+                'ruangans.id as id_ruangan',
                 'ruangans.nama as nama_ruangan',
                 'users.nim',
                 'users.email',
@@ -186,7 +188,73 @@ class PeminjamanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //megambil id untuk mencari di db
+        $datapeminjaman = Peminjaman::find($id);
+         //jika data tidak ditemukan
+         if (empty($datapeminjaman)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data tidak ditemukan',
+            ], 404);
+        }
+
+
+        //edit peminjaman
+        $rules = [
+            'nama_lembaga' => 'required',
+            'kegiatan' => 'required',
+            'tgl_mulai' => 'required',
+            'tgl_selesai' => 'required',
+            'feedback' => 'nullable',
+            'dokumen_pendukung' => 'nullable',
+            'user_id' => 'required',
+            'id_ruangan' => 'required',
+        ];
+
+
+        //validasi input
+        $validator = Validator::make($request->all(), $rules);
+        //mengembalikan respon ketika inputan salah
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Proses ubah data ruangan gagal',
+                'data' => $validator->errors(),
+                'request' => $request->all(),
+            ], 400);
+        }
+
+        if ($request->hasFile('dokumen_pendukung')) {
+            // Hapus file gambar lama jika ada
+            if (!empty($datapeminjaman->dokumen_pendukung)) {
+                $oldPhotoPath = public_path('assets/images/bukti_pendukung/' . $datapeminjaman->dokumen_pendukung);
+                if (File::exists($oldPhotoPath)) {
+                    File::delete($oldPhotoPath);
+                }
+
+
+                //simpan gambar baru
+                $dokumen_pendukung = $request->file('dokumen_pendukung');
+                $namadokumen = time() . '.' . $dokumen_pendukung->getClientOriginalExtension();
+                $dokumen_pendukung->move(public_path('assets/images/bukti_pendukung'), $namadokumen);
+                $datapeminjaman->dokumen_pendukung = $namadokumen;
+            }
+        }
+
+
+            $datapeminjaman->nama_lembaga = $request->nama_lembaga;
+            $datapeminjaman->kegiatan = $request->kegiatan;
+            $datapeminjaman->tgl_mulai = $request->tgl_mulai;
+            $datapeminjaman->tgl_selesai = $request->tgl_selesai;
+            $datapeminjaman->feedback = $request->feedback;
+            $datapeminjaman->user_id = $request->user_id;
+            $datapeminjaman->id_ruangan = $request->id_ruangan;
+            $datapeminjaman->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Proses ubah pengajuan ruangan berhasil',
+            ], 200);
     }
 
     public function updateStatus(Request $request, $id)
@@ -228,9 +296,33 @@ class PeminjamanController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Peminjaman $peminjaman)
+    public function destroy(string $id)
     {
-        //
+        //hapus peminjaman
+
+            // Temukan peminjaman berdasarkan ID
+            $peminjaman = Peminjaman::findOrFail($id);
+
+            // Hapus peminjaman
+            $peminjaman->delete();
+
+             // mengambil data gambar dari db
+             $dokumen_pendukung = $peminjaman->dokumen_pendukung;
+
+             //cek apahah data ada. jika ada hapus dari folder
+             if (!empty($dokumen_pendukung)) {
+                 // Hapus file gambar dari sistem file
+                 $pathToFile = public_path('assets/images/bukti_pendukung/' . $dokumen_pendukung);
+                if (file_exists($pathToFile)) {
+                    unlink($pathToFile);
+                }
+             }
+
+            // Beri respons berhasil
+            return response()->json([
+                'status' => true,
+                'message' => 'Peminjaman berhasil dihapus',
+            ], 200);
     }
 
     public function unduhFile($id)
@@ -357,12 +449,12 @@ class PeminjamanController extends Controller
                 'users.telp'
             )
             ->where('peminjamen.user_id', '=', $id_user)
-            ->where(function($query) {
+            ->where(function ($query) {
                 // Menampilkan data dengan status "submitted", "submited", dan "in progress"
                 $query->whereIn('peminjamen.status', ['submitted', 'approved', 'in progress']);
 
                 // Menampilkan data dengan status "completed" hanya jika kolom feedback kosong
-                $query->orWhere(function($subQuery) {
+                $query->orWhere(function ($subQuery) {
                     $subQuery->where('peminjamen.status', 'completed')
                         ->whereNull('peminjamen.feedback');
                 });
@@ -370,13 +462,13 @@ class PeminjamanController extends Controller
             ->get();
 
         // Check if any data is found
-        if ($datapeminjaman->isEmpty()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Data tidak ditemukan.',
-                'data' => null,
-            ], 404);
-        }
+        // if ($datapeminjaman->isEmpty()) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'message' => 'Data tidak ditemukan.',
+        //         'data' => null,
+        //     ], 404);
+        // }
 
         return response()->json([
             'status' => true,

@@ -48,7 +48,9 @@ Route::get('peminjaman/{id}',[PeminjamanController::class,'show'])->middleware('
 Route::get('unduhFileDokumen/{id}',[PeminjamanController::class,'unduhFile']);//
 Route::post('peminjaman',[PeminjamanController::class, 'store']);//tambah peminjaman
 Route::put('peminjaman/{id}',[PeminjamanController::class,'updateStatus'])->middleware('auth:sanctum','ablity:access-admin');//edit Status
+Route::delete('peminjaman/{id}',[PeminjamanController::class, 'destroy']);
+
 
 //user
 Route::get('peminjamanbyuser/{id}',[PeminjamanController::class,'peminjamanByUser'])->middleware('auth:sanctum','ablity:access-user');//menampilkan data berdasarkan id
-
+Route::put('EditPeminjaman/{id}',[PeminjamanController::class,'update'])->middleware('auth:sanctum','ablity:access-user');//edit ruangan

@@ -36,35 +36,44 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card">
+                                @if (session()->has('error'))
+                                <div class="alert alert-danger">
+                                    <strong>{{ session('error') }}</strong>
+                                </div>
+                            @endif
                                 <div class="card-body">
-                                    <form action="" method="post" enctype="multipart/form-data">
+                                    <form action="{{ route('form_ajukan_peminjaman') }}" method="post" enctype="multipart/form-data">
+                                        @csrf
                                         <div class="form-group">
                                             <label>Nama Lembaga</label>
-                                            <input type="text" class="form-control" name="nama">
+                                            <input type="text" class="form-control" name="nama_lembaga" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Kegiatan</label>
-                                            <input type="text" class="form-control" name="prodi">
+                                            <input type="text" class="form-control" name="kegiatan" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Ruangan</label>
-                                            <select class="form-control" name="id_ruangan">
+                                            <select class="form-control" name="id_ruangan" required>
                                             <option value="">Pilih Ruangan</option>
+                                            @foreach ($data as $dataruangan)
+                                            <option value="{{ $dataruangan['id'] }}">{{ $dataruangan['nama'] }}</option>
+                                            @endforeach
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label>Waktu Mulai</label>
-                                            <input type="datetime-local" class="form-control" name="mulai">
+                                            <input type="datetime-local" class="form-control" name="tgl_mulai" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Waktu Selesai</label>
-                                            <input type="datetime-local" class="form-control" name="selesai">
+                                            <input type="datetime-local" class="form-control" name="tgl_selesai" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Bukti Pendukung</label>
-                                            <input type="file" name="bukti" class="form-control">
+                                            <input type="file" name="dokumen_pendukung" class="form-control">
                                         </div>
-                                        <button class="btn-primary btn" name="submit">Simpan</button>
+                                        <button class="btn-primary btn" type="submit">Simpan</button>
                                     </form>
                                 </div>
                             @endsection
