@@ -80,9 +80,9 @@ Route::get('/kalender', function () {
 //     return view('user.edit_peminjaman');
 // });
 
-// Route::get('/BuktiPeminjaman', function () {
-//     return view('user.bukti_peminjaman');
-// });
+Route::get('/BuktiPeminjaman', function () {
+    return view('user.bukti_peminjaman');
+});
 
 // Route::get('/riwayat', function () {
 //     return view('user.riwayat');
@@ -96,7 +96,7 @@ Route::get('/kalender', function () {
 //fix admin
 Route::get('/admin/DataRuangan',[webRuanganController::class,'index']); //data ruangan
 Route::get('/DataRuangan/TambahRuangan', [webRuanganController::class,'create']);
-Route::post('/DataRuangan/TambahRuangan', [webRuanganController::class,'store']);
+Route::post('/DataRuangan/TambahRuangan', [webRuanganController::class,'store'])->name('tambah_ruangan');
 Route::get('/DataRuangan/UbahRuangan/{id}', [webRuanganController::class,'edit']);
 Route::put('/DataRuangan/UbahRuangan/{id}', [webRuanganController::class,'update']);
 
@@ -114,7 +114,7 @@ Route::get('/',[webAuthController::class,'viewLogin']);
 Route::post('/',[webAuthController::class,'Login']);
 Route::post('/logout',[webAuthController::class,'Logout'])->name('logout');
 
-//user
+
 //user
 Route::get('/PengajuanPeminjaman', [PeminjamanController::class, 'peminjamanku']);
 Route::get('/AjukanPeminjaman', [PeminjamanController::class,'create']);
@@ -122,4 +122,5 @@ Route::post('/AjukanPeminjaman',[PeminjamanController::class,'store'])->name('fo
 Route::delete('/PengajuanPeminjaman/{id}',[PeminjamanController::class,'destroy'])->name('hapus_pengajuan');
 Route::get('/EditPeminjaman/{id}', [PeminjamanController::class,'edit']);
 Route::get('/peminjaman/detail/{id}',[PeminjamanController::class,'show']);//detail pemijaman user
-Route::put('/EditPeminjaman/{id}', [PeminjamanController::class,'update'])->name('ubah_pengajuan');
+Route::post('/EditPeminjaman/{id}', [PeminjamanController::class,'update'])->name('ubah_pengajuan');
+Route::patch('/PengajuanPeminjaman/{id}', [PeminjamanController::class,'updateStatus'])->name('ulasan');

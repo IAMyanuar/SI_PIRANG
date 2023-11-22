@@ -173,10 +173,10 @@
                                                                                 </div>
 
                                                                                 <form class="pl-3 pr-3"
-                                                                                    action="{{ route('update-status', ['id' => $item['id'], 'status' => 'reject']) }}"
+                                                                                    action="{{ route('ulasan', $item['id']) }}"
                                                                                     method="POST" id="modal-form">
                                                                                     @csrf
-                                                                                    @method('PUT')
+                                                                                    @method('patch')
                                                                                     <div class="form-group">
                                                                                         <label for="username">Berikan
                                                                                             Masukan atau Saran</label>

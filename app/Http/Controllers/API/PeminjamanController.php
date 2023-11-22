@@ -89,6 +89,7 @@ class PeminjamanController extends Controller
         //cek apakah sudah ada yang meminjam ruangan tsb
         $CekDB = Peminjaman::where('id_ruangan', $ruangan)
             ->where('status', 'approved')
+            ->orWhere('status', 'in progress')
             ->where(function ($query) use ($tgl_mulai, $tgl_selesai) {
                 $query->where(function ($query) use ($tgl_mulai, $tgl_selesai) {
                     $query->whereBetween('tgl_mulai', [$tgl_mulai, $tgl_selesai])
@@ -475,5 +476,42 @@ class PeminjamanController extends Controller
             'message' => 'data ditemukan',
             'data' => $datapeminjaman,
         ], 200);
+    }
+
+
+    public function feedback(string $id,Request $request)
+    {
+        //memberi feedback
+        $datapeminjaman = Peminjaman::find($id);
+
+        if (empty($datapeminjaman)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data tidak ditemukan',
+            ], 404);
+        }
+
+        $rules = [
+            'feedback' => 'required',
+        ];
+
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Proses ubah status peminjaman gagal',
+                'data' => $validator->errors(),
+                'request' => $request->all(),
+            ], 400);
+        }
+
+        $datapeminjaman->feedback = $request->feedback;
+        $datapeminjaman->save();
+
+        return response()->json([
+            'status' => 'true',
+            'message' => 'Proses ubah ststus peminjaman berhasil',
+        ], 201);
     }
 }

@@ -52,7 +52,7 @@
                                         <strong>{{ session('RuanganIsExist') }}</strong>
                                     </div>
                                 @endif
-                                    <form method="post" action="{{ route('DataRuangan.store') }}"
+                                    <form method="post" action="{{ route('tambah_ruangan') }}"
                                         enctype="multipart/form-data">
                                         @csrf
                                         <div class="form-group">

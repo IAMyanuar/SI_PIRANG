@@ -42,9 +42,9 @@
                                 </div>
                             @endif
                                 <div class="card-body">
-                                    <form method="POST" enctype="multipart/form-data">
+                                    <form method="POST" action="{{ route('ubah_pengajuan',$datapeminjam['id']) }}"  enctype="multipart/form-data">
                                         @csrf
-                                        @method('PUT')
+                                        @method('POST')
                                         <div class="form-group">
                                             <label>Nama Lembaga</label>
                                             <input type="text" class="form-control" name="nama_lembaga" value="{{ $datapeminjam['nama_lembaga'] }}" required>

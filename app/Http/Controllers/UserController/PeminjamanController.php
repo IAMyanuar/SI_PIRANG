@@ -290,17 +290,17 @@ class PeminjamanController extends Controller
 
             $client = new Client();
             $url = $apiUrl . "/api/EditPeminjaman/$id";
-            $response = $client->request('PUT', $url, $options);
+            $response = $client->request('POST', $url, $options);
             $response->getBody()->getContents();
             return redirect()->to('/PengajuanPeminjaman')
-                ->with('success', 'Pengajuan ruangan Berhasil');
+                ->with('success', 'pengajuan Peminjaman Ruangan Berhasil di Ubah');
+            return dd($options);
         } catch (RequestException $e) {
             $response = $e->getResponse();
             $conten = $response->getBody()->getContents();
             $contenarray = json_decode($conten, true);
             return redirect()->back()
                 ->with('error', $contenarray['message']);
-            // return dd();
         }
 
     }
@@ -332,6 +332,43 @@ class PeminjamanController extends Controller
         } catch (\Exception $e) {
             return redirect()->to('/PengajuanPeminjaman')
                 ->with('error', 'Terjadi kesalahan. ' . $e->getMessage());
+        }
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        try {
+            $apiUrl = env('API_URL');
+            $apiToken = session('api_token');
+            $options = [
+                'form_params' => [
+                  'feedback' => $request->input('feedback'),
+                ],
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $apiToken,
+                ],
+            ];
+
+
+
+            // Kirim permintaan PUT ke API dengan status yang sesuai
+            $client = new Client();
+            $url = $apiUrl."/api/peminjaman/$id/feedback";
+            $response = $client->request('PATCH', $url, $options);
+
+            // Periksa respons dari API
+            if ($response->getStatusCode() === 201) {
+                return redirect()->back()->with('success', 'Berhasil mengirim ulasan');
+            } else {
+                return redirect()->back()->with('error', 'Gagal merubah memberi ulasan');
+            }
+        }  catch (\Exception $e) {
+            // $response = $e->getResponse();
+            // $conten = $response->getBody()->getContents();
+            // $contenarray = json_decode($conten, true);
+            // return redirect()->back()
+            //     ->with('error',$contenarray['message']);
+            return dd($options);
         }
     }
 
