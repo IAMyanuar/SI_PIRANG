@@ -88,8 +88,7 @@ class PeminjamanController extends Controller
 
         //cek apakah sudah ada yang meminjam ruangan tsb
         $CekDB = Peminjaman::where('id_ruangan', $ruangan)
-            ->where('status', 'approved')
-            ->orWhere('status', 'in progress')
+            ->whereIn('status', ['approved','in progress'])
             ->where(function ($query) use ($tgl_mulai, $tgl_selesai) {
                 $query->where(function ($query) use ($tgl_mulai, $tgl_selesai) {
                     $query->whereBetween('tgl_mulai', [$tgl_mulai, $tgl_selesai])
@@ -99,7 +98,7 @@ class PeminjamanController extends Controller
                         $query->where('tgl_mulai', '>=', $tgl_mulai)
                             ->where('tgl_selesai', '<=', $tgl_selesai);
                     });
-            })
+                })
             ->exists();
 
         if (!$CekDB) {
@@ -110,7 +109,8 @@ class PeminjamanController extends Controller
             $datapeminjaman->tgl_selesai = $request->tgl_selesai;
             $datapeminjaman->feedback = $request->feedback;
             $datapeminjaman->user_id = $request->user_id;
-            $datapeminjaman->id_ruangan = $request->id_ruangan;
+            // $datapeminjaman->id_ruangan = $request->id_ruangan;
+            $datapeminjaman->id_ruangan = $ruangan;
 
 
             if ($request->hasFile('dokumen_pendukung')) {
@@ -398,7 +398,7 @@ class PeminjamanController extends Controller
 
     public function peminjamInProgress()
     {
-        // menampilkan data peminjaman status approve
+        // menampilkan data peminjaman status inprogres
         $datapeminjaman = Peminjaman::join('users', 'peminjamen.user_id', '=', 'users.id')
             ->join('ruangans', 'peminjamen.id_ruangan', '=', 'ruangans.id')
             ->select(
@@ -427,9 +427,9 @@ class PeminjamanController extends Controller
         ], 200);
     }
 
-    public function peminjamanByUser($id_user)
+    public function peminjamanByUser($id)
     {
-        //menampilkan data peminjaman berdasarkan orang yang mengajukan
+        //menampilkan data peminjaman berdasarkan user yang mengajukan
         $datapeminjaman = Peminjaman::join('users', 'peminjamen.user_id', '=', 'users.id')
             ->join('ruangans', 'peminjamen.id_ruangan', '=', 'ruangans.id')
             ->select(
@@ -449,7 +449,7 @@ class PeminjamanController extends Controller
                 'users.email',
                 'users.telp'
             )
-            ->where('peminjamen.user_id', '=', $id_user)
+            ->where('peminjamen.user_id', '=', $id)
             ->where(function ($query) {
                 // Menampilkan data dengan status "submitted", "submited", dan "in progress"
                 $query->whereIn('peminjamen.status', ['submitted', 'approved', 'in progress']);
@@ -461,15 +461,6 @@ class PeminjamanController extends Controller
                 });
             })
             ->get();
-
-        // Check if any data is found
-        // if ($datapeminjaman->isEmpty()) {
-        //     return response()->json([
-        //         'status' => false,
-        //         'message' => 'Data tidak ditemukan.',
-        //         'data' => null,
-        //     ], 404);
-        // }
 
         return response()->json([
             'status' => true,
@@ -510,8 +501,199 @@ class PeminjamanController extends Controller
         $datapeminjaman->save();
 
         return response()->json([
-            'status' => 'true',
+            'status' => true,
             'message' => 'Proses ubah ststus peminjaman berhasil',
         ], 201);
+    }
+
+
+    public function riwatyatPeminjamanByUser(Request $request, $id)
+    {
+        //menampilkann data riwayat dan pencarian
+        $keyword = $request->keyword;
+        if (isset($keyword)) {
+            $datapeminjaman = Peminjaman::join('users', 'peminjamen.user_id', '=', 'users.id')
+            ->join('ruangans', 'peminjamen.id_ruangan', '=', 'ruangans.id')
+            ->select(
+                'peminjamen.id',
+                'users.nama as nama_user',
+                'peminjamen.nama_lembaga',
+                'peminjamen.kegiatan',
+                Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
+                Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
+                Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
+                Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
+                'peminjamen.status',
+                'peminjamen.feedback',
+                'peminjamen.dokumen_pendukung',
+                'ruangans.nama as nama_ruangan',
+                'users.nim',
+                'users.email',
+                'users.telp'
+            )
+            ->where('peminjamen.user_id', '=', $id)
+            ->where(function ($query) {
+                // Menampilkan data dengan status "submitted", "submited", dan "in progress"
+                $query->where('peminjamen.status','reject');
+
+                // Menampilkan data dengan status "completed" hanya jika kolom feedback kosong
+                $query->orWhere(function ($subQuery) {
+                    $subQuery->where('peminjamen.status', 'completed')
+                        ->whereNotNull('peminjamen.feedback');
+                });
+            })
+            ->where(function ($query) use ($keyword) {
+                $query->where('peminjamen.tgl_mulai', 'LIKE', "%".$keyword."%")
+                    ->orWhere('peminjamen.nama_lembaga', 'LIKE', "%".$keyword."%")
+                    ->orWhere('peminjamen.kegiatan', 'LIKE', "%".$keyword."%")
+                    ->orWhere('ruangans.nama', 'LIKE', "%".$keyword."%");
+            })
+            ->get();
+
+
+        }else{
+        //menampilkann data riwayat peminjaman seluruh user
+        $datapeminjaman = Peminjaman::join('users', 'peminjamen.user_id', '=', 'users.id')
+            ->join('ruangans', 'peminjamen.id_ruangan', '=', 'ruangans.id')
+            ->select(
+                'peminjamen.id',
+                'users.nama as nama_user',
+                'peminjamen.nama_lembaga',
+                'peminjamen.kegiatan',
+                Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
+                Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
+                Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
+                Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
+                'peminjamen.status',
+                'peminjamen.feedback',
+                'peminjamen.dokumen_pendukung',
+                'ruangans.nama as nama_ruangan',
+                'users.nim',
+                'users.email',
+                'users.telp'
+            )
+            ->where('peminjamen.user_id', '=', $id)
+            ->where(function ($query) {
+                // Menampilkan data dengan status "submitted", "submited", dan "in progress"
+                $query->where('peminjamen.status','reject');
+
+                // Menampilkan data dengan status "completed" hanya jika kolom feedback kosong
+                $query->orWhere(function ($subQuery) {
+                    $subQuery->where('peminjamen.status', 'completed')
+                        ->whereNotNull('peminjamen.feedback');
+                });
+            })
+            ->get();
+        }
+
+        //jika data kosong
+        if ($datapeminjaman->isEmpty()) {
+            return response()->json([
+                'status' => false,
+                'message' => isset($keyword) ? 'Data yang anda cari tidak ditemukan' : 'Belum ada data riwayat peminjaman',
+                'data' => [],
+            ], 404); // Use 404 status code for "not found"
+        }
+
+        //jika data ada
+        return response()->json([
+            'status' => true,
+            'message' => 'data ditemukan',
+            'data' =>  $datapeminjaman,
+        ], 200);
+
+    }
+
+    public function riwayat(Request $request)
+    {
+        $keyword = $request->keyword;
+        if (isset($keyword)) {
+            $datapeminjaman = Peminjaman::join('users', 'peminjamen.user_id', '=', 'users.id')
+            ->join('ruangans', 'peminjamen.id_ruangan', '=', 'ruangans.id')
+            ->select(
+                'peminjamen.id',
+                'users.nama as nama_user',
+                'peminjamen.nama_lembaga',
+                'peminjamen.kegiatan',
+                Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
+                Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
+                Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
+                Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
+                'peminjamen.status',
+                'peminjamen.feedback',
+                'peminjamen.dokumen_pendukung',
+                'ruangans.nama as nama_ruangan',
+                'users.nim',
+                'users.email',
+                'users.telp'
+            )
+            ->where(function ($query) {
+                // Menampilkan data dengan status "submitted", "submited", dan "in progress"
+                $query->where('peminjamen.status','reject');
+
+                // Menampilkan data dengan status "completed" hanya jika kolom feedback kosong
+                $query->orWhere(function ($subQuery) {
+                    $subQuery->where('peminjamen.status', 'completed')
+                        ->whereNotNull('peminjamen.feedback');
+                });
+            })
+            ->where(function ($query) use ($keyword) {
+                $query->where('users.nama', 'LIKE', "%".$keyword."%")
+                    ->orWhere('peminjamen.nama_lembaga', 'LIKE', "%".$keyword."%")
+                    ->orWhere('peminjamen.kegiatan', 'LIKE', "%".$keyword."%")
+                    ->orWhere('ruangans.nama', 'LIKE', "%".$keyword."%");
+            })
+            ->get();
+
+
+        }else{
+        //menampilkann data riwayat peminjaman seluruh user
+        $datapeminjaman = Peminjaman::join('users', 'peminjamen.user_id', '=', 'users.id')
+            ->join('ruangans', 'peminjamen.id_ruangan', '=', 'ruangans.id')
+            ->select(
+                'peminjamen.id',
+                'users.nama as nama_user',
+                'peminjamen.nama_lembaga',
+                'peminjamen.kegiatan',
+                Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
+                Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
+                Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
+                Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
+                'peminjamen.status',
+                'peminjamen.feedback',
+                'peminjamen.dokumen_pendukung',
+                'ruangans.nama as nama_ruangan',
+                'users.nim',
+                'users.email',
+                'users.telp'
+            )
+            ->where(function ($query) {
+                // Menampilkan data dengan status "submitted", "submited", dan "in progress"
+                $query->where('peminjamen.status','reject');
+
+                // Menampilkan data dengan status "completed" hanya jika kolom feedback kosong
+                $query->orWhere(function ($subQuery) {
+                    $subQuery->where('peminjamen.status', 'completed')
+                        ->whereNotNull('peminjamen.feedback');
+                });
+            })
+            ->get();
+        }
+
+        //jika data kosong
+        if ($datapeminjaman->isEmpty()) {
+            return response()->json([
+                'status' => false,
+                'message' => isset($keyword) ? 'Data yang anda cari tidak ditemukan' : 'Belum ada data riwayat peminjaman',
+                'data' => [],
+            ], 404); // Use 404 status code for "not found"
+        }
+
+        //jika data ada
+        return response()->json([
+            'status' => true,
+            'message' => 'data ditemukan',
+            'data' =>  $datapeminjaman,
+        ], 200);
     }
 }

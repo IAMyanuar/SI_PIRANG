@@ -52,15 +52,26 @@
         <!-- ============================================================== -->
         <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
             <li class="nav-item d-none d-md-block">
-                {{-- <a class="nav-link" href="javascript:void(0)">
-                    <form>
-                        <div class="customize-input">
-                            <input class="form-control custom-shadow custom-radius border-0 bg-white"
-                                type="search" placeholder="Search" aria-label="Search">
-                            <i class="form-control-icon" data-feather="search"></i>
-                        </div>
-                    </form>
-                </a> --}}
+                <a class="nav-link">
+                    @if(request()->is('admin/riwayat'))
+                        <form method="GET" action="{{ route('riwayat_search') }}">
+                            @csrf
+                            <div class="customize-input">
+                                <input class="form-control custom-shadow custom-radius border-0 bg-white"
+                                    type="search" placeholder="Search" aria-label="Search" name="search">
+                                <i class="form-control-icon" data-feather="search"></i>
+                            </div>
+                        </form>
+                    @elseif (request()->is('riwayat'))
+                        <form method="GET" action="{{ route('riwayatku_search') }}">
+                            @csrf
+                            <div class="customize-input">
+                                <input class="form-control custom-shadow custom-radius border-0 bg-white"
+                                    type="search" placeholder="Search" aria-label="Search" name="search">
+                                <i class="form-control-icon" data-feather="search"></i>
+                            </div>
+                        </form>
+                    @endif
             </li>
         </ul>
         <!-- ============================================================== -->

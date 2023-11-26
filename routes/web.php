@@ -80,9 +80,9 @@ Route::get('/kalender', function () {
 //     return view('user.edit_peminjaman');
 // });
 
-Route::get('/BuktiPeminjaman', function () {
-    return view('user.bukti_peminjaman');
-});
+// Route::get('/BuktiPeminjaman', function () {
+//     return view('user.bukti_peminjaman');
+// });
 
 // Route::get('/riwayat', function () {
 //     return view('user.riwayat');
@@ -104,6 +104,7 @@ Route::get('/admin/accpeminjaman',[webPeminjamanController::class,'index']);//ha
 Route::get('/admin/accpeminjaman/detail/{id}',[webPeminjamanController::class,'show']);//detail pemijaman
 Route::put('/update-status/{id}', [webPeminjamanController::class,'updateStatus'])->name('update-status');//update status
 Route::get('/unduh-file/{id}',[webPeminjamanController::class,'unduhfile']);//untuk download bukti peminjaman
+Route::get('/admin/riwayat', [webPeminjamanController::class,'riwayat'])->name('riwayat_search');
 
 //register
 Route::get('/daftar',[webAuthController::class,'viewRegister']);
@@ -124,3 +125,4 @@ Route::get('/EditPeminjaman/{id}', [PeminjamanController::class,'edit']);
 Route::get('/peminjaman/detail/{id}',[PeminjamanController::class,'show']);//detail pemijaman user
 Route::post('/EditPeminjaman/{id}', [PeminjamanController::class,'update'])->name('ubah_pengajuan');
 Route::patch('/PengajuanPeminjaman/{id}', [PeminjamanController::class,'updateStatus'])->name('ulasan');
+Route::get('/riwayat', [PeminjamanController::class,'riwayatPeminjaman'])->name('riwayatku_search');;

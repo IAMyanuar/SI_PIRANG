@@ -1,7 +1,7 @@
-@extends('layout.master2')
+@extends('layout.master1')
 
 @section('title')
-    SI PIRANG | RIWAYAT PEMIJAMAN
+    SI PIRANG | Riwayat Peminjaman
 @stop
 
 @section('css')
@@ -52,31 +52,6 @@
                                     </div>
                                 @endif
                                 <div class="card-body">
-                                    <div class="form-actions">
-                                        <div class="text-left">
-                                            <form method="post">
-                                                <div class="row">
-                                                    <div class="col-md-5">
-                                                        <label>Tanggal Mulai</label>
-                                                        <input type="date" class="form-control" name="tglm"
-                                                            value="">
-                                                    </div>
-                                                    <div class="col-md-5">
-                                                        <label>Tanggal Selesai</label>
-                                                        <input type="date" class="form-control" name="tgls"
-                                                            value="">
-                                                    </div>
-                                                    <div class="col-md-2 mb-5">
-                                                        <label>&nbsp;</label><br>
-                                                        <button class="btn btn-primary btn-rounded"
-                                                            name="kirim">Lihat</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-
-
                                     <div class="table-responsive table-bordered">
                                         <table class="table">
                                             <thead class="bg-primary text-white">
@@ -117,12 +92,20 @@
                                                                 <br>jam:
                                                                 {{ date('H:i', strtotime($item['jam_selesai'])) }}
                                                             </td>
-                                                            <td>{{ $item['status'] }}</td>
+                                                            <td>
+                                                                @if ($item['status'] == 'reject')
+                                                                    <text
+                                                                        class="text-danger font-weight-bold">{{ $item['status'] }}</text>
+                                                                @elseif ($item['status'] == 'completed')
+                                                                    <text
+                                                                        class="text-info font-weight-bold">{{ $item['status'] }}</text>
+                                                                @endif
+                                                            </td>
                                                             <td>
                                                                 <a class="btn btn-info btn-rounded" data-toggle="tooltip"
                                                                     data-placement="left" title=""
                                                                     data-original-title="Detail"
-                                                                    href="{{ url('/peminjaman/detail/' . $item['id']) }}"><i
+                                                                    href="{{ url('/admin/accpeminjaman/detail/' . $item['id']) }}"><i
                                                                         class="fas fa-search-plus"></i></a>
                                                             </td>
                                                         </tr>

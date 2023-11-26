@@ -101,7 +101,16 @@
                                                             <br>jam:
                                                             {{ date('H:i', strtotime($item['jam_selesai'])) }}
                                                         </td>
-                                                        <td>{{ $item['status'] }}</td>
+                                                        <td>
+                                                            @if ($item['status']=='submitted')
+                                                                <text class="text-secondary font-weight-bold">{{ $item['status'] }}</text>
+                                                            @elseif ($item['status']=='approved')
+                                                                <text class="text-success font-weight-bold">{{ $item['status'] }}</text>
+                                                            @elseif ($item['status']=='in progress')
+                                                                <text class="text-warning font-weight-bold">{{ $item['status'] }}</text>
+                                                            @elseif ($item['status']=='completed')
+                                                            <text class="text-info font-weight-bold">{{ $item['status'] }}</text>
+                                                            @endif</td>
                                                         <td>
                                                             @if ($item['status'] == 'submitted')
                                                                 <a href="/EditPeminjaman/{{ $item['id'] }}"
