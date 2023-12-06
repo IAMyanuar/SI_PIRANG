@@ -67,4 +67,9 @@ class Kernel extends HttpKernel
         //
         'ablity' => \Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,
     ];
+
+    protected $routeMiddleware = [
+        // ...
+        'checkToken' => \App\Http\Middleware\CheckLogin::class,
+    ];
 }

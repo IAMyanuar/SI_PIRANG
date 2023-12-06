@@ -219,10 +219,13 @@ class webPeminjamanController extends Controller
     public function unduhFile($id)
     {
         $apiUrl = env('API_URL');
+        $apiToken = session('api_token');
         $client = new Client();
         $url = $apiUrl.'/api/unduhFileDokumen/' . $id;
         try {
-            $response = $client->get($url);
+            $response = $client->get($url,['headers' => [
+                'Authorization' => 'Bearer ' . $apiToken
+            ],]);
 
             if ($response->getStatusCode() === 200) {
                 // Mendapatkan body respons (file) dari API
@@ -237,10 +240,10 @@ class webPeminjamanController extends Controller
                 return redirect()->back()
                     ->with('info', 'tidak ada bukti pendukung');
 
-            }
+             }
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('info', 'tidak ada bukti pendukung');
+             return redirect()->back()
+               ->with('info', 'response error');
 
         }
     }
@@ -270,5 +273,11 @@ class webPeminjamanController extends Controller
             // return view('admin.riwayat', ['datariwayat' =>$contenarray['message']]);
         }
         return view('admin.riwayat', ['datariwayat' => $datariwayat]);
+    }
+
+    public function KalenderPeminjaman()
+    {
+        // Menampilkan halaman kalender
+        return view('admin.kalender');
     }
 }

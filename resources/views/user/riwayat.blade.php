@@ -52,31 +52,6 @@
                                     </div>
                                 @endif
                                 <div class="card-body">
-                                    <div class="form-actions">
-                                        <div class="text-left">
-                                            <form method="post">
-                                                <div class="row">
-                                                    <div class="col-md-5">
-                                                        <label>Tanggal Mulai</label>
-                                                        <input type="date" class="form-control" name="tglm"
-                                                            value="">
-                                                    </div>
-                                                    <div class="col-md-5">
-                                                        <label>Tanggal Selesai</label>
-                                                        <input type="date" class="form-control" name="tgls"
-                                                            value="">
-                                                    </div>
-                                                    <div class="col-md-2 mb-5">
-                                                        <label>&nbsp;</label><br>
-                                                        <button class="btn btn-primary btn-rounded"
-                                                            name="kirim">Lihat</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-
-
                                     <div class="table-responsive table-bordered">
                                         <table class="table">
                                             <thead class="bg-primary text-white">

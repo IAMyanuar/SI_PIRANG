@@ -394,12 +394,17 @@ class PeminjamanController extends Controller
             $response = $e->getResponse();
             $conten = $response->getBody()->getContents();
             $contenarray = json_decode($conten, true);
-            return view('/admin/riwayat',['empty' => $contenarray['message']]);
+            return view('user.riwayat',['empty' => $contenarray['message']]);
         }
-        
-        return view('admin.riwayat', ['datariwayat' => $datariwayat]);
+
+        return view('user.riwayat', ['datariwayat' => $datariwayat]);
     }
 
+    public function KalenderPeminjaman()
+    {
+        // Mengirimkan data ke halaman Blade
+        return view('user.kalender');
 
+    }
 
 }

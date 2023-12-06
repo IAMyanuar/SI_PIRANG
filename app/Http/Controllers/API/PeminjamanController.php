@@ -109,7 +109,6 @@ class PeminjamanController extends Controller
             $datapeminjaman->tgl_selesai = $request->tgl_selesai;
             $datapeminjaman->feedback = $request->feedback;
             $datapeminjaman->user_id = $request->user_id;
-            // $datapeminjaman->id_ruangan = $request->id_ruangan;
             $datapeminjaman->id_ruangan = $ruangan;
 
 
@@ -350,7 +349,7 @@ class PeminjamanController extends Controller
                 return response()->file($pathToFile, [
                     'Content-Type' => $contentType,
                     'Content-Disposition' => 'attachment; filename=' . $dokumen_pendukung,
-                ]);
+                ],200);
             } else {
                 // File tidak ditemukan
                 return response()->json([
@@ -460,6 +459,7 @@ class PeminjamanController extends Controller
                         ->whereNull('peminjamen.feedback');
                 });
             })
+            ->orderBy('peminjamen.id', 'desc')
             ->get();
 
         return response()->json([
@@ -583,6 +583,7 @@ class PeminjamanController extends Controller
                         ->whereNotNull('peminjamen.feedback');
                 });
             })
+            ->orderBy('peminjamen.id', 'desc')
             ->get();
         }
 
@@ -677,6 +678,7 @@ class PeminjamanController extends Controller
                         ->whereNotNull('peminjamen.feedback');
                 });
             })
+            ->orderBy('peminjamen.id', 'desc')
             ->get();
         }
 
@@ -695,5 +697,24 @@ class PeminjamanController extends Controller
             'message' => 'data ditemukan',
             'data' =>  $datapeminjaman,
         ], 200);
+    }
+
+
+    public function KalenderPeminjaman()
+    {
+        $datapeminjaman = Peminjaman::join('ruangans', 'peminjamen.id_ruangan', '=', 'ruangans.id')
+        ->whereIn('peminjamen.status',['approved', 'in progress'])->get();
+            $events = $datapeminjaman->map(function ($event) {
+
+                return [
+                    'title' => $event->kegiatan . "(". $event->nama_lembaga. ")",
+                    'start' => $event->tgl_mulai,
+                    'end' => $event->tgl_selesai,
+                    'ruangan' => $event->nama,
+                    'className' => 'bg-primary',
+                ];
+            });
+
+            return response()->json($events);
     }
 }

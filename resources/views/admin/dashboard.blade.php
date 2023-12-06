@@ -16,7 +16,7 @@
         <div class="page-breadcrumb">
             <div class="row">
                 <div class="col-7 align-self-center">
-                    <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">Dasboard</h3>
+                    <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">Dashboard</h3>
                     <div class="d-flex align-items-center">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb m-0 p-0">
@@ -30,73 +30,71 @@
                         <p><span class="form-control bg-white border-0 custom-shadow custom-radius" id="tanggalwaktu"></span></p>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="form-actions">
-                                        <div class="text-left mb-4">
-                                            <h3 class="card-title">Data Peminjaman Terbaru</h3>
-                                        </div>
-                                    </div>
+            <div class="container-fluid">
+                <!-- *************************************************************** -->
+                <!-- Start First Cards -->
+                <!-- *************************************************************** -->
+                <div class="card-group">
+                    <div class="card border-right">
+                        <div class="card-body">
+                            <div class="d-flex d-lg-flex d-md-block align-items-center">
+                                <div>
+                                    <h2 class="text-dark mb-1 font-weight-medium"></h2>
+                                    <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Pengguna</h6>
+                                </div>
+                                <div class="ml-auto mt-md-3 mt-lg-0">
+                                    <span class="opacity-7 text-muted"><i data-feather="user"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card border-right ml-2">
+                        <div class="card-body">
+                            <div class="d-flex d-lg-flex d-md-block align-items-center">
+                                <div>
+                                    <h2 class="text-dark mb-1 w-100 text-truncate font-weight-medium"></h2>
+                                    <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Ruangan
+                                    </h6>
+                                </div>
+                                <div class="ml-auto mt-md-3 mt-lg-0">
+                                    <span class="opacity-7 text-muted"><i data-feather="home"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card border-right ml-2">
+                        <div class="card-body">
+                            <div class="d-flex d-lg-flex d-md-block align-items-center">
+                                <div>
+                                    <h2 class="text-dark mb-1 w-100 text-truncate font-weight-medium"></h2>
+                                    <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">produk diproses
+                                    </h6>
+                                </div>
+                                <div class="ml-auto mt-md-3 mt-lg-0">
+                                    <span class="opacity-7 text-muted"><i class="icon-hourglass" ></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card border-right ml-2">
+                        <div class="card-body">
+                            <div class="d-flex d-lg-flex d-md-block align-items-center">
+                                <div>
+                                    <h2 class="text-dark mb-1 w-100 text-truncate font-weight-medium"></h2>
+                                    <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">produk dikirim
+                                    </h6>
+                                </div>
+                                <div class="ml-auto mt-md-3 mt-lg-0">
+                                    <span class="opacity-7 text-muted"><i class="feather" data-feather="truck" ></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
-                                    <div class="table-responsive table-bordered">
-                                        <table class="table">
-                                            <thead class="bg-primary text-white">
-                                                <tr>
-                                                    <th>no</th>
-                                                    <th>Nama Peminjam</th>
-                                                    <th>Program Studi</th>
-                                                    <th>Nama Kegiatan</th>
-                                                    <th>Ruangan</th>
-                                                    <th>Waktu Mulai</th>
-                                                    <th>Waktu Selesai</th>
-                                                    <th>surat pendukung peminjaman</th>
-                                                    <th>status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>malik</td>
-                                                    <td>teknologi rekayasa</td>
-                                                    <td>rapat triwulan KWU</td>
-                                                    <td>aula</td>
-                                                    <td>05/07/2008 10:33 PM</td>
-                                                    <td>05/07/2008 11:33 PM</td>
-                                                    <td><button class=" btn btn-circle btn-success"><i class="fa fa-link"></button></td>
-                                                    <td>pending</td>
-                                                </tr>
-                                                {{-- <?php $nomor = 1; ?>
-                                                <?php
-                                                $ambil = $conn->query('SELECT * FROM produk LEFT JOIN kategori ON produk.id_kategori=kategori.id_kategori'); ?>
-                                                <?php while($pecah= $ambil->fetch_assoc()){ ?>
-                                                <tr>
-                                                    <td><?php echo $nomor; ?></td>
-                                                    <td><?php echo $pecah['nama_kategori']; ?></td>
-                                                    <td><?php echo $pecah['nama_produk']; ?></td>
-                                                    <td><?php echo $pecah['stok_produk']; ?></td>
-                                                    <td>Rp<?php echo number_format($pecah['harga_produk']); ?></td>
-                                                    <td><?php echo $pecah['berat']; ?> Gram</td>
-                                                    <td>
-                                                        <img src="../assets/images/foto_produk/<?php echo $pecah['foto_produk']; ?>"
-                                                            width="100">
-
-                                                    </td>
-                                                    <td><?php echo $pecah['deskripsi_produk']; ?>
-                                                    <td>
-                                                        <a href="index.php?halaman=hapusproduk&id=<?php echo $pecah['id_produk']; ?>"
-                                                            class="btn btn-rounded btn-danger">hapus</a><a
-                                                            href="index.php?halaman=ubahproduk&id=<?php echo $pecah['id_produk']; ?>"
-                                                            class="btn btn-rounded btn-warning text-white">ubah</a>
-                                                    </td>
-                                                </tr>
-                                                <?php $nomor++; ?>
-                                                <?php } ?> --}}
-                                            </tbody>
-                                        </table>
-                                    </div>
 @endsection
