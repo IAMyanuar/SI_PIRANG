@@ -6,7 +6,7 @@
             <ul id="sidebarnav">
                 <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="/admin/dashboard" aria-expanded="false"><i data-feather="home" class="feather-icon"></i><span class="hide-menu">Dashboard</span></a></li>
                 <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="/admin/kalender" aria-expanded="false"><i data-feather="calendar" class="feather-icon"></i><span class="hide-menu">Kalender</span></a></li>
-                <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="/admin/accpeminjaman" aria-expanded="false"><i class="icon-check"></i><span class="hide-menu">ACC Peminjaman</span></a></li>
+                <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="/admin/accpeminjaman" aria-expanded="false"><i class="icon-check"></i><span class="hide-menu">Konfirmasi Peminjaman</span></a></li>
                 <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="/admin/riwayat" aria-expanded="false"><i class="icon-notebook"></i><span class="hide-menu">Riwayat</span></a></li>
                 <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="/admin/DataRuangan" aria-expanded="false"><i class="far fa-building"></i><span class="hide-menu">Data Ruangan</span></a></li>
                 <form action="{{ route('logout') }}" method="post">

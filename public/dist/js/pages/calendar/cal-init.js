@@ -56,6 +56,12 @@
         $this.$calendarObj = $this.$calendar.fullCalendar({
             // ... konfigurasi head saat hosting
             events: "http://127.0.0.1:8000/api/kalender",
+            height: 500, // Atur tinggi kalender
+            width: 600,
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+            },
             // ... konfigurasi lainnya ...
             eventRender: function (event, element) {
                 // Add Bootstrap tooltip to each event element

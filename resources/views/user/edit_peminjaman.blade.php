@@ -76,10 +76,10 @@
                                             <label>Bukti Pendukung</label>
                                             <input type="file" name="dokumen_pendukung" class="form-control" >
                                         </div>
-                                        @if ($datapeminjam['dokumen_pendukung'] != null)
+                                        @if ($datapeminjam['dokumen_pendukung'])
                                         <div class="form-group">
                                             <label>Bukti Pendukung: </label>
-                                            <img src="{{asset('assets/images/bukti_pendukung/' . $datapeminjam['dokumen_pendukung']) }}" width="600">
+                                            <img src="{{ $datapeminjam['dokumen_pendukung'] }}" width="600">
                                         </div>
                                         @endif
                                         <button class="btn-primary btn" type="submit">Simpan</button>

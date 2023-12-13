@@ -17,6 +17,9 @@ class RuanganController extends Controller
     {
         //menampilkan semua data ruangan
         $data = Ruangan::get();
+        for ($i = 0; $i < $data->count(); $i++) {
+            $data[$i]['foto'] = url('assets/images/ruangan/' . $data[$i]['foto']);
+        }
         return response()->json([
             'status' => true,
             'message' => 'data ditemukan',
@@ -87,6 +90,8 @@ class RuanganController extends Controller
     {
         //menampilkan data berdasarkan id
         $data = Ruangan::find($id);
+        $data['foto'] = url('assets/images/ruangan/' . $data['foto']);
+
         if(empty($data)){
             return response()->json([
                 'status' => false,

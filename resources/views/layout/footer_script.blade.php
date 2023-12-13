@@ -44,3 +44,4 @@
     });
 </script>
 <script src="../dist/js/custom.min.js"></script>
+<script src="../assets/libs/chart.js/dist/Chart.min.js"></script>

@@ -77,7 +77,7 @@ SI PIRANG | Data Ruangan
                                                         <td>{{ $no++ }}</td>
                                                         <td>{{ $item['nama'] }}</td>
                                                         <td>{{ $item['fasilitas'] }}</td>
-                                                        <td><img src="{{ asset('assets/images/ruangan/' . $item['foto']) }}"
+                                                        <td><img src="{{ $item['foto'] }}"
                                                                 width="100"></td>
                                                         <td>
                                                             <a href="{{ url('/DataRuangan/UbahRuangan/' . $item['id']) }}"

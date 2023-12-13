@@ -55,7 +55,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Foto Ruangan:</label><br>
-                                            <img src="{{ asset('assets/images/ruangan/' . $data['foto']) }}" alt="" width="500px">
+                                            <img src="{{ $data['foto'] }}" alt="" width="500px">
                                         </div>
                                         <div class="form-group">
                                             <input type="file" class="form-control" name="foto">

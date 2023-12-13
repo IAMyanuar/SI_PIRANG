@@ -20,8 +20,8 @@ class User extends Authenticatable
         return $this->role_user->value;
     }
 
-    public function Peminjaman()
+    public function peminjamans()
     {
-        return $this->hasMany(Peminjaman::class);
+        return $this->hasMany(Peminjaman::class, 'user_id');
     }
 }

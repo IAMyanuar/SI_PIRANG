@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController\DashboardController;
 use App\Http\Controllers\UserController\PeminjamanController;
 use App\Http\Controllers\webAuthController;
 use App\Http\Controllers\webRuanganController;
@@ -26,6 +27,7 @@ use Illuminate\Support\Facades\Route;
 //register
 Route::get('/daftar', [webAuthController::class, 'viewRegister']);
 Route::post('/daftar', [webAuthController::class, 'Register'])->name('register');
+Route::get('/admin/report', [webPeminjamanController::class, 'report']);
 
 //login
 Route::get('/', [webAuthController::class, 'viewLogin']);
@@ -33,7 +35,7 @@ Route::post('/', [webAuthController::class, 'Login']);
 
 Route::middleware('checkToken')->group(function () {
     //admin
-    Route::get('/admin/dashboard', function () { return view('admin.dashboard'); });
+    Route::get('/admin/dashboard', [webPeminjamanController::class,'report']);
     Route::get('/admin/DataRuangan', [webRuanganController::class, 'index']); //data ruangan
     Route::get('/DataRuangan/TambahRuangan', [webRuanganController::class, 'create']);
     Route::post('/DataRuangan/TambahRuangan', [webRuanganController::class, 'store'])->name('tambah_ruangan');
@@ -48,7 +50,7 @@ Route::middleware('checkToken')->group(function () {
     Route::get('/admin/kalender', [webPeminjamanController::class, 'KalenderPeminjaman']);
 
     //user
-    Route::get('/dashboard', function () { return view('user.dashboard'); });
+    Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::get('/PengajuanPeminjaman', [PeminjamanController::class, 'peminjamanku']);
     Route::get('/AjukanPeminjaman', [PeminjamanController::class, 'create']);
     Route::post('/AjukanPeminjaman', [PeminjamanController::class, 'store'])->name('form_ajukan_peminjaman');

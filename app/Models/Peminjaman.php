@@ -8,15 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Peminjaman extends Model
 {
     use HasFactory;
-    protected $fillable =['kegiatan','tgl_mulai','tgl_selesai','status','dokumen_pendukung','feedback'];
+    protected $fillable = ['kegiatan', 'tgl_mulai', 'tgl_selesai', 'status', 'dokumen_pendukung', 'feedback'];
     protected $dates = ['created_at', 'updated_at'];
-    public function User()
+
+
+    public function ruangan()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Ruangan::class, 'id_ruangan');
     }
 
-    public function Peminjaman()
+    public function user()
     {
-        return $this->belongsTo(Peminjaman::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

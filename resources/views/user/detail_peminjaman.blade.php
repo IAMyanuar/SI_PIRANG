@@ -181,7 +181,7 @@
                                                         <h3 class="card-title">:</h3>
                                                     </div>
                                                     <div class="row col-auto mb-3">
-                                                        <img src="{{ asset('assets/images/bukti_pendukung/' . $datapeminjam['dokumen_pendukung']) }}" width="600">
+                                                        <img src="{{ $datapeminjam['dokumen_pendukung'] }}" width="600">
                                                     </div>
                                                     </form>
                                                 </div>

@@ -294,7 +294,6 @@ class PeminjamanController extends Controller
             $response->getBody()->getContents();
             return redirect()->to('/PengajuanPeminjaman')
                 ->with('success', 'pengajuan Peminjaman Ruangan Berhasil di Ubah');
-            return dd($options);
         } catch (RequestException $e) {
             $response = $e->getResponse();
             $conten = $response->getBody()->getContents();

@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use GuzzleHttp\Exception\RequestException;
-
+use DateTime;
+use Faker\Core\Color;
 use GuzzleHttp\Client;
 
 class webPeminjamanController extends Controller
@@ -20,7 +21,7 @@ class webPeminjamanController extends Controller
         $client = new Client();
 
         try {
-            $url1 = $apiUrl."/api/peminjaman/submitted";
+            $url1 = $apiUrl . "/api/peminjaman/submitted";
             $response1 = $client->request(
                 'GET',
                 $url1,
@@ -37,7 +38,7 @@ class webPeminjamanController extends Controller
 
 
         try {
-            $url2 = $apiUrl."/api/peminjaman/approve";
+            $url2 = $apiUrl . "/api/peminjaman/approve";
             $response2 = $client->request(
                 'GET',
                 $url2,
@@ -54,7 +55,7 @@ class webPeminjamanController extends Controller
 
 
         try {
-            $url3 = $apiUrl."/api/peminjaman/inprogress";
+            $url3 = $apiUrl . "/api/peminjaman/inprogress";
             $response3 = $client->request(
                 'GET',
                 $url3,
@@ -129,7 +130,6 @@ class webPeminjamanController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('RuanganIsExist', 'ruangan ' . $validatedData['nama'] . ' Sudah ada.');
         }
-
     }
 
     /**
@@ -142,7 +142,7 @@ class webPeminjamanController extends Controller
         $apiToken = session('api_token');
         $client = new Client();
         try {
-            $url = $apiUrl.'/api/peminjaman/' . $id;
+            $url = $apiUrl . '/api/peminjaman/' . $id;
             $response = $client->request(
                 'GET',
                 $url,
@@ -189,7 +189,7 @@ class webPeminjamanController extends Controller
 
             // Kirim permintaan PUT ke API dengan status yang sesuai
             $client = new Client();
-            $url = $apiUrl."/api/peminjaman/{$id}";
+            $url = $apiUrl . "/api/peminjaman/{$id}";
             $response = $client->request('PUT', $url, ['json' =>  $datadiubah, 'headers' => [
                 'Authorization' => 'Bearer ' . $apiToken,
             ],]);
@@ -221,9 +221,9 @@ class webPeminjamanController extends Controller
         $apiUrl = env('API_URL');
         $apiToken = session('api_token');
         $client = new Client();
-        $url = $apiUrl.'/api/unduhFileDokumen/' . $id;
+        $url = $apiUrl . '/api/unduhFileDokumen/' . $id;
         try {
-            $response = $client->get($url,['headers' => [
+            $response = $client->get($url, ['headers' => [
                 'Authorization' => 'Bearer ' . $apiToken
             ],]);
 
@@ -236,15 +236,16 @@ class webPeminjamanController extends Controller
 
                 // Meneruskan file dari API ke pengguna
                 return response($fileData, 200)->withHeaders($headers);
-            } else {
+            } elseif ($response->getStatusCode() === 404) {
                 return redirect()->back()
                     ->with('info', 'tidak ada bukti pendukung');
-
-             }
-        } catch (\Exception $e) {
-             return redirect()->back()
-               ->with('info', 'response error');
-
+            }
+        } catch (RequestException $e) {
+            $response = $e->getResponse();
+            $conten = $response->getBody()->getContents();
+            $contenarray = json_decode($conten, true);
+            return redirect()->back()
+                ->with('error', $contenarray['message']);
         }
     }
 
@@ -258,7 +259,7 @@ class webPeminjamanController extends Controller
             'keyword' => $request->input('search')
         ];
         try {
-            $url = $apiUrl.'/api/peminjaman/riwayat';
+            $url = $apiUrl . '/api/peminjaman/riwayat';
             $response = $client->request('GET', $url, ['json' =>  $search, 'headers' => [
                 'Authorization' => 'Bearer ' . $apiToken,
             ],]);
@@ -269,7 +270,7 @@ class webPeminjamanController extends Controller
             $response = $e->getResponse();
             $conten = $response->getBody()->getContents();
             $contenarray = json_decode($conten, true);
-            return view('/admin/riwayat',['empty' => $contenarray['message']]);
+            return view('/admin/riwayat', ['empty' => $contenarray['message']]);
             // return view('admin.riwayat', ['datariwayat' =>$contenarray['message']]);
         }
         return view('admin.riwayat', ['datariwayat' => $datariwayat]);
@@ -279,5 +280,116 @@ class webPeminjamanController extends Controller
     {
         // Menampilkan halaman kalender
         return view('admin.kalender');
+    }
+
+    public function report()
+    {
+        $apiUrl = env('API_URL');
+        $apiToken = session('api_token');
+        $client = new Client();
+
+        try {
+            //mengambil data ruangan
+            $url1 = $apiUrl . '/api/ruangan';
+            $response2 = $client->get($url1, ['headers' => [
+                'Authorization' => 'Bearer ' . $apiToken
+            ],]);
+            $conten1 = $response2->getBody()->getContents();
+            $contenarray1 = json_decode($conten1, true);
+            $dataruangan = $contenarray1['data'];
+            //data nama ruangan
+            $ruangan = [];
+            foreach ($dataruangan as $data) {
+                $namaruangan = $data['nama'];
+                if (!in_array($namaruangan, $ruangan)) {
+                    $ruangan[] = $namaruangan;
+                }
+            }
+
+            //mengambil data peminjaman
+            $url2 = $apiUrl . '/api/peminjaman';
+            $response2 = $client->get($url2, ['headers' => [
+                'Authorization' => 'Bearer ' . $apiToken
+            ],]);
+            $conten2 = $response2->getBody()->getContents();
+            $contenarray2 = json_decode($conten2, true);
+            $datapeminjaman = $contenarray2['data'];
+            //
+            $bulanIni = date('Y-m');
+            $BulanSebelumnya = date('Y-m', strtotime('-1 month'));
+            $dataBulanIni = array_fill_keys($ruangan, 0);
+            $dataBulanSebelumnya = array_fill_keys($ruangan, 0);
+
+            //mengampil data peminjaman status[complited, in progress]
+            foreach ($datapeminjaman as $data){
+                if ($data['status'] == 'completed' || $data['status'] == 'in progress' ) {
+                    $peminjamanFinal[] = $data;
+                }
+            }
+
+            //mengambil data peminjaman status [reject]
+            $peminjamanReject = 0 ;
+            foreach ($datapeminjaman as $data){
+                if ($data['status'] == 'reject') {
+                    $peminjamanReject++;
+                }
+            }
+
+            //mengambil data peminjaman status di[approved]
+            $peminjamanApprove= 0;
+            foreach ($datapeminjaman as $data){
+                if ($data['status'] == 'approved' || $data['status'] == 'in progress' || $data['status'] == 'completed') {
+                    $peminjamanApprove++;
+                }
+            }
+
+             //mengambil data peminjaman terkonfirmasi
+             $peminjamanTKF= 0;
+             foreach ($datapeminjaman as $data){
+                if ($data['status'] !== 'submitted') {
+                    $peminjamanTKF++;
+                }
+            }
+
+            //perulangan menghitung data ruangan yang di pakai
+            foreach ($peminjamanFinal as $peminjam) {
+                $tgl_mulai = (new DateTime($peminjam['tgl_mulai']))->format('Y-m');
+                $namaruangan = $peminjam['ruangan']['nama'];
+                if ($tgl_mulai == $bulanIni) {
+                    if (in_array($namaruangan, $ruangan)) {
+                        $dataBulanIni[$namaruangan]++;
+                    }
+                } else if ($tgl_mulai == $BulanSebelumnya) {
+                    if (in_array($namaruangan, $ruangan)) {
+                        $dataBulanSebelumnya[$namaruangan]++;
+                    }
+                }
+            }
+            //data nilai perruangan
+            $dataBulanSebelumnya = array_values($dataBulanSebelumnya);
+            $dataBulanIni = array_values($dataBulanIni);
+
+            //membuat warna untuk grafik
+            $color1 = '#ffac00';
+            $color2 = '#000dff';
+            for ($i = 0; $i < count($ruangan); $i++) {
+                $colors1[] = $color1;
+                $colors2[] = $color2;
+            }
+
+
+            return view('admin.dashboard', [
+                'ruangan' => $ruangan,
+                'dataBulanSebelumnya' => $dataBulanSebelumnya,
+                'dataBulanIni' => $dataBulanIni,
+                'colors1' => $colors1, 'colors2' => $colors2,
+                'peminjamanApprove' => $peminjamanApprove,
+                'peminjamanReject' => $peminjamanReject,
+                'peminjamanFinal' => $peminjamanFinal,
+                'peminjamanTKF' => $peminjamanTKF
+            ]);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 }

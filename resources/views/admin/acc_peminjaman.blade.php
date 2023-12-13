@@ -67,20 +67,32 @@
                                                 <a href="#submitted" data-toggle="tab" aria-expanded="false"
                                                     class="nav-link  active">
                                                     <i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
-                                                    <span class="d-none d-lg-block">submitted</span>
+                                                    <span class="d-none d-lg-block">submitted
+                                                        @if (count($datapeminjamansubmitted) !== 0)
+                                                            <span class="badge badge-primary notify-no rounded-circle">{{ count($datapeminjamansubmitted) }}</span>
+                                                        @endif
+                                                    </span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="#approved" data-toggle="tab" aria-expanded="true" class="nav-link">
                                                     <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i>
-                                                    <span class="d-none d-lg-block">approved</span>
+                                                    <span class="d-none d-lg-block">approved
+                                                        @if (count($datapmjapprove) !== 0)
+                                                            <span class="badge badge-primary notify-no rounded-circle">{{ count($datapmjapprove) }}</span>
+                                                        @endif
+                                                    </span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="#inprogress" data-toggle="tab" aria-expanded="false"
                                                     class="nav-link">
                                                     <i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
-                                                    <span class="d-none d-lg-block">in progress</span>
+                                                    <span class="d-none d-lg-block">in progress
+                                                        @if (count($datapmjinprogress) !== 0)
+                                                            <span class="badge badge-primary notify-no rounded-circle">{{ count($datapmjinprogress) }}</span>
+                                                        @endif
+                                                    </span>
                                                 </a>
                                             </li>
                                         </ul>
@@ -93,7 +105,7 @@
                                                             <tr>
                                                                 <th>no</th>
                                                                 <th>Nama Peminjam</th>
-                                                                <th>Program Studi</th>
+                                                                <th>Nama Lembaga</th>
                                                                 <th>Nama Kegiatan</th>
                                                                 <th>Ruangan</th>
                                                                 <th>Waktu Mulai</th>
@@ -131,7 +143,8 @@
                                                                         {{ date('H:i', strtotime($item['jam_selesai'])) }}
                                                                     </td>
                                                                     <td class="text-center"><a
-                                                                            class=" btn btn-circle btn-success"
+                                                                            class=" btn btn-circle btn-success" data-toggle="tooltip" data-placement="bottom"
+                                                                            title="" data-original-title="Unduh Surat Pendukung"
                                                                             href="{{ url('/unduh-file/' . $item['id']) }}"><i
                                                                                 class="fa fa-download"></a></td>
                                                                     <td>{{ $item['status'] }}</td>
@@ -140,11 +153,13 @@
                                                                             action="{{ route('update-status', ['id' => $item['id'], 'status' => 'approved']) }}">
                                                                             @csrf
                                                                             @method('PUT')
-                                                                            <button class="btn btn-success btn-rounded"
+                                                                            <button class="btn btn-success btn-rounded" data-toggle="tooltip" data-placement="left"
+                                                                            title="" data-original-title="Setujui"
                                                                                 type="submit"><i
                                                                                     class="fas fa-check"></i></button>
                                                                         </form>
-                                                                        <button class="btn btn-danger btn-rounded"
+                                                                        <button class="btn btn-danger btn-rounded" data-toggle="tooltip" data-placement="left"
+                                                                        title="" data-original-title="Tolak"
                                                                             type="button" data-toggle="modal"
                                                                             data-target="#reject-modal"
                                                                             data-id="{{ $item['id'] }}">
@@ -187,7 +202,8 @@
                                                                                 </div><!-- /.modal-content -->
                                                                             </div><!-- /.modal-dialog -->
                                                                         </div><!-- /.modal -->
-                                                                        <a class="btn btn-info btn-rounded"
+                                                                        <a class="btn btn-info btn-rounded" data-toggle="tooltip" data-placement="left"
+                                                                        title="" data-original-title="Detail"
                                                                             href="{{ url('/admin/accpeminjaman/detail/' . $item['id']) }}"><i
                                                                                 class="fas fa-search-plus"></i></a>
                                                                     </td>
@@ -204,7 +220,7 @@
                                                             <tr>
                                                                 <th>no</th>
                                                                 <th>Nama Peminjam</th>
-                                                                <th>Program Studi</th>
+                                                                <th>Nama Lembaga</th>
                                                                 <th>Nama Kegiatan</th>
                                                                 <th>Ruangan</th>
                                                                 <th>Waktu Mulai</th>
@@ -236,7 +252,8 @@
                                                                         {{ date('H:i', strtotime($item['jam_selesai'])) }}
                                                                     </td>
                                                                     <td class="text-center"><a
-                                                                            class=" btn btn-circle btn-success"
+                                                                            class=" btn btn-circle btn-success" data-toggle="tooltip" data-placement="bottom"
+                                                                            title="" data-original-title="Unduh Surat Pendukung"
                                                                             href="{{ url('/unduh-file/' . $item['id']) }}"><i
                                                                                 class="fa fa-download"></a></td>
                                                                     <td>{{ $item['status'] }}</td>
@@ -245,11 +262,13 @@
                                                                             action="{{ route('update-status', ['id' => $item['id'], 'status' => 'in progress']) }}">
                                                                             @csrf
                                                                             @method('PUT')
-                                                                            <button class="btn btn-success btn-rounded"
+                                                                            <button class="btn btn-success btn-rounded" data-toggle="tooltip" data-placement="left"
+                                                                            title="" data-original-title="Di Pinjam"
                                                                                 type="submit"><i
                                                                                     class="fas fa-check"></i></button>
                                                                         </form>
-                                                                        <a class="btn btn-info btn-rounded"
+                                                                        <a class="btn btn-info btn-rounded" data-toggle="tooltip" data-placement="left"
+                                                                        title="" data-original-title="Detail"
                                                                             href="{{ url('/admin/accpeminjaman/detail/' . $item['id']) }}"><i
                                                                                 class="fas fa-search-plus"></i></a>
                                                                     </td>
@@ -266,7 +285,7 @@
                                                             <tr>
                                                                 <th>no</th>
                                                                 <th>Nama Peminjam</th>
-                                                                <th>Program Studi</th>
+                                                                <th>Nama Lembaga</th>
                                                                 <th>Nama Kegiatan</th>
                                                                 <th>Ruangan</th>
                                                                 <th>Waktu Mulai</th>
@@ -297,7 +316,8 @@
                                                                         {{ date('H:i', strtotime($item['jam_selesai'])) }}
                                                                     </td>
                                                                     <td class="text-center"><a
-                                                                            class=" btn btn-circle btn-success"
+                                                                            class=" btn btn-circle btn-success" data-toggle="tooltip" data-placement="bottom"
+                                                                            title="" data-original-title="Unduh Surat Pendukung"
                                                                             href="{{ url('/unduh-file/' . $item['id']) }}"><i
                                                                                 class="fa fa-download"></a></td>
                                                                     <td>{{ $item['status'] }}</td>
@@ -306,11 +326,13 @@
                                                                             action="{{ route('update-status', ['id' => $item['id'], 'status' => 'completed']) }}">
                                                                             @csrf
                                                                             @method('PUT')
-                                                                            <button class="btn btn-success btn-rounded"
+                                                                            <button class="btn btn-success btn-rounded" data-toggle="tooltip" data-placement="left"
+                                                                            title="" data-original-title="Selesai"
                                                                                 type="submit"><i
                                                                                     class="fas fa-check"></i></button>
                                                                         </form>
-                                                                        <a class="btn btn-info btn-rounded"
+                                                                        <a class="btn btn-info btn-rounded" data-toggle="tooltip" data-placement="left"
+                                                                        title="" data-original-title="Detail"
                                                                             href="{{ url('/admin/accpeminjaman/detail/' . $item['id']) }}"><i
                                                                                 class="fas fa-search-plus"></i></a>
                                                                     </td>

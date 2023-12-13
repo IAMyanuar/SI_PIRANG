@@ -8899,6 +8899,8 @@ fieldset:disabled a.btn {
 }
 .card-img-top {
     width: 100%;
+    object-fit: cover;
+    height: 200px; /* Adjust the height as needed */
     border-top-left-radius: calc(0.25rem - 0);
     border-top-right-radius: calc(0.25rem - 0);
 }
