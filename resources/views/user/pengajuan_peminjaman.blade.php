@@ -151,10 +151,10 @@
                                                                     data-original-title="Detail"
                                                                     href="{{ url('/peminjaman/detail/' . $item['id']) }}"><i
                                                                         class="fas fa-search-plus"></i></a>
-                                                                <button type="submit" class="btn btn-success btn-rounded"
+                                                                {{-- <button type="submit" class="btn btn-success btn-rounded"
                                                                     data-toggle="tooltip" data-placement="left"
                                                                     title="" data-original-title="Bukti Disetujui"><i
-                                                                        class="fas fa-clipboard-check"></i></button>
+                                                                        class="fas fa-clipboard-check"></i></button> --}}
                                                             @endif
 
                                                             @if ($item['status'] == 'in progress')

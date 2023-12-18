@@ -711,7 +711,9 @@ class PeminjamanController extends Controller
     public function KalenderPeminjaman()
     {
         $datapeminjaman = Peminjaman::join('ruangans', 'peminjamen.id_ruangan', '=', 'ruangans.id')
-            ->whereIn('peminjamen.status', ['approved', 'in progress'])->get();
+            ->whereIn('peminjamen.status', ['approved', 'in progress'])
+            ->orderBy('peminjamen.tgl_mulai', 'asc')
+            ->get();
         $events = $datapeminjaman->map(function ($event) {
 
             return [
