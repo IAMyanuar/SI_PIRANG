@@ -371,24 +371,24 @@ class PeminjamanController extends Controller
         }
     }
 
-    public function riwayatPeminjaman(Request $request)
-    {
-        //riwayat dan pencarian
-        $apiUrl = env('API_URL');
-        $apiToken = session('api_token');
-        $id_user = session('id_user');
-        $client = new Client();
-        $search = [
-            'keyword' => $request->input('search')
-        ];
-        try {
-            $url = $apiUrl.'/api/peminjaman/riwayat/' . $id_user;
-            $response = $client->request('GET', $url, ['json' =>  $search, 'headers' => [
-                'Authorization' => 'Bearer ' . $apiToken,
-            ],]);
-            $conten = $response->getBody()->getContents();
-            $contenarray = json_decode($conten, true);
-            $datariwayat = $contenarray['data'];
+        public function riwayatPeminjaman(Request $request)
+        {
+            //riwayat dan pencarian
+            $apiUrl = env('API_URL');
+            $apiToken = session('api_token');
+            $id_user = session('id_user');
+            $client = new Client();
+            $search = [
+                'keyword' => $request->input('search')
+            ];
+            try {
+                $url = $apiUrl.'/api/peminjaman/riwayat/' . $id_user;
+                $response = $client->request('GET', $url, ['json' =>  $search, 'headers' => [
+                    'Authorization' => 'Bearer ' . $apiToken,
+                ],]);
+                $conten = $response->getBody()->getContents();
+                $contenarray = json_decode($conten, true);
+                $datariwayat = $contenarray['data'];
         } catch (RequestException $e) {
             $response = $e->getResponse();
             $conten = $response->getBody()->getContents();

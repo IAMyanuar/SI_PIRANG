@@ -56,14 +56,14 @@
                                         <table class="table">
                                             <thead class="bg-primary text-white">
                                                 <tr>
-                                                    <th>no</th>
+                                                    <th>No</th>
                                                     <th>Nama Peminjam</th>
                                                     <th>Program Studi</th>
                                                     <th>Nama Kegiatan</th>
                                                     <th>Waktu Mulai</th>
                                                     <th>Waktu Selesai</th>
-                                                    <th>status</th>
-                                                    <th>aksi</th>
+                                                    <th>Status</th>
+                                                    <th>Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>

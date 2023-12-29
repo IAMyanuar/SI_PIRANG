@@ -55,8 +55,8 @@
                                 <div class="card-body">
                                     <div class="form-actions">
                                         <div class="text-right mb-3">
-                                            <a class="btn btn-success btn-rounded" href="/AjukanPeminjaman">ajukan
-                                                peminjaman (+)</a>
+                                            <a class="btn btn-success btn-rounded" href="/AjukanPeminjaman">Ajukan
+                                                Peminjaman (+)</a>
                                         </div>
                                     </div>
 
@@ -65,14 +65,14 @@
                                         <table class="table">
                                             <thead class="bg-primary text-white">
                                                 <tr>
-                                                    <th>no</th>
+                                                    <th>No</th>
                                                     <th>Nama Peminjam</th>
                                                     <th>Program Studi</th>
                                                     <th>Nama Kegiatan</th>
                                                     <th>Waktu Mulai</th>
                                                     <th>Waktu Selesai</th>
-                                                    <th>status</th>
-                                                    <th>aksi</th>
+                                                    <th>Status</th>
+                                                    <th>Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>

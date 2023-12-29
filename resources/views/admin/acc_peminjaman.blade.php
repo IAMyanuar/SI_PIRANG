@@ -158,12 +158,12 @@
                                                                                 type="submit"><i
                                                                                     class="fas fa-check"></i></button>
                                                                         </form>
-                                                                        <button class="btn btn-danger btn-rounded" data-toggle="tooltip" data-placement="left"
-                                                                        title="" data-original-title="Tolak"
+                                                                        <button class="btn btn-danger btn-rounded"
                                                                             type="button" data-toggle="modal"
                                                                             data-target="#reject-modal"
                                                                             data-id="{{ $item['id'] }}">
-                                                                            <i class="fas fa-times"></i>
+                                                                            <i class="fas fa-times" data-toggle="tooltip" data-placement="left"
+                                                                            title="" data-original-title="Tolak"></i>
                                                                         </button>
                                                                         <!-- feedback modal content -->
                                                                         <div id="reject-modal" class="modal fade"

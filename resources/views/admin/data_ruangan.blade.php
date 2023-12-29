@@ -61,10 +61,10 @@ SI PIRANG | Data Ruangan
                                         <table class="table">
                                             <thead class="bg-primary text-white">
                                                 <tr>
-                                                    <th>no</th>
+                                                    <th>No</th>
                                                     <th>Nama Ruangan</th>
                                                     <th>Fasilitas</th>
-                                                    <th>foto</th>
+                                                    <th>Foto</th>
                                                     <th>Aksi</th>
                                                 </tr>
                                             </thead>

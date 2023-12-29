@@ -97,7 +97,7 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-3">
-                                                        <h3 class="card-title">Tanggal Dan waktu mulai</h3>
+                                                        <h3 class="card-title">Tanggal dan Waktu Mulai</h3>
                                                     </div>
                                                     <div class="row col-sm-1">
                                                         <h3 class="card-title">:</h3>
@@ -108,7 +108,7 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-3">
-                                                        <h3 class="card-title">Tanggal Dan waktu selesai</h3>
+                                                        <h3 class="card-title">Tanggal dan Waktu Selesai</h3>
                                                     </div>
                                                     <div class="row col-sm-1">
                                                         <h3 class="card-title">:</h3>
@@ -171,11 +171,23 @@
                                                         <h3 class="text-info font-weight-bold">{{ $datapeminjam['status'] }}</h3>
                                                     </div>
                                                     @endif
-
                                                 </div>
+                                                @if (!empty($datapeminjam['feedback']))
                                                 <div class="row">
                                                     <div class="col-md-3">
-                                                        <h3 class="card-title">Bukti Pendukung Peminjaman</h3>
+                                                        <h3 class="card-title">Feedback</h3>
+                                                    </div>
+                                                    <div class="row col-sm-1">
+                                                        <h3 class="card-title">:</h3>
+                                                    </div>
+                                                    <div class="row col-auto mb-3">
+                                                        <h3 class="">{{ $datapeminjam['feedback'] }}</h3>
+                                                    </div>
+                                                </div>
+                                                @endif
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h3 class="card-title">Bukti Pendukung / Ijin Kegiatan</h3>
                                                     </div>
                                                     <div class="row col-sm-1">
                                                         <h3 class="card-title">:</h3>

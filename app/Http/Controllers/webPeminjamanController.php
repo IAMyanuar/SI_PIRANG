@@ -298,11 +298,11 @@ class webPeminjamanController extends Controller
             $contenarray1 = json_decode($conten1, true);
             $dataruangan = $contenarray1['data'];
             //data nama ruangan
-            $ruangan = [];
+            $ruangans = [];
             foreach ($dataruangan as $data) {
                 $namaruangan = $data['nama'];
-                if (!in_array($namaruangan, $ruangan)) {
-                    $ruangan[] = $namaruangan;
+                if (!in_array($namaruangan, $ruangans)) {
+                    $ruangans[] = $namaruangan;
                 }
             }
 
@@ -317,35 +317,43 @@ class webPeminjamanController extends Controller
             //
             $bulanIni = date('Y-m');
             $BulanSebelumnya = date('Y-m', strtotime('-1 month'));
-            $dataBulanIni = array_fill_keys($ruangan, 0);
-            $dataBulanSebelumnya = array_fill_keys($ruangan, 0);
+            $dataBulanIni = array_fill_keys($ruangans, 0);
+            $dataBulanSebelumnya = array_fill_keys($ruangans, 0);
 
-            //mengampil data peminjaman status[complited, in progress]
-            foreach ($datapeminjaman as $data){
-                if ($data['status'] == 'completed' || $data['status'] == 'in progress' ) {
+            //mengambil data peminjaman status[complited, in progress]
+            foreach ($datapeminjaman as $data) {
+                if ($data['status'] == 'completed' || $data['status'] == 'in progress') {
                     $peminjamanFinal[] = $data;
                 }
             }
 
             //mengambil data peminjaman status [reject]
-            $peminjamanReject = 0 ;
-            foreach ($datapeminjaman as $data){
+            $peminjamanReject = 0;
+            foreach ($datapeminjaman as $data) {
                 if ($data['status'] == 'reject') {
                     $peminjamanReject++;
                 }
             }
 
+            //mengambil data peminjaman status [submitted]
+            $peminjamanSubmited = 0;
+            foreach ($datapeminjaman as $data) {
+                if ($data['status'] == 'submitted') {
+                    $peminjamanSubmited++;
+                }
+            }
+
             //mengambil data peminjaman status di[approved]
-            $peminjamanApprove= 0;
-            foreach ($datapeminjaman as $data){
+            $peminjamanApprove = 0;
+            foreach ($datapeminjaman as $data) {
                 if ($data['status'] == 'approved' || $data['status'] == 'in progress' || $data['status'] == 'completed') {
                     $peminjamanApprove++;
                 }
             }
 
-             //mengambil data peminjaman terkonfirmasi
-             $peminjamanTKF= 0;
-             foreach ($datapeminjaman as $data){
+            //mengambil data peminjaman terkonfirmasi
+            $peminjamanTKF = 0;
+            foreach ($datapeminjaman as $data) {
                 if ($data['status'] !== 'submitted') {
                     $peminjamanTKF++;
                 }
@@ -356,11 +364,11 @@ class webPeminjamanController extends Controller
                 $tgl_mulai = (new DateTime($peminjam['tgl_mulai']))->format('Y-m');
                 $namaruangan = $peminjam['ruangan']['nama'];
                 if ($tgl_mulai == $bulanIni) {
-                    if (in_array($namaruangan, $ruangan)) {
+                    if (in_array($namaruangan, $ruangans)) {
                         $dataBulanIni[$namaruangan]++;
                     }
                 } else if ($tgl_mulai == $BulanSebelumnya) {
-                    if (in_array($namaruangan, $ruangan)) {
+                    if (in_array($namaruangan, $ruangans)) {
                         $dataBulanSebelumnya[$namaruangan]++;
                     }
                 }
@@ -372,21 +380,73 @@ class webPeminjamanController extends Controller
             //membuat warna untuk grafik
             $color1 = '#ffac00';
             $color2 = '#000dff';
-            for ($i = 0; $i < count($ruangan); $i++) {
+            for ($i = 0; $i < count($ruangans); $i++) {
                 $colors1[] = $color1;
                 $colors2[] = $color2;
             }
 
 
+
+
+            // Menghitung jumlah peminjaman setiap ruangan
+            $jumlahPeminjaman = [];
+            foreach ($dataruangan as $ruangan) {
+                $ruanganId = $ruangan['id'];
+                $jumlahPeminjaman[$ruanganId] = 0;
+
+                foreach ($peminjamanFinal as $peminjaman) {
+                    if ($peminjaman['id_ruangan'] == $ruanganId && $peminjaman['status'] == 'completed') {
+                        $jumlahPeminjaman[$ruanganId]++;
+                    }
+                }
+            }
+
+            // chart line
+            $hasilData = [];
+            foreach ($dataruangan as $ruangan) {
+                $ruanganId = $ruangan['id'];
+                $label = $ruangan['nama'];
+                $data = [];
+
+                // Menggunakan bulan sebagai index
+                for ($bulan = 1; $bulan <= 12; $bulan++) {
+                    // Inisialisasi jumlah peminjaman pada bulan ini
+                    $jumlahPeminjamanBulanIni = 0;
+
+                    // Iterasi pada data peminjaman
+                    foreach ($peminjamanFinal as $peminjaman) {
+                        $bulanPeminjaman = date('n', strtotime($peminjaman['tgl_mulai']));
+
+                        // Periksa apakah peminjaman sesuai dengan bulan dan ruangan
+                        if ($peminjaman['id_ruangan'] == $ruanganId && $bulanPeminjaman == $bulan) {
+                            $jumlahPeminjamanBulanIni++;
+                        }
+                    }
+                    $data[] = $jumlahPeminjamanBulanIni;
+                }
+
+
+                // Menghasilkan format data yang diinginkan
+                $hasilData[] = [
+                    'label' => $label,
+                    'data' => $data,
+                    'borderColor' => '#' . substr(md5($ruanganId), 0, 6),
+                    'backgroundColor' =>  '#' . substr(md5($ruanganId), 0, 6),
+                    'fill' => false,
+                ];
+            }
+
             return view('admin.dashboard', [
-                'ruangan' => $ruangan,
-                'dataBulanSebelumnya' => $dataBulanSebelumnya,
-                'dataBulanIni' => $dataBulanIni,
-                'colors1' => $colors1, 'colors2' => $colors2,
+                'ruangan' => $ruangans,
+                // 'dataBulanSebelumnya' => $dataBulanSebelumnya,
+                // 'dataBulanIni' => $dataBulanIni,
+                // 'colors1' => $colors1, 'colors2' => $colors2,
+                'peminjamanSubmitted' => $peminjamanSubmited,
                 'peminjamanApprove' => $peminjamanApprove,
                 'peminjamanReject' => $peminjamanReject,
                 'peminjamanFinal' => $peminjamanFinal,
-                'peminjamanTKF' => $peminjamanTKF
+                'peminjamanTKF' => $peminjamanTKF,
+                'grafikline' => $hasilData
             ]);
         } catch (\Throwable $th) {
             throw $th;
