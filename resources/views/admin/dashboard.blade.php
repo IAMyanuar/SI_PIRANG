@@ -122,6 +122,13 @@
                         </div>
                         <canvas id="line-chart" height="511" width="1422"
                             style="display: block; width: 1422px; height: 511px;" class="chartjs-render-monitor"></canvas>
+                        {{-- <select id="year-select">
+                            <!-- Tambahkan opsi untuk tahun saat ini -->
+                            <option value="current">Tahun Ini</option>
+                            <!-- Tambahkan opsi untuk tahun sebelumnya -->
+                            <option value="previous">Tahun Sebelumnya</option>
+                        </select> --}}
+
                         <script>
                             $(function() {
                                 "use strict";
@@ -131,7 +138,7 @@
                                     'Oktober', 'November', 'Desember'
                                 ];
 
-                                new Chart(ctl, {
+                                var chart = new Chart(ctl, {
                                     type: 'line',
                                     data: {
                                         labels: labels,
@@ -159,8 +166,30 @@
                                         }
                                     }
                                 });
+
+                                // Tambahkan event listener untuk perubahan tahun
+                                document.getElementById("year-select").addEventListener("change", function() {
+                                    var selectedYear = this.value;
+                                    updateChartData(chart, selectedYear);
+                                });
+
+                                function updateChartData(chart, selectedYear) {
+                                    // Lakukan permintaan AJAX atau manipulasi data sesuai kebutuhan
+                                    // Di sini Anda dapat mengganti datasets dengan data baru untuk tahun yang dipilih
+                                    if (selectedYear === "previous") {
+                                        // Lakukan sesuatu untuk mendapatkan data tahun sebelumnya
+                                        // Contoh: datasets = fetchDataForPreviousYear();
+                                    } else {
+                                        // Lakukan sesuatu untuk mendapatkan data tahun saat ini
+                                        // Contoh: datasets = fetchDataForCurrentYear();
+                                    }
+
+                                    chart.data.datasets = datasets;
+                                    chart.update(); // Perbarui grafik
+                                }
                             });
                         </script>
+
                     </div>
                 </div>
             </div>

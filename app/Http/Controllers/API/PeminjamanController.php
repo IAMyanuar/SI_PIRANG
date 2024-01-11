@@ -339,7 +339,8 @@ class PeminjamanController extends Controller
     public function unduhFile($id)
     {
         $peminjaman = Peminjaman::find($id);
-        if ($peminjaman['bukti_pendukung'] !== null) {
+        // return $peminjaman;
+        if ($peminjaman['dokumen_pendukung'] !== null) {
             $dokumen_pendukung = $peminjaman->dokumen_pendukung;
             $pathToFile = public_path('assets/images/bukti_pendukung/' . $dokumen_pendukung);
 
@@ -349,7 +350,7 @@ class PeminjamanController extends Controller
 
                 // Menentukan Content-Type sesuai dengan ekstensi file
                 $contentTypes = [
-                    'jpg' => 'image/jpeg',
+                    'jpg' => 'image/jpg',
                     'jpeg' => 'image/jpeg',
                     'png' => 'image/png',
                     'pdf' => 'application/pdf',
@@ -472,6 +473,14 @@ class PeminjamanController extends Controller
             })
             ->orderBy('peminjamen.id', 'desc')
             ->get();
+
+        if (empty($datapeminjaman)) {
+            return response()->json([
+                'status' => true,
+                'message' => 'data belum ada',
+                'data' => null,
+            ], 401);
+        }
 
         return response()->json([
             'status' => true,
@@ -602,8 +611,8 @@ class PeminjamanController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => isset($keyword) ? 'Data yang anda cari tidak ditemukan' : 'Belum ada data riwayat peminjaman',
-                'data' => [],
-            ], 404); // Use 404 status code for "not found"
+                'data' => null,
+            ], 401); // Use 404 status code for "not found"
         }
 
         //jika data ada

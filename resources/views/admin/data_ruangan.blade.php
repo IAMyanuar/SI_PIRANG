@@ -69,9 +69,16 @@ SI PIRANG | Data Ruangan
                                                 </tr>
                                             </thead>
                                             <tbody>
+
                                                 @php
                                                     $no = 1;
                                                 @endphp
+                                                @if (empty($data))
+                                                <tr>
+                                                    <td colspan="10" class="text-center"><strong>Tidak ada
+                                                            data ruangan</strong></td>
+                                                </tr>
+                                            @endif
                                                 @foreach ($data as $item)
                                                     <tr>
                                                         <td>{{ $no++ }}</td>

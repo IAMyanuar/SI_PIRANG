@@ -170,7 +170,6 @@ class RuanganController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Proses ubah ruangan berhasil',
-            'request' => $request
         ], 200);
     }
 

@@ -122,7 +122,7 @@
                                                             @if (empty($datapeminjamansubmitted))
                                                                 <tr>
                                                                     <td colspan="10" class="text-center"><strong>Tidak ada
-                                                                            yang mengajukan ruangan</strong></td>
+                                                                            yang mengajukan prminjaman ruangan</strong></td>
                                                                 </tr>
                                                             @endif
                                                             @foreach ($datapeminjamansubmitted as $item)

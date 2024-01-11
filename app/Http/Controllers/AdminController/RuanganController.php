@@ -1,17 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\AdminController;
 
-use GuzzleHttp\Client;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
-
-class webRuanganController extends Controller
+class RuanganController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-
     public function index()
     {
         //menampilkan semua data
@@ -177,13 +174,5 @@ class webRuanganController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('RuanganIsExist', 'ruangan ' . $validatedData['nama'] . ' Sudah ada.');
         }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }
