@@ -47,7 +47,7 @@ Route::get('peminjaman/approve',[PeminjamanController::class, 'peminjamApprove']
 Route::get('peminjaman/inprogress',[PeminjamanController::class, 'peminjamInProgress'])->middleware('auth:sanctum','ablity:access-admin');//menampilkan data peminjaman in progress
 Route::get('peminjaman/riwayat',[PeminjamanController::class, 'riwayat'])->middleware('auth:sanctum','ablity:access-admin');//riwayat
 Route::get('peminjaman/{id}',[PeminjamanController::class,'show'])->middleware('auth:sanctum');//menampilkan data peminjaman berdasarkan id
-Route::get('unduhFileDokumen/{id}',[PeminjamanController::class,'unduhFile'])->middleware('auth:sanctum','[ablity:access-admin,ablity:access-user]');//unduh file bukti pendukung peminjaman
+Route::get('unduhFileDokumen/{id}',[PeminjamanController::class,'unduhFile'])->middleware('auth:sanctum');//unduh file bukti pendukung peminjaman
 Route::put('peminjaman/{id}',[PeminjamanController::class,'updateStatus'])->middleware('auth:sanctum','ablity:access-admin');//edit Status
 
 
