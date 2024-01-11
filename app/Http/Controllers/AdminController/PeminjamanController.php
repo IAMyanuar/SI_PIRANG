@@ -70,82 +70,6 @@ class PeminjamanController extends Controller
     }
 
 
-    public function store(Request $request)
-    {
-        //menambah data pengajuan ruangan
-        $apiUrl = env('API_URL');
-        $apiToken = session('api_token');
-        $validatedData = $request->validate([
-            'bukti_pendukung' => 'required',
-            'fasilitas' => 'required',
-            'foto' => 'required|image', // Jika Anda ingin memastikan bahwa 'foto' adalah berkas gambar.
-        ]);
-        try {
-            $foto = $request->file('foto');
-            $options = [
-                'multipart' => [
-                    [
-                        'name' => 'nama',
-                        'contents' => $validatedData['nama']
-                    ],
-                    [
-                        'name' => 'fasilitas',
-                        'contents' => $validatedData['fasilitas']
-                    ],
-                    [
-                        'name' => 'foto',
-                        'contents' => fopen($foto, 'r'),
-                        'filename' => $foto->getClientOriginalName(),
-                        'headers'  => [
-                            'Content-Type' => '<Content-type header>'
-                        ]
-                    ]
-                ],
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $apiToken,
-                ],
-
-            ];
-
-            $client = new Client();
-            $url = $apiUrl . "/api/peminjaman";
-            $response = $client->request('POST', $url, $options);
-            $response->getBody()->getContents();
-            return redirect()->to('/admin/DataRuangan')
-                ->with('success', 'ruangan ' . $validatedData['nama'] . ' berhasil ditambahkan');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('RuanganIsExist', 'ruangan ' . $validatedData['nama'] . ' Sudah ada.');
-        }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //menampilkan detail peminjaman berdasarkan id
-        $apiUrl = env('API_URL');
-        $apiToken = session('api_token');
-        $client = new Client();
-        try {
-            $url = $apiUrl . '/api/peminjaman/' . $id;
-            $response = $client->request(
-                'GET',
-                $url,
-                ['headers' => [
-                    'Authorization' => 'Bearer ' . $apiToken
-                ],]
-            );
-            $conten = $response->getBody()->getContents();
-            $contenarray = json_decode($conten, true);
-            $datapeminjam = $contenarray['data'];
-            return view('admin.detail_peminjaman', ['datapeminjam' => $datapeminjam]);
-        } catch (\Throwable $th) {
-            // return redirect()->back()->withErrors('error', 'Access Denied');
-        }
-    }
-
-
     public function updateStatus(Request $request, $id)
     {
         try {
@@ -171,6 +95,30 @@ class PeminjamanController extends Controller
             } else {
                 return redirect()->back()->with('error', 'Gagal merubah status');
             }
+        } catch (\Throwable $th) {
+            // return redirect()->back()->withErrors('error', 'Access Denied');
+        }
+    }
+
+    public function show(string $id)
+    {
+        //menampilkan detail peminjaman berdasarkan id
+        $apiUrl = env('API_URL');
+        $apiToken = session('api_token');
+        $client = new Client();
+        try {
+            $url = $apiUrl . '/api/peminjaman/' . $id;
+            $response = $client->request(
+                'GET',
+                $url,
+                ['headers' => [
+                    'Authorization' => 'Bearer ' . $apiToken
+                ],]
+            );
+            $conten = $response->getBody()->getContents();
+            $contenarray = json_decode($conten, true);
+            $datapeminjam = $contenarray['data'];
+            return view('admin.detail_peminjaman', ['datapeminjam' => $datapeminjam]);
         } catch (\Throwable $th) {
             // return redirect()->back()->withErrors('error', 'Access Denied');
         }
