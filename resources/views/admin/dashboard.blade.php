@@ -120,29 +120,28 @@
                                 <div class=""></div>
                             </div>
                         </div>
-                        <canvas id="line-chart" height="511" width="1422"
-                            style="display: block; width: 1422px; height: 511px;" class="chartjs-render-monitor"></canvas>
-                        {{-- <select id="year-select">
+                        <select id="year-select">
                             <!-- Tambahkan opsi untuk tahun saat ini -->
                             <option value="current">Tahun Ini</option>
                             <!-- Tambahkan opsi untuk tahun sebelumnya -->
                             <option value="previous">Tahun Sebelumnya</option>
-                        </select> --}}
-
+                        </select>
+                        <canvas id="line-chart" height="511" width="1422"
+                            style="display: block; width: 1422px; height: 511px;" class="chartjs-render-monitor"></canvas>
                         <script>
                             $(function() {
                                 "use strict";
-                                var datasets = @php echo json_encode($grafikline); @endphp;
                                 var ctl = document.getElementById("line-chart").getContext('2d');
                                 var labels = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September',
                                     'Oktober', 'November', 'Desember'
                                 ];
 
+                                // Inisialisasi chart dengan data baru
                                 var chart = new Chart(ctl, {
                                     type: 'line',
                                     data: {
                                         labels: labels,
-                                        datasets: datasets
+                                        datasets: @php echo json_encode($grafiklineNew); @endphp,
                                     },
                                     options: {
                                         title: {
@@ -150,7 +149,7 @@
                                             text: 'Data Ruangan Yang Di Gunakan'
                                         },
                                         legend: {
-                                            position: 'right', // Mengatur posisi legenda ke kanan
+                                            position: 'right',
                                         },
                                         tooltips: {
                                             callbacks: {
@@ -174,17 +173,15 @@
                                 });
 
                                 function updateChartData(chart, selectedYear) {
-                                    // Lakukan permintaan AJAX atau manipulasi data sesuai kebutuhan
-                                    // Di sini Anda dapat mengganti datasets dengan data baru untuk tahun yang dipilih
+                                    // Periksa tahun yang dipilih
                                     if (selectedYear === "previous") {
-                                        // Lakukan sesuatu untuk mendapatkan data tahun sebelumnya
-                                        // Contoh: datasets = fetchDataForPreviousYear();
+                                        // Mendapatkan data tahun sebelumnya
+                                        chart.data.datasets = @php echo json_encode($grafiklineOld); @endphp;
                                     } else {
-                                        // Lakukan sesuatu untuk mendapatkan data tahun saat ini
-                                        // Contoh: datasets = fetchDataForCurrentYear();
+                                        // Mendapatkan data tahun baru
+                                        chart.data.datasets = @php echo json_encode($grafiklineNew); @endphp;
                                     }
 
-                                    chart.data.datasets = datasets;
                                     chart.update(); // Perbarui grafik
                                 }
                             });
@@ -193,64 +190,6 @@
                     </div>
                 </div>
             </div>
-            {{-- <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Grafik Ruangan</h4>
-                        <div>
-                            <canvas id="bar-chart" height="150"></canvas>
-                            <script>
-                                $(function() {
-                                    "use strict";
-
-                                    var ruangan = @php echo json_encode($ruangan); @endphp;
-                                    var dataBulanIni = @php echo json_encode($dataBulanIni); @endphp;
-                                    var dataBulanSebelumnya = @php echo json_encode($dataBulanSebelumnya); @endphp;
-                                    var colors1 = @php echo json_encode($colors1); @endphp;
-                                    var colors2 = @php echo json_encode($colors2); @endphp;
-                                    var ctx = document.getElementById("bar-chart").getContext('2d');
-
-                                    // Bar chart
-                                    new Chart(ctx, {
-                                        type: 'bar',
-                                        data: {
-                                            labels: ruangan,
-                                            datasets: [{
-                                                    label: "Peminjaman Bulan Sebelumnya",
-                                                    backgroundColor: colors1,
-                                                    data: dataBulanSebelumnya
-                                                },
-                                                {
-                                                    label: "Peminjaman Bulan Ini",
-                                                    backgroundColor: colors2,
-                                                    data: dataBulanIni
-                                                }
-                                            ]
-                                        },
-                                        options: {
-                                            legend: {
-                                                display: true
-                                            },
-                                            title: {
-                                                display: true,
-                                                text: 'Data Ruangan Yang Di Gunakan Perbulannya'
-                                            }
-                                        }
-                                    });
-                                });
-                            </script>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
-
-
-
-            {{-- <div class="card border-right ml-2 col-3"> --}}
-
-            {{-- </div> --}}
-
-
         </div>
 
 

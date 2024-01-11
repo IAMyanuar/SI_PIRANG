@@ -82,7 +82,8 @@ class DashboardController extends Controller
             }
 
             // chart line
-            $hasilData = [];
+            $hasilDataNew = [];
+            $hasilDataOld = [];
             foreach ($dataruangan as $ruangan) {
                 $ruanganId = $ruangan['id'];
                 $label = $ruangan['nama'];
@@ -100,32 +101,35 @@ class DashboardController extends Controller
                         $bulanPeminjaman = date('n', strtotime($peminjaman['tgl_mulai']));
                         $tahunPeminjamanNow = date('Y', strtotime($peminjaman['tgl_mulai']));
 
-                        // Periksa apakah peminjaman sesuai dengan bulan dan ruangan
+                        // Periksa apakah peminjaman sesuai dengan bulan dan ruangan tahun ini
                         if ($peminjaman['id_ruangan'] == $ruanganId && $bulanPeminjaman == $bulan && $tahunPeminjamanNow == date('Y')) {
                             $jumlahPeminjamanBulanIni++;
                         }
-                    }
-                    $dataTahunIni[] = $jumlahPeminjamanBulanIni;
 
-                    // Iterasi pada data peminjaman di tahun sebelumnya
-                    foreach ($peminjamanFinal as $peminjaman) {
-                        $bulanPeminjaman = date('n', strtotime($peminjaman['tgl_mulai']));
-                        $tahunPeminjamanNow = date('Y', strtotime($peminjaman['tgl_mulai']));
-                        $TahunSebelumnya = $tahunPeminjamanNow - 1;
-
-                        // Periksa apakah peminjaman sesuai dengan bulan dan ruangan
-                        if ($peminjaman['id_ruangan'] == $ruanganId && $bulanPeminjaman == $bulan && $TahunSebelumnya == date('Y')) {
+                        // Periksa apakah peminjaman sesuai dengan bulan dan ruangan tahun sebelumnya
+                        if ($peminjaman['id_ruangan'] == $ruanganId && $bulanPeminjaman == $bulan && $tahunPeminjamanNow == (date('Y') - 1)) {
                             $jumlahPeminjamanBulanTahunSebelumnya++;
                         }
                     }
+                    $dataTahunIni[] = $jumlahPeminjamanBulanIni;
                     $dataTahunSebelumnya[] = $jumlahPeminjamanBulanTahunSebelumnya;
+
                 }
 
 
-                // Menghasilkan format data yang diinginkan
-                $hasilData[] = [
+                // data tahun ini
+                $hasilDataNew[] = [
                     'label' => $label,
                     'data' => $dataTahunIni,
+                    'borderColor' => '#' . substr(md5($ruanganId), 0, 6),
+                    'backgroundColor' =>  '#' . substr(md5($ruanganId), 0, 6),
+                    'fill' => false,
+                ];
+
+                // data tahun lalu
+                $hasilDataOld[] = [
+                    'label' => $label,
+                    'data' => $dataTahunSebelumnya,
                     'borderColor' => '#' . substr(md5($ruanganId), 0, 6),
                     'backgroundColor' =>  '#' . substr(md5($ruanganId), 0, 6),
                     'fill' => false,
@@ -141,7 +145,8 @@ class DashboardController extends Controller
                 'peminjamanReject' => $peminjamanReject,
                 'peminjamanFinal' => $peminjamanFinal,
                 'peminjamanTKF' => $peminjamanTKF,
-                'grafikline' => $hasilData
+                'grafiklineNew' => $hasilDataNew,
+                'grafiklineOld' => $hasilDataOld,
             ]);
         } catch (\Throwable $th) {
             throw $th;
