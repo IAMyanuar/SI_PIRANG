@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="">
-    <title>SI PIRANG | Register</title>
+    <title>SI PIRANG | Daftar</title>
     <!-- Custom CSS -->
     <link href="{{ asset('dist/css/style.min.css') }}" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -41,48 +41,48 @@
             style="no-repeat center center">
                 <div class="col-lg-4 col-md-4 bg-white rounded-5 border-2 custom-shadow custom-radius">
                     <div class="p-3">
-                        <h3 class="mt-3 text-center text-dark font-weight-medium">Sign Up</h3>
-                        <p class="text-center">Please enter your data below to sign up</p>
+                        <h3 class="mt-3 text-center text-dark font-weight-medium">Daftar</h3>
+                        <p class="text-center">Masukkan data di bawah ini untuk Daftar</p>
                         <form action="{{ route('register') }}" method="post">
                             @csrf
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label class="text-dark">NIM</label>
+                                        <label class="text-dark">NIM/NIP</label>
                                         <input class="form-control" name="nim" type="text"
-                                            placeholder="insert your nim" required>
+                                            placeholder="Masukkan NIM/NIP" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label class="text-dark">Name</label>
+                                        <label class="text-dark">Nama</label>
                                         <input class="form-control" name="nama" type="text"
-                                            placeholder="insert your nim" required>
+                                            placeholder="Masukkan Nama" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label class="text-dark">Email</label>
                                         <input class="form-control" name="email" type="email"
-                                            placeholder="insert your email" required>
+                                            placeholder="Masukkan Email" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label class="text-dark">Password</label>
+                                        <label class="text-dark">Kata Sandi</label>
                                         <input class="form-control" name="password" type="password"
-                                            placeholder="insert your password" required>
+                                            placeholder="Masukkan Kata Sandi" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label class="text-dark">Telp</label>
                                         <input class="form-control" name="telp" type="telp"
-                                            placeholder="insert your telp" required>
+                                            placeholder="Masukkan Telp" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12 text-center mt-5 mb-4">
-                                    <button class="btn btn-primary rounded-5 col-md-12" type="submit">Sign Up</button>
+                                    <button class="btn btn-primary rounded-5 col-md-12" type="submit">Simpan</button>
                                 </div>
                                 @if (session()->has('error'))
                                     <div class="alert alert-danger">

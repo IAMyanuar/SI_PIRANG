@@ -94,7 +94,7 @@ class authController extends Controller
             ], 200);
         }
 
-        if ($datauser = User::where('nim', $request->nim)->where('role_user', 'user')->first()) {
+        if ($datauser = User::where('nim', $request->nim)->where('role_user', 'peminjam')->first()) {
             $role = $datauser->role_user;
             $nama = $datauser->nama;
             $id_user = $datauser->id;
@@ -104,7 +104,7 @@ class authController extends Controller
                 'role' => $role,
                 'id_user' => $id_user,
                 'nama' => $nama,
-                'token' => $datauser->createToken('api-product', ['access-user'])->plainTextToken
+                'token' => $datauser->createToken('api-product', ['access-peminjam'])->plainTextToken
             ], 200);
         }
     }

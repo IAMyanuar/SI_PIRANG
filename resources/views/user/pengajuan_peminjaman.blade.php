@@ -77,136 +77,145 @@
                                             </thead>
                                             <tbody>
                                                 @if (empty($datapeminjaman))
-                                                <tr>
-                                                    <td colspan="10" class="text-center"><strong>
-                                                        Anda Belum Mengajukan Ruangan Peminjaman Ruangan
-                                                     </strong></td>
-                                                </tr>
-                                                @endif
-                                                @php
-                                                    $no = 1;
-                                                @endphp
-                                                @foreach ($datapeminjaman as $item)
                                                     <tr>
-                                                        <td>{{ $no++ }}</td>
-                                                        <td>{{ $item['nama_user'] }}</td>
-                                                        <td>{{ $item['nama_lembaga'] }}</td>
-                                                        <td>{{ $item['kegiatan'] }}</td>
-                                                        <td class="text-center">
-                                                            {{ date('d-m-Y', strtotime($item['tgl_mulai'])) }}
-                                                            <br>jam:{{ date('H:i', strtotime($item['jam_mulai'])) }}
-                                                        </td>
-                                                        <td class="text-center">
-                                                            {{ date('d-m-Y', strtotime($item['tgl_selesai'])) }}
-                                                            <br>jam:
-                                                            {{ date('H:i', strtotime($item['jam_selesai'])) }}
-                                                        </td>
-                                                        <td>
-                                                            @if ($item['status']=='submitted')
-                                                                <text class="text-secondary font-weight-bold">{{ $item['status'] }}</text>
-                                                            @elseif ($item['status']=='approved')
-                                                                <text class="text-success font-weight-bold">{{ $item['status'] }}</text>
-                                                            @elseif ($item['status']=='in progress')
-                                                                <text class="text-warning font-weight-bold">{{ $item['status'] }}</text>
-                                                            @elseif ($item['status']=='completed')
-                                                            <text class="text-info font-weight-bold">{{ $item['status'] }}</text>
-                                                            @endif</td>
-                                                        <td>
-                                                            @if ($item['status'] == 'submitted')
-                                                                <a href="/EditPeminjaman/{{ $item['id'] }}"
-                                                                    class="btn btn-warning btn-rounded"
-                                                                    data-toggle="tooltip" data-placement="left"
-                                                                    title="" data-original-title="Ubah"><i
-                                                                        class="fas fa-edit"></i></a>
-                                                                <form action="{{ route('hapus_pengajuan', $item['id']) }}"
-                                                                    method="POST">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="submit"
-                                                                        class="btn btn-danger btn-rounded"
+                                                        <td colspan="10" class="text-center"><strong>
+                                                                Anda Belum Mengajukan Ruangan Peminjaman Ruangan
+                                                            </strong></td>
+                                                    </tr>
+                                                @else
+                                                    @php
+                                                        $no = 1;
+                                                    @endphp
+                                                    @foreach ($datapeminjaman as $item)
+                                                        <tr>
+                                                            <td>{{ $no++ }}</td>
+                                                            <td>{{ $item['nama_user'] }}</td>
+                                                            <td>{{ $item['nama_lembaga'] }}</td>
+                                                            <td>{{ $item['kegiatan'] }}</td>
+                                                            <td class="text-center">
+                                                                {{ date('d-m-Y', strtotime($item['tgl_mulai'])) }}
+                                                                <br>jam:{{ date('H:i', strtotime($item['jam_mulai'])) }}
+                                                            </td>
+                                                            <td class="text-center">
+                                                                {{ date('d-m-Y', strtotime($item['tgl_selesai'])) }}
+                                                                <br>jam:
+                                                                {{ date('H:i', strtotime($item['jam_selesai'])) }}
+                                                            </td>
+                                                            <td>
+                                                                @if ($item['status'] == 'terkirim')
+                                                                    <text
+                                                                        class="text-secondary font-weight-bold">{{ $item['status'] }}</text>
+                                                                @elseif ($item['status'] == 'disetujui')
+                                                                    <text
+                                                                        class="text-success font-weight-bold">{{ $item['status'] }}</text>
+                                                                @elseif ($item['status'] == 'di prosess')
+                                                                    <text
+                                                                        class="text-warning font-weight-bold">{{ $item['status'] }}</text>
+                                                                @elseif ($item['status'] == 'selesai')
+                                                                    <text
+                                                                        class="text-info font-weight-bold">{{ $item['status'] }}</text>
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                @if ($item['status'] == 'terkirim')
+                                                                    <a href="/EditPeminjaman/{{ $item['id'] }}"
+                                                                        class="btn btn-warning btn-rounded"
                                                                         data-toggle="tooltip" data-placement="left"
-                                                                        title="" data-original-title="Hapus"><i
-                                                                            class="fas fa-trash-alt"></i></button>
-                                                                </form>
-                                                                <a class="btn btn-info btn-rounded" data-toggle="tooltip"
-                                                                    data-placement="left" title=""
-                                                                    data-original-title="Detail"
-                                                                    href="{{ url('/peminjaman/detail/' . $item['id']) }}"><i
-                                                                        class="fas fa-search-plus"></i></a>
-                                                            @endif
+                                                                        title="" data-original-title="Ubah"><i
+                                                                            class="fas fa-edit"></i></a>
+                                                                    <form
+                                                                        action="{{ route('hapus_pengajuan', $item['id']) }}"
+                                                                        method="POST">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit"
+                                                                            class="btn btn-danger btn-rounded"
+                                                                            data-toggle="tooltip" data-placement="left"
+                                                                            title="" data-original-title="Hapus"><i
+                                                                                class="fas fa-trash-alt"></i></button>
+                                                                    </form>
+                                                                    <a class="btn btn-info btn-rounded"
+                                                                        data-toggle="tooltip" data-placement="left"
+                                                                        title="" data-original-title="Detail"
+                                                                        href="{{ url('/peminjaman/detail/' . $item['id']) }}"><i
+                                                                            class="fas fa-search-plus"></i></a>
+                                                                @endif
 
-                                                            @if ($item['status'] == 'approved')
-                                                                <form action="{{ route('hapus_pengajuan', $item['id']) }}"
-                                                                    method="POST">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="submit"
-                                                                        class="btn btn-danger btn-rounded"
+                                                                @if ($item['status'] == 'disetujui')
+                                                                    <form
+                                                                        action="{{ route('hapus_pengajuan', $item['id']) }}"
+                                                                        method="POST">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit"
+                                                                            class="btn btn-danger btn-rounded"
+                                                                            data-toggle="tooltip" data-placement="left"
+                                                                            title="" data-original-title="Hapus"><i
+                                                                                class="fas fa-trash-alt"></i></button>
+                                                                    </form>
+                                                                    <a class="btn btn-info btn-rounded"
                                                                         data-toggle="tooltip" data-placement="left"
-                                                                        title="" data-original-title="Hapus"><i
-                                                                            class="fas fa-trash-alt"></i></button>
-                                                                </form>
-                                                                <a class="btn btn-info btn-rounded" data-toggle="tooltip"
-                                                                    data-placement="left" title=""
-                                                                    data-original-title="Detail"
-                                                                    href="{{ url('/peminjaman/detail/' . $item['id']) }}"><i
-                                                                        class="fas fa-search-plus"></i></a>
-                                                                {{-- <button type="submit" class="btn btn-success btn-rounded"
+                                                                        title="" data-original-title="Detail"
+                                                                        href="{{ url('/peminjaman/detail/' . $item['id']) }}"><i
+                                                                            class="fas fa-search-plus"></i></a>
+                                                                    {{-- <button type="submit" class="btn btn-success btn-rounded"
                                                                     data-toggle="tooltip" data-placement="left"
                                                                     title="" data-original-title="Bukti Disetujui"><i
                                                                         class="fas fa-clipboard-check"></i></button> --}}
-                                                            @endif
+                                                                @endif
 
-                                                            @if ($item['status'] == 'in progress')
-                                                                <a class="btn btn-info btn-rounded" data-toggle="tooltip"
-                                                                    data-placement="left" title=""
-                                                                    data-original-title="Detail"
-                                                                    href="{{ url('/peminjaman/detail/' . $item['id']) }}"><i
-                                                                        class="fas fa-search-plus"></i></a>
-                                                            @endif
+                                                                @if ($item['status'] == 'di prosess')
+                                                                    <a class="btn btn-info btn-rounded"
+                                                                        data-toggle="tooltip" data-placement="left"
+                                                                        title="" data-original-title="Detail"
+                                                                        href="{{ url('/peminjaman/detail/' . $item['id']) }}"><i
+                                                                            class="fas fa-search-plus"></i></a>
+                                                                @endif
 
-                                                            @if ($item['status'] == 'completed')
-                                                                <button type="submit" class="btn btn-info btn-rounded"
-                                                                    data-toggle="tooltip" data-placement="left"
-                                                                    title="" data-original-title="Masukan/Saran"
-                                                                    data-target="#feedback-modal"><i
-                                                                        class="fas fa-comment-alt"></i></button>
-                                                                <!-- feedback modal content -->
-                                                                <div id="feedback-modal" class="modal fade" tabindex="-1"
-                                                                    role="dialog" aria-hidden="true">
-                                                                    <div class="modal-dialog">
-                                                                        <div class="modal-content">
+                                                                @if ($item['status'] == 'selesai')
+                                                                    <button type="submit" class="btn btn-info btn-rounded"
+                                                                        data-toggle="tooltip" data-placement="left"
+                                                                        title="" data-original-title="Masukan/Saran"
+                                                                        data-target="#feedback-modal"><i
+                                                                            class="fas fa-comment-alt"></i></button>
+                                                                    <!-- feedback modal content -->
+                                                                    <div id="feedback-modal" class="modal fade"
+                                                                        tabindex="-1" role="dialog" aria-hidden="true">
+                                                                        <div class="modal-dialog">
+                                                                            <div class="modal-content">
 
-                                                                            <div class="modal-body">
-                                                                                <div class="text-center mt-2 mb-4">
+                                                                                <div class="modal-body">
+                                                                                    <div class="text-center mt-2 mb-4">
+                                                                                    </div>
+
+                                                                                    <form class="pl-3 pr-3"
+                                                                                        action="{{ route('ulasan', $item['id']) }}"
+                                                                                        method="POST" id="modal-form">
+                                                                                        @csrf
+                                                                                        @method('patch')
+                                                                                        <div class="form-group">
+                                                                                            <label for="username">Berikan
+                                                                                                Masukan atau Saran</label>
+                                                                                            <input class="form-control"
+                                                                                                name="feedback" required>
+                                                                                        </div>
+                                                                                        <div
+                                                                                            class="form-group text-center">
+                                                                                            <button class="btn btn-primary"
+                                                                                                type="submit">Kirim</button>
+                                                                                        </div>
+
+                                                                                    </form>
+
                                                                                 </div>
-
-                                                                                <form class="pl-3 pr-3"
-                                                                                    action="{{ route('ulasan', $item['id']) }}"
-                                                                                    method="POST" id="modal-form">
-                                                                                    @csrf
-                                                                                    @method('patch')
-                                                                                    <div class="form-group">
-                                                                                        <label for="username">Berikan
-                                                                                            Masukan atau Saran</label>
-                                                                                        <input class="form-control"
-                                                                                            name="feedback" required>
-                                                                                    </div>
-                                                                                    <div class="form-group text-center">
-                                                                                        <button class="btn btn-primary"
-                                                                                            type="submit">Kirim</button>
-                                                                                    </div>
-
-                                                                                </form>
-
-                                                                            </div>
-                                                                        </div><!-- /.modal-content -->
-                                                                    </div><!-- /.modal-dialog -->
-                                                                </div><!-- /.modal -->
-                                                            @endif
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
+                                                                            </div><!-- /.modal-content -->
+                                                                        </div><!-- /.modal-dialog -->
+                                                                    </div><!-- /.modal -->
+                                                                @endif
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                @endif
 
                                             </tbody>
                                         </table>

@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminController\KalenderController;
 use App\Http\Controllers\AdminController\PeminjamanController as AdminPeminjamanController;
 use App\Http\Controllers\AdminController\RiwayatController as AdminRiwayatController;
 use App\Http\Controllers\AdminController\RuanganController as AdminRuanganController;
+use App\Http\Controllers\AdminController\FasilitasController as AdminFasilitasController;
 use App\Http\Controllers\UserController\DashboardController;
 use App\Http\Controllers\UserController\PeminjamanController;
 use App\Http\Controllers\UserController\RiwayatController;
@@ -24,9 +25,7 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 */
 
 
-// Route::get('/BuktiPeminjaman', function () {
-//     return view('user.bukti_peminjaman');
-// });
+Route::get('/', [webAuthController::class, 'landingPage']);
 
 
 //register
@@ -34,8 +33,8 @@ Route::get('/daftar', [webAuthController::class, 'viewRegister']);
 Route::post('/daftar', [webAuthController::class, 'Register'])->name('register');
 
 //login
-Route::get('/', [webAuthController::class, 'viewLogin']);
-Route::post('/', [webAuthController::class, 'Login']);
+Route::get('/login', [webAuthController::class, 'viewLogin']);
+Route::post('/login', [webAuthController::class, 'Login']);
 
 Route::middleware('checkToken')->group(function () {
     //admin
@@ -45,6 +44,11 @@ Route::middleware('checkToken')->group(function () {
     Route::post('/DataRuangan/TambahRuangan', [AdminRuanganController::class, 'store'])->name('tambah_ruangan');
     Route::get('/DataRuangan/UbahRuangan/{id}', [AdminRuanganController::class, 'edit']);
     Route::put('/DataRuangan/UbahRuangan/{id}', [AdminRuanganController::class, 'update']);
+    Route::get('/admin/DataFasilitas', [AdminFasilitasController::class, 'index']);//data fasilitas
+    Route::get('/DataFasilitas/TambahFasilitas', [AdminFasilitasController::class, 'create']);
+    Route::post('/DataFasilitas/TambahFasilitas', [AdminFasilitasController::class, 'store'])->name('tambah_fasilitas');
+    Route::get('/DataFasilitas/UbahFasilitas/{id}', [AdminFasilitasController::class, 'edit']);
+    Route::put('/DataFasilitas/UbahFasilitas/{id}', [AdminFasilitasController::class, 'update']);
 
     Route::get('/admin/accpeminjaman', [AdminPeminjamanController::class, 'index']); //halaman acc peminjaman
     Route::get('/admin/accpeminjaman/detail/{id}', [AdminPeminjamanController::class, 'show']); //detail pemijaman
@@ -65,6 +69,8 @@ Route::middleware('checkToken')->group(function () {
     Route::patch('/PengajuanPeminjaman/{id}', [PeminjamanController::class, 'updateStatus'])->name('ulasan');
     Route::get('/riwayat', [RiwayatController::class, 'riwayatPeminjaman'])->name('riwayatku_search');
     Route::get('/kalender', [DashboardController::class, 'KalenderPeminjaman']);
+
+
 
     Route::post('/logout', [webAuthController::class, 'Logout'])->name('logout');
 });

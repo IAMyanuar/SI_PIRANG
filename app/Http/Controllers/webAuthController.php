@@ -9,6 +9,9 @@ use GuzzleHttp\Exception\RequestException;
 
 class webAuthController extends Controller
 {
+    public function landingPage(){
+        return view('layout.landing_page');
+    }
     public function viewLogin()
     {
         return view('layout.login');
@@ -29,7 +32,7 @@ class webAuthController extends Controller
             $contenarray = json_decode($conten, true);
 
 
-            if ($contenarray['status'] == true && $contenarray['role'] == "user") {
+            if ($contenarray['status'] == true && $contenarray['role'] == "peminjam") {
                 $token = $contenarray['token'];
                 $id_user = $contenarray['id_user'];
                 $nama = $contenarray['nama'];

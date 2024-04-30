@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\authController;
+use App\Http\Controllers\API\FasilitasController;
 use App\Http\Controllers\API\RuanganController;
 use App\Http\Controllers\API\PeminjamanController;
 use App\Models\Peminjaman;
@@ -49,16 +50,18 @@ Route::get('peminjaman/riwayat',[PeminjamanController::class, 'riwayat'])->middl
 Route::get('peminjaman/{id}',[PeminjamanController::class,'show'])->middleware('auth:sanctum');//menampilkan data peminjaman berdasarkan id
 Route::get('unduhFileDokumen/{id}',[PeminjamanController::class,'unduhFile'])->middleware('auth:sanctum');//unduh file bukti pendukung peminjaman
 Route::put('peminjaman/{id}',[PeminjamanController::class,'updateStatus'])->middleware('auth:sanctum','ablity:access-admin');//edit Status
-
-
+Route::get('fasilitas',[FasilitasController::class,'index']);
+Route::post('tambahfasilitas',[FasilitasController::class, 'store']);
+Route::get('fasilitas/{id}',[FasilitasController::class,'show']);
+Route::post('fasilitas/{id}',[FasilitasController::class,'update']);
 
 //user
-Route::post('peminjaman',[PeminjamanController::class, 'store']);//tambah peminjaman
-Route::get('peminjamanbyuser/{id}',[PeminjamanController::class,'peminjamanByUser'])->middleware('auth:sanctum','ablity:access-user');//menampilkan data berdasarkan id user
-Route::post('EditPeminjaman/{id}',[PeminjamanController::class,'update'])->middleware('auth:sanctum','ablity:access-user');//edit ruangan
-Route::patch('peminjaman/{id}/feedback',[PeminjamanController::class,'feedback'])->middleware('auth:sanctum','ablity:access-user');//feedback dari user
-Route::get('peminjaman/riwayat/{id}',[PeminjamanController::class, 'riwatyatPeminjamanByUser'])->middleware('auth:sanctum','ablity:access-user');//riwayat peminjaman user
-Route::delete('peminjaman/{id}',[PeminjamanController::class, 'destroy'])->middleware('auth:sanctum','ablity:access-user');//hapus peminjaman
+Route::post('peminjaman',[PeminjamanController::class, 'storefasilitas']);//tambah peminjaman
+Route::get('peminjamanbyuser/{id}',[PeminjamanController::class,'peminjamanByUser'])->middleware('auth:sanctum','ablity:access-peminjam');//menampilkan data berdasarkan id user
+Route::post('EditPeminjaman/{id}',[PeminjamanController::class,'update'])->middleware('auth:sanctum','ablity:access-peminjam');//edit ruangan
+Route::patch('peminjaman/{id}/feedback',[PeminjamanController::class,'feedback'])->middleware('auth:sanctum','ablity:access-peminjam');//feedback dari user
+Route::get('peminjaman/riwayat/{id}',[PeminjamanController::class, 'riwatyatPeminjamanByUser'])->middleware('auth:sanctum','ablity:access-peminjam');//riwayat peminjaman user
+Route::delete('peminjaman/{id}',[PeminjamanController::class, 'destroy'])->middleware('auth:sanctum','ablity:access-peminjam');//hapus peminjaman
 
 
 //kalender

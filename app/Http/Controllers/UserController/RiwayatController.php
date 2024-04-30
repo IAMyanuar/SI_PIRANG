@@ -32,8 +32,11 @@ class RiwayatController extends Controller
             $conten = $response->getBody()->getContents();
             $contenarray = json_decode($conten, true);
             return view('user.riwayat',['empty' => $contenarray['message']]);
+            // return $contenarray['message'];
         }
 
         return view('user.riwayat', ['datariwayat' => $datariwayat]);
+        // return $datariwayat;
+
     }
 }

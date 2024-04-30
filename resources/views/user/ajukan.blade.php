@@ -16,7 +16,7 @@
         <div class="page-breadcrumb">
             <div class="row">
                 <div class="col-7 align-self-center">
-                    <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">Edit Peminjaman</h3>
+                    <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">Ajukan Peminjaman</h3>
                     <div class="d-flex align-items-center">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb m-0 p-0">
@@ -42,86 +42,67 @@
                                     </div>
                                 @endif
                                 <div class="card-body">
-                                    <form method="POST" action="{{ route('ubah_pengajuan', $datapeminjam[0]['id']) }}"
+                                    <form action="{{ route('form_ajukan_peminjaman') }}" method="post"
                                         enctype="multipart/form-data">
                                         @csrf
-                                        @method('POST')
                                         <div class="form-group">
                                             <label>Nama Lembaga</label>
-                                            <input type="text" class="form-control" name="nama_lembaga"
-                                                value="{{ $datapeminjam[0]['nama_lembaga'] }}" required>
+                                            <input type="text" class="form-control" name="nama_lembaga">
                                         </div>
                                         <div class="form-group">
                                             <label>Kegiatan</label>
-                                            <input type="text" class="form-control" name="kegiatan"
-                                                value="{{ $datapeminjam[0]['kegiatan'] }}" required>
+                                            <input type="text" class="form-control" name="kegiatan">
                                         </div>
                                         <div class="form-group">
                                             <label>Ruangan</label>
-                                            <select class="form-control" name="id_ruangan" required>
+                                            <select class="form-control" name="id_ruangan">
                                                 <option value="">Pilih Ruangan</option>
                                                 @foreach ($data as $dataruangan)
-                                                    <option value="{{ $dataruangan['id'] }}"
-                                                        {{ $datapeminjam[0]['id_ruangan'] == $dataruangan['id'] ? 'selected' : '' }}>
-                                                        {{ $dataruangan['nama'] }}
+                                                    <option value="{{ $dataruangan['id'] }}">{{ $dataruangan['nama'] }}
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </div>
-                                        @php
-                                            $jumlah_elemen = count($datapeminjam[1]);
-                                        @endphp
                                         <div id="fasilitas">
-                                            @for ($i = 0; $i < $jumlah_elemen; $i++)
-                                                <div class="row fasilitas-row">
-                                                    <div class="form-group col-md-7">
-                                                        <label>Fasilitas</label>
-                                                        <select class="form-control" name="fasilitas[]">
-                                                            <option value="">Pilih Fasilitas</option>
-                                                            @foreach ($fasilitas as $datafasilitas)
-                                                                <option value="{{ $datafasilitas['id'] }}" {{ $datapeminjam[1][$i]['id_fasilitas'] == $datafasilitas['id'] ? 'selected' : '' }}>
-                                                                    {{ $datafasilitas['nama'] }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group col-md-3">
-                                                        <label>Jumlah</label>
-                                                        <input type="number" class="form-control" name="jumlah[]" value="{{ $datapeminjam[1][$i]['jumlah'] }}">
-                                                    </div>
-                                                    <div class="p-4">
-                                                        <button type="button" class="btn btn-circle btn-primary"
-                                                            id="tambahfasilitas"><i class="fas fa-plus"></i></button>
-                                                    </div>
+                                            <div class="row fasilitas-row">
+                                                <div class="form-group col-md-7">
+                                                    <label>Fasilitas</label>
+                                                    <select class="form-control" name="fasilitas[]">
+                                                        <option value="">Pilih Fasilitas</option>
+                                                        @foreach ($fasilitas as $datafasilitas)
+                                                            <option value="{{ $datafasilitas['id'] }}">
+                                                                {{ $datafasilitas['nama'] }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
-                                            @endfor
+                                                <div class="form-group col-md-3">
+                                                    <label>Jumlah</label>
+                                                    <input type="number" class="form-control" name="jumlah[]">
+                                                </div>
+                                                <div class="p-4">
+                                                    <button type="button" class="btn btn-circle btn-primary"
+                                                        id="tambahfasilitas"><i class="fas fa-plus"></i></button>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="form-group">
                                             <label>Waktu Mulai</label>
-                                            <input type="datetime-local" class="form-control" name="tgl_mulai"
-                                                value="{{ date('Y-m-d\TH:i', strtotime($datapeminjam[0]['tgl_mulai'] . ' ' . $datapeminjam[0]['jam_mulai'])) }}"
-                                                required>
+                                            <input type="datetime-local" class="form-control" name="tgl_mulai">
                                         </div>
                                         <div class="form-group">
                                             <label>Waktu Selesai</label>
-                                            <input type="datetime-local" class="form-control" name="tgl_selesai"
-                                                value="{{ date('Y-m-d\TH:i', strtotime($datapeminjam[0]['tgl_selesai'] . ' ' . $datapeminjam[0]['jam_selesai'])) }}"
-                                                required>
+                                            <input type="datetime-local" class="form-control" name="tgl_selesai">
                                         </div>
                                         <div class="form-group">
                                             <label>Bukti Pendukung</label>
                                             <input type="file" name="dokumen_pendukung" class="form-control">
                                         </div>
-                                        @if ($datapeminjam[0]['dokumen_pendukung'])
-                                            <div class="form-group">
-                                                <label>Bukti Pendukung: </label>
-                                                <img src="{{ $datapeminjam[0]['dokumen_pendukung'] }}" width="600">
-                                            </div>
-                                        @endif
                                         <button class="btn-primary btn" type="submit">Simpan</button>
                                     </form>
                                 </div>
                             @endsection
+
 
                             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                             <script>

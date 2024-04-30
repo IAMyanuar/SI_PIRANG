@@ -3,22 +3,22 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Ruangan;
+use App\Models\Fasilitas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
 
-class RuanganController extends Controller
+class FasilitasController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //menampilkan semua data ruangan
-        $data = Ruangan::get();
+        //menampilkan semua data fasilitas
+        $data = Fasilitas::get();
         for ($i = 0; $i < $data->count(); $i++) {
-            $data[$i]['foto'] = url('assets/images/ruangan/' . $data[$i]['foto']);
+            $data[$i]['foto'] = url('assets/images/fasilitas/' . $data[$i]['foto']);
         }
         return response()->json([
             'status' => true,
@@ -27,57 +27,58 @@ class RuanganController extends Controller
         ], 200);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
-        //
         try {
-        $dataruangan = new Ruangan;
-        $rules = [
-            'nama' => 'required',
-            'fasilitas' => 'required',
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif',
-        ];
+            $datafasilitas = new Fasilitas;
+            $rules = [
+                'nama' => 'required',
+                'foto' => 'required|image|mimes:jpeg,png,jpg,gif',
+                'jumlah' => 'required',
+            ];
 
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'prsoses tambah ruangan gagal',
+                    'data' => $validator->errors()
+                ], 422);
+            }
+
+            $foto = $request->file('foto');
+            $namafoto = time() . '.' . $foto->getClientOriginalExtension();
+            $foto->move(public_path('assets/images/fasilitas'), $namafoto);
+
+            $datafasilitas->nama = $request->nama;
+            $datafasilitas->foto = $namafoto;
+            $datafasilitas->jumlah = $request->jumlah;
+            $datafasilitas->save();
+
             return response()->json([
-                'status' => false,
-                'message' => 'prsoses tambah ruangan gagal',
-                'data' => $validator->errors()
-            ], 422);
-        }
+                'status' => true,
+                'message' => 'prsoses tambah ruangan berhasil',
+            ], 201);
 
-        $foto = $request->file('foto');
-        $namafoto = time() . '.' . $foto->getClientOriginalExtension();
-        $foto->move(public_path('assets/images/ruangan'), $namafoto);
-
-        $dataruangan->nama = $request->nama;
-        $dataruangan->fasilitas = $request->fasilitas;
-        $dataruangan->foto = $namafoto;
-        $dataruangan->save();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'prsoses tambah ruangan berhasil',
-        ], 201);
-
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Ruangan sudah ada',
-            ], 409);
-        }
-
+            } catch (\Throwable $th) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Ruangan sudah ada',
+                ], 409);
+            }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(string $id)
     {
         //menampilkan data berdasarkan id
-        $data = Ruangan::find($id);
-        $data['foto'] = url('assets/images/ruangan/' . $data['foto']);
+        $data = Fasilitas::find($id);
+        $data['foto'] = url('assets/images/fasilitas/' . $data['foto']);
 
         if(empty($data)){
             return response()->json([
@@ -92,16 +93,15 @@ class RuanganController extends Controller
         ], 200);
     }
 
-
     /**
      * Update the specified resource in storage.
      */
-    public function update($id, Request $request)
+    public function update(Request $request, string $id)
     {
-        // Temukan data ruangan berdasarkan ID
-        $dataruangan = Ruangan::find($id);
+        //
+        $datafasilitas = Fasilitas::find($id);
 
-        if (empty($dataruangan)) {
+        if (empty($datafasilitas)) {
             return response()->json([
                 'status' => false,
                 'message' => 'Data tidak ditemukan',
@@ -111,8 +111,8 @@ class RuanganController extends Controller
         // Validasi input
         $rules = [
             'nama' => 'required',
-            'fasilitas' => 'required',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'jumlah' => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -128,8 +128,8 @@ class RuanganController extends Controller
 
         if ($request->hasFile('foto')) {
             // Hapus file gambar lama jika ada
-            if (!empty($dataruangan->foto)) {
-                $oldPhotoPath = public_path('assets/images/ruangan/' . $dataruangan->foto);
+            if (!empty($datafasilitas->foto)) {
+                $oldPhotoPath = public_path('assets/images/fasilitas/' . $datafasilitas->foto);
                 if (File::exists($oldPhotoPath)) {
                     File::delete($oldPhotoPath);
                 }
@@ -138,14 +138,14 @@ class RuanganController extends Controller
             // Simpan gambar baru
             $foto = $request->file('foto');
             $namafoto = time() . '.' . $foto->getClientOriginalExtension();
-            $foto->move(public_path('assets/images/ruangan'), $namafoto);
-            $dataruangan->foto = $namafoto;
+            $foto->move(public_path('assets/images/fasilitas'), $namafoto);
+            $datafasilitas->foto = $namafoto;
         }
 
         // Update data ruangan hanya jika validasi berhasil
-        $dataruangan->nama = $request->nama;
-        $dataruangan->fasilitas = $request->fasilitas;
-        $dataruangan->save();
+        $datafasilitas->nama = $request->nama;
+        $datafasilitas->jumlah = $request->jumlah;
+        $datafasilitas->save();
 
         return response()->json([
             'status' => true,
@@ -156,7 +156,7 @@ class RuanganController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function destroy(string $id)
     {
         //
     }

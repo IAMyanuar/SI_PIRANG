@@ -31,7 +31,7 @@ class DashboardController extends Controller
         $contenarray = json_decode($conten, true);
         $dataruangan = $contenarray['data'];
 
-        //data peminjaman user
+        // data peminjaman user
         $url2 = $apiUrl . '/api/peminjamanbyuser/' . $id_user;
         $response2 = $client->request(
             'GET',
@@ -80,7 +80,7 @@ class DashboardController extends Controller
         }
 
 
-        return view('user.dashboard', ['dataruangan' => $dataruangan, 'datapeminjaman' => $datapeminjaman,'peminjamandisetujui' => $peminjamandisetujui, 'peminjamanditolak' => $peminjamanditolak]);
+        return view('user.dashboard', ['dataruangan' => $dataruangan, 'datapeminjaman'=>$datapeminjaman ,'peminjamandisetujui' => $peminjamandisetujui, 'peminjamanditolak' => $peminjamanditolak]);
     }
 
     public function KalenderPeminjaman()

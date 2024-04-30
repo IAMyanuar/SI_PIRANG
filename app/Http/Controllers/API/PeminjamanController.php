@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Peminjaman;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdatePeminjamanRequest;
+use App\Models\Fasilitas;
+use App\Models\PeminjamanFasilitas;
 use Doctrine\Inflector\Rules\English\Rules;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
@@ -18,7 +20,7 @@ class PeminjamanController extends Controller
      */
     public function index()
     {
-        // menampilkan data peminjaman status submitted
+        // menampilkan data peminjaman status terkirim
         $datapeminjaman = Peminjaman::join('users', 'peminjamen.user_id', '=', 'users.id')
             ->join('ruangans', 'peminjamen.id_ruangan', '=', 'ruangans.id')
             ->select(
@@ -37,21 +39,13 @@ class PeminjamanController extends Controller
                 'users.nim',
                 'users.email',
                 'users.telp'
-            )->where('peminjamen.status', '=', 'submitted')
+            )->where('peminjamen.status', '=', 'terkirim')
             ->get();
         return response()->json([
             'status' => true,
             'message' => 'data ditemukan',
             'data' => $datapeminjaman,
         ], 200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -88,7 +82,7 @@ class PeminjamanController extends Controller
 
         //cek apakah sudah ada yang meminjam ruangan tsb
         $CekDB = Peminjaman::where('id_ruangan', $ruangan)
-            ->whereIn('status', ['approved', 'in progress'])
+            ->whereIn('status', ['disetujui', 'di prosess'])
             ->where(function ($query) use ($tgl_mulai, $tgl_selesai) {
                 $query->where(function ($query) use ($tgl_mulai, $tgl_selesai) {
                     $query->whereBetween('tgl_mulai', [$tgl_mulai, $tgl_selesai])
@@ -134,6 +128,100 @@ class PeminjamanController extends Controller
         }
     }
 
+    public function storefasilitas(Request $request)
+    {
+        //tambah data peminjaman
+        $rules = [
+            'nama_lembaga' => 'required',
+            'kegiatan' => 'required',
+            'tgl_mulai' => 'required',
+            'tgl_selesai' => 'required',
+            'feedback' => 'nullable',
+            'dokumen_pendukung' => 'nullable',
+            'user_id' => 'required',
+            'id_ruangan' => 'required',
+            'id_fasilitas' => 'nullable',
+            'id_fasilitas.*' => 'nullable',
+            'jumlah' => 'nullable',
+            'jumlah.*' => 'nullable',
+        ];
+
+        //validasi data yang di insert
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'prsoses ajukan peminjaman gagal',
+                'data' => $validator->errors()
+            ], 422);
+        }
+
+        $ruangan = $request->id_ruangan;
+        $tgl_mulai = $request->tgl_mulai;
+        $tgl_selesai = $request->tgl_selesai;
+
+        //cek apakah sudah ada yang meminjam ruangan tsb
+        $CekPeminjaman = Peminjaman::where('id_ruangan', $ruangan)
+            ->whereIn('status', ['disetujui', 'di prosess'])
+            ->where(function ($query) use ($tgl_mulai, $tgl_selesai) {
+                $query->where(function ($query) use ($tgl_mulai, $tgl_selesai) {
+                    $query->whereBetween('tgl_mulai', [$tgl_mulai, $tgl_selesai])
+                        ->orWhereBetween('tgl_selesai', [$tgl_mulai, $tgl_selesai]);
+                })
+                    ->orWhere(function ($query) use ($tgl_mulai, $tgl_selesai) {
+                        $query->where('tgl_mulai', '>=', $tgl_mulai)
+                            ->where('tgl_selesai', '<=', $tgl_selesai);
+                    });
+            })
+            ->exists();
+
+        if (!$CekPeminjaman) {
+            $datapeminjaman = new Peminjaman;
+            $datapeminjaman->nama_lembaga = $request->nama_lembaga;
+            $datapeminjaman->kegiatan = $request->kegiatan;
+            $datapeminjaman->tgl_mulai = $request->tgl_mulai;
+            $datapeminjaman->tgl_selesai = $request->tgl_selesai;
+            $datapeminjaman->feedback = $request->feedback;
+            $datapeminjaman->user_id = $request->user_id;
+            $datapeminjaman->id_ruangan = $ruangan;
+
+
+            if ($request->hasFile('dokumen_pendukung')) {
+                $dokumen_pendukung = $request->file('dokumen_pendukung');
+                $namadokumen = time() . '.' . $dokumen_pendukung->getClientOriginalExtension();
+                $dokumen_pendukung->move(public_path('assets/images/bukti_pendukung'), $namadokumen);
+                $datapeminjaman->dokumen_pendukung = $namadokumen;
+            }
+
+            //masukkan ke DB
+            $datapeminjaman->save();
+
+            // Simpan data fasilitas yang diasosiasikan dengan peminjaman
+            $id_fasilitas_array = explode('"', $request->id_fasilitas);
+            $jumlah_array = explode('"', $request->jumlah);
+            foreach ($id_fasilitas_array ?? [] as $key => $fasilitasId) {
+                if (!is_null($fasilitasId)) { // Pastikan nilai tidak null
+                    $detailPeminjaman = new PeminjamanFasilitas;
+                    $detailPeminjaman->id_peminjaman = $datapeminjaman->id;
+                    $detailPeminjaman->id_fasilitas = $fasilitasId;
+                    $detailPeminjaman->jumlah = $jumlah_array[$key] ?? 0; // Default ke 0 jika jumlah kosong
+                    $detailPeminjaman->save();
+                }
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => 'prsoses ajukan peminjaman ruangan berhasil',
+            ], 201);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Ruangan sudah ada yang meminjam',
+            ], 409);
+        }
+    }
+
+
     /**
      * Display the specified resource.
      */
@@ -161,6 +249,11 @@ class PeminjamanController extends Controller
                 'users.telp'
             )->find($id);
 
+            $datafasilitas = PeminjamanFasilitas::where('id_peminjaman', $id)
+                ->leftjoin('fasilitas', 'peminjaman_fasilitas.id_fasilitas', '=', 'fasilitas.id')
+                ->select('peminjaman_fasilitas.id','peminjaman_fasilitas.id_peminjaman','peminjaman_fasilitas.id_fasilitas','fasilitas.nama','peminjaman_fasilitas.jumlah')
+                ->get();
+
         //memberi url foto
         if (!empty($datapeminjaman['dokumen_pendukung'])) {
             $datapeminjaman['dokumen_pendukung'] = url('assets/images/bukti_pendukung/' . $datapeminjaman['dokumen_pendukung']);
@@ -177,17 +270,10 @@ class PeminjamanController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'data ditemukan',
-            'data' => $datapeminjaman,
+            'data' => [$datapeminjaman,$datafasilitas]
         ], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Peminjaman $peminjaman)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -312,6 +398,8 @@ class PeminjamanController extends Controller
         //hapus peminjaman
 
         // Temukan peminjaman berdasarkan ID
+        $peminmjamanfasilitas = PeminjamanFasilitas::where('id_peminjaman', $id);
+        $peminmjamanfasilitas->delete();
         $peminjaman = Peminjaman::findOrFail($id);
 
         // Hapus peminjaman
@@ -398,7 +486,7 @@ class PeminjamanController extends Controller
                 'users.nim',
                 'users.email',
                 'users.telp'
-            )->where('peminjamen.status', '=', 'approved')
+            )->where('peminjamen.status', '=', 'disetujui')
             ->get();
         return response()->json([
             'status' => true,
@@ -429,7 +517,7 @@ class PeminjamanController extends Controller
                 'users.email',
                 'users.telp'
             )
-            ->where('peminjamen.status', '=', 'in progress')
+            ->where('peminjamen.status', '=', 'di prosess')
             ->get();
         return response()->json([
             'status' => true,
@@ -462,12 +550,12 @@ class PeminjamanController extends Controller
             )
             ->where('peminjamen.user_id', '=', $id)
             ->where(function ($query) {
-                // Menampilkan data dengan status "submitted", "submited", dan "in progress"
-                $query->whereIn('peminjamen.status', ['submitted', 'approved', 'in progress']);
+                // Menampilkan data dengan status "terkirim", "submited", dan "di prosess"
+                $query->whereIn('peminjamen.status', ['terkirim', 'disetujui', 'di prosess']);
 
-                // Menampilkan data dengan status "completed" hanya jika kolom feedback kosong
+                // Menampilkan data dengan status "selesai" hanya jika kolom feedback kosong
                 $query->orWhere(function ($subQuery) {
-                    $subQuery->where('peminjamen.status', 'completed')
+                    $subQuery->where('peminjamen.status', 'selesai')
                         ->whereNull('peminjamen.feedback');
                 });
             })
@@ -476,7 +564,7 @@ class PeminjamanController extends Controller
 
         if (empty($datapeminjaman)) {
             return response()->json([
-                'status' => true,
+                'status' => false,
                 'message' => 'data belum ada',
                 'data' => null,
             ], 401);
@@ -553,12 +641,12 @@ class PeminjamanController extends Controller
                 )
                 ->where('peminjamen.user_id', '=', $id)
                 ->where(function ($query) {
-                    // Menampilkan data dengan status "submitted", "submited", dan "in progress"
-                    $query->where('peminjamen.status', 'reject');
+                    // Menampilkan data dengan status "terkirim", "submited", dan "di prosess"
+                    $query->where('peminjamen.status', 'ditolak');
 
-                    // Menampilkan data dengan status "completed" hanya jika kolom feedback kosong
+                    // Menampilkan data dengan status "selesai" hanya jika kolom feedback kosong
                     $query->orWhere(function ($subQuery) {
-                        $subQuery->where('peminjamen.status', 'completed')
+                        $subQuery->where('peminjamen.status', 'selesai')
                             ->whereNotNull('peminjamen.feedback');
                     });
                 })
@@ -593,12 +681,12 @@ class PeminjamanController extends Controller
                 )
                 ->where('peminjamen.user_id', '=', $id)
                 ->where(function ($query) {
-                    // Menampilkan data dengan status "submitted", "submited", dan "in progress"
-                    $query->where('peminjamen.status', 'reject');
+                    // Menampilkan data dengan status "terkirim", "submited", dan "di prosess"
+                    $query->where('peminjamen.status', 'ditolak');
 
-                    // Menampilkan data dengan status "completed" hanya jika kolom feedback kosong
+                    // Menampilkan data dengan status "selesai" hanya jika kolom feedback kosong
                     $query->orWhere(function ($subQuery) {
-                        $subQuery->where('peminjamen.status', 'completed')
+                        $subQuery->where('peminjamen.status', 'selesai')
                             ->whereNotNull('peminjamen.feedback');
                     });
                 })
@@ -647,12 +735,12 @@ class PeminjamanController extends Controller
                     'users.telp'
                 )
                 ->where(function ($query) {
-                    // Menampilkan data dengan status "submitted", "submited", dan "in progress"
-                    $query->where('peminjamen.status', 'reject');
+                    // Menampilkan data dengan status "terkirim", "submited", dan "di prosess"
+                    $query->where('peminjamen.status', 'ditolak');
 
-                    // Menampilkan data dengan status "completed" hanya jika kolom feedback kosong
+                    // Menampilkan data dengan status "selesai" hanya jika kolom feedback kosong
                     $query->orWhere(function ($subQuery) {
-                        $subQuery->where('peminjamen.status', 'completed')
+                        $subQuery->where('peminjamen.status', 'selesai')
                             ->whereNotNull('peminjamen.feedback');
                     });
                 })
@@ -686,12 +774,12 @@ class PeminjamanController extends Controller
                     'users.telp'
                 )
                 ->where(function ($query) {
-                    // Menampilkan data dengan status "submitted", "submited", dan "in progress"
-                    $query->where('peminjamen.status', 'reject');
+                    // Menampilkan data dengan status "terkirim", "submited", dan "di prosess"
+                    $query->where('peminjamen.status', 'ditolak');
 
-                    // Menampilkan data dengan status "completed" hanya jika kolom feedback kosong
+                    // Menampilkan data dengan status "selesai" hanya jika kolom feedback kosong
                     $query->orWhere(function ($subQuery) {
-                        $subQuery->where('peminjamen.status', 'completed')
+                        $subQuery->where('peminjamen.status', 'selesai')
                             ->whereNotNull('peminjamen.feedback');
                     });
                 })
@@ -720,7 +808,7 @@ class PeminjamanController extends Controller
     public function KalenderPeminjaman()
     {
         $datapeminjaman = Peminjaman::join('ruangans', 'peminjamen.id_ruangan', '=', 'ruangans.id')
-            ->whereIn('peminjamen.status', ['approved', 'in progress'])
+            ->whereIn('peminjamen.status', ['disetujui', 'di prosess'])
             ->orderBy('peminjamen.tgl_mulai', 'asc')
             ->get();
         $events = $datapeminjaman->map(function ($event) {
@@ -739,10 +827,10 @@ class PeminjamanController extends Controller
 
     public function peminjaman()
     {
-        $datapeminjaman = Peminjaman::with(['ruangan','user'])
-        // ->whereIn('peminjamen.status', ['in progress','completed'])
-        ->orderBy('id','desc')
-        ->get();
+        $datapeminjaman = Peminjaman::with(['ruangan', 'user'])
+            // ->whereIn('peminjamen.status', ['di prosess','selesai'])
+            ->orderBy('id', 'desc')
+            ->get();
 
         return response()->json([
             'status' => true,

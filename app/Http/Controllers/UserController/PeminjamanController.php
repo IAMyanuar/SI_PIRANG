@@ -21,7 +21,7 @@ class PeminjamanController extends Controller
         $id_user = session('id_user');
         $client = new Client();
         try {
-            $url = $apiUrl.'/api/peminjamanbyuser/' . $id_user;
+            $url = $apiUrl . '/api/peminjamanbyuser/' . $id_user;
             $response = $client->request(
                 'GET',
                 $url,
@@ -34,7 +34,7 @@ class PeminjamanController extends Controller
             $datapeminjaman = $contenarray['data'];
         } catch (\Throwable $th) {
             return view('user.pengajuan_peminjaman')
-            ->with('datakosong');
+                ->with('datakosong');
         }
         return view('user.pengajuan_peminjaman', ['datapeminjaman' => $datapeminjaman]);
     }
@@ -55,10 +55,19 @@ class PeminjamanController extends Controller
                     'Authorization' => 'Bearer ' . $apiToken
                 ],
             ]);
+            $url1 = $apiUrl . "/api/fasilitas";
+            $response1 = $client->request('GET', $url1, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $apiToken
+                ],
+            ]);
             $conten = $response->getBody()->getContents();
             $contenarray = json_decode($conten, true);
-            $data = $contenarray['data'];
-            return view('user.ajukan_peminjaman', ['data' => $data]);
+            $ruangan = $contenarray['data'];
+            $conten1 = $response1->getBody()->getContents();
+            $contenarray1 = json_decode($conten1, true);
+            $fasilitas = $contenarray1['data'];
+            return view('user.ajukan', ['data' => $ruangan, 'fasilitas' => $fasilitas]);
         } catch (\Throwable $th) {
             //throw $th;
         }
@@ -81,6 +90,10 @@ class PeminjamanController extends Controller
             'tgl_selesai' => 'required',
             'id_ruangan' => 'required',
             'dokumen_pendukung' => 'nullable',
+            'fasilitas' => 'nullable|array',
+            'fasilitas.*' => 'integer',
+            'jumlah' => 'nullable|array',
+            'jumlah.*' => 'integer',
 
 
             // Jika Anda ingin memastikan bahwa 'dokumen_pendukung' adalah berkas gambar.
@@ -114,6 +127,14 @@ class PeminjamanController extends Controller
                         'name' => 'id_ruangan',
                         'contents' => $validatedData['id_ruangan']
                     ],
+                    [
+                        'name' => 'id_fasilitas',
+                        'contents' => implode('"', $validatedData['fasilitas'])
+                    ],
+                    [
+                        'name' => 'jumlah',
+                        'contents' => implode('"', $validatedData['jumlah'])
+                    ],
 
 
                 ],
@@ -123,6 +144,7 @@ class PeminjamanController extends Controller
 
             ];
 
+            // return $options;
             if (!empty($dokumen_pendukung)) {
                 $dokumenIsexist = [
                     'name' => 'dokumen_pendukung',
@@ -131,11 +153,11 @@ class PeminjamanController extends Controller
                     'headers'  => [
                         'Content-Type' => '<Content-type header>'
                     ]
-                    ];
-                    $options['multipart'][] = $dokumenIsexist;
+                ];
+                $options['multipart'][] = $dokumenIsexist;
             }
 
-
+            // return $options;
             $client = new Client();
             $url = $apiUrl . "/api/peminjaman";
             $response = $client->request('POST', $url, $options);
@@ -146,8 +168,9 @@ class PeminjamanController extends Controller
             $response = $e->getResponse();
             $conten = $response->getBody()->getContents();
             $contenarray = json_decode($conten, true);
-            return redirect()->back()
-                ->with('error', $contenarray['message']);
+            // return redirect()->back()
+            //     ->with('error', $contenarray['message']);
+            return $contenarray['message'];
         }
     }
 
@@ -160,7 +183,7 @@ class PeminjamanController extends Controller
         $apiToken = session('api_token');
         $client = new Client();
         try {
-            $url = $apiUrl.'/api/peminjaman/' . $id;
+            $url = $apiUrl . '/api/peminjaman/' . $id;
             $response = $client->request(
                 'GET',
                 $url,
@@ -187,7 +210,7 @@ class PeminjamanController extends Controller
         $apiToken = session('api_token');
         $client = new Client();
         try {
-            $url1 = $apiUrl.'/api/peminjaman/' . $id;
+            $url1 = $apiUrl . '/api/peminjaman/' . $id;
             $response1 = $client->request(
                 'GET',
                 $url1,
@@ -202,6 +225,12 @@ class PeminjamanController extends Controller
                     'Authorization' => 'Bearer ' . $apiToken
                 ],
             ]);
+            $url3 = $apiUrl . "/api/fasilitas";
+            $response3 = $client->request('GET', $url3, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $apiToken
+                ],
+            ]);
 
             $conten1 = $response1->getBody()->getContents();
             $contenarray1 = json_decode($conten1, true);
@@ -211,7 +240,11 @@ class PeminjamanController extends Controller
             $contenarray2 = json_decode($conten2, true);
             $data = $contenarray2['data'];
 
-            return view('user.edit_peminjaman', ['datapeminjam' => $datapeminjam, 'data' => $data]);
+            $conten3 = $response3->getBody()->getContents();
+            $contenarray3 = json_decode($conten3, true);
+            $fasilitas = $contenarray3['data'];
+
+            return view('user.edit_peminjaman', ['datapeminjam' => $datapeminjam, 'data' => $data, 'fasilitas'=> $fasilitas]);
         } catch (\Throwable $th) {
             // return redirect()->back()->withErrors('error', 'Access Denied');
         }
@@ -283,8 +316,8 @@ class PeminjamanController extends Controller
                     'headers'  => [
                         'Content-Type' => '<Content-type header>'
                     ]
-                    ];
-                    $options['multipart'][] = $dokumenIsexist;
+                ];
+                $options['multipart'][] = $dokumenIsexist;
             }
 
 
@@ -301,7 +334,6 @@ class PeminjamanController extends Controller
             return redirect()->back()
                 ->with('error', $contenarray['message']);
         }
-
     }
 
     /**
@@ -327,7 +359,6 @@ class PeminjamanController extends Controller
 
             // Beri respons berhasil
             return redirect()->back()->with('success', 'Peminjaman berhasil dihapus.');
-
         } catch (\Exception $e) {
             return redirect()->to('/PengajuanPeminjaman')
                 ->with('error', 'Terjadi kesalahan. ' . $e->getMessage());
@@ -341,7 +372,7 @@ class PeminjamanController extends Controller
             $apiToken = session('api_token');
             $options = [
                 'form_params' => [
-                  'feedback' => $request->input('feedback'),
+                    'feedback' => $request->input('feedback'),
                 ],
                 'headers' => [
                     'Authorization' => 'Bearer ' . $apiToken,
@@ -352,7 +383,7 @@ class PeminjamanController extends Controller
 
             // Kirim permintaan PUT ke API dengan status yang sesuai
             $client = new Client();
-            $url = $apiUrl."/api/peminjaman/$id/feedback";
+            $url = $apiUrl . "/api/peminjaman/$id/feedback";
             $response = $client->request('PATCH', $url, $options);
 
             // Periksa respons dari API
@@ -361,18 +392,13 @@ class PeminjamanController extends Controller
             } else {
                 return redirect()->back()->with('error', 'Gagal merubah memberi ulasan');
             }
-        }  catch (RequestException $e) {
+        } catch (RequestException $e) {
             $response = $e->getResponse();
             $conten = $response->getBody()->getContents();
             $contenarray = json_decode($conten, true);
             return redirect()->back()
-                ->with('error',$contenarray['message']);
+                ->with('error', $contenarray['message']);
             // return dd($options);
         }
     }
-
-
-
-
-
 }

@@ -141,32 +141,43 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-3">
+                                                        <h3 class="card-title">Fasilitas</h3>
+                                                    </div>
+                                                    <div class="row col-sm-1">
+                                                        <h3 class="card-title">:</h3>
+                                                    </div>
+                                                    <div class="row col-auto mb-3">
+                                                        <h3 class="">fasilitas</h3>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-3">
                                                         <h3 class="card-title">Status</h3>
                                                     </div>
                                                     <div class="row col-sm-1">
                                                         <h3 class="card-title">:</h3>
                                                     </div>
-                                                    @if ($datapeminjam['status']=='submitted')
+                                                    @if ($datapeminjam['status']=='terkirim')
                                                     <div class="row col-auto mb-3">
                                                         <h3 class="text-secondary font-weight-bold">{{ $datapeminjam['status'] }}</h3>
                                                     </div>
                                                     @endif
-                                                    @if ($datapeminjam['status']=='approved')
+                                                    @if ($datapeminjam['status']=='disetujui')
                                                     <div class="row col-auto mb-3">
                                                         <h3 class="text-success font-weight-bold">{{ $datapeminjam['status'] }}</h3>
                                                     </div>
                                                     @endif
-                                                    @if ($datapeminjam['status']=='reject')
+                                                    @if ($datapeminjam['status']=='tolak')
                                                     <div class="row col-auto mb-3">
                                                         <h3 class="text-danger font-weight-bold">{{ $datapeminjam['status'] }}</h3>
                                                     </div>
                                                     @endif
-                                                    @if ($datapeminjam['status']=='in progress')
+                                                    @if ($datapeminjam['status']=='di prosess')
                                                     <div class="row col-auto mb-3">
                                                         <h3 class="text-warning font-weight-bold">{{ $datapeminjam['status'] }}</h3>
                                                     </div>
                                                     @endif
-                                                    @if ($datapeminjam['status']=='completed')
+                                                    @if ($datapeminjam['status']=='selesai')
                                                     <div class="row col-auto mb-3">
                                                         <h3 class="text-info font-weight-bold">{{ $datapeminjam['status'] }}</h3>
                                                     </div>

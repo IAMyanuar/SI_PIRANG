@@ -9,6 +9,7 @@
                 <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="/admin/accpeminjaman" aria-expanded="false"><i class="icon-check"></i><span class="hide-menu">Konfirmasi Peminjaman</span></a></li>
                 <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="/admin/riwayat" aria-expanded="false"><i class="icon-notebook"></i><span class="hide-menu">Riwayat</span></a></li>
                 <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="/admin/DataRuangan" aria-expanded="false"><i class="far fa-building"></i><span class="hide-menu">Data Ruangan</span></a></li>
+                <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="/admin/DataFasilitas" aria-expanded="false"><i class="fas fa-box-open"></i><span class="hide-menu">Data Fasilitas</span></a></li>
                 <form action="{{ route('logout') }}" method="post">
                 @csrf
                 <li class="sidebar-item"><button class="sidebar-link sidebar-link btn btn-no-outline" aria-expanded="false"><i data-feather="log-out" class="feather-icon"></i><span class="hide-menu">Logout</span></button></li>
