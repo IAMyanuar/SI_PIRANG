@@ -41,92 +41,24 @@ class PeminjamanController extends Controller
                 'users.telp'
             )->where('peminjamen.status', '=', 'terkirim')
             ->get();
+
+        // Mengambil ID peminjaman
+        $peminjamanIDs = $datapeminjaman->pluck('id');
+
+        //query peminjaman fasilitas dan fasilitas
+        $datafasilitas = PeminjamanFasilitas::whereIn('id_peminjaman', $peminjamanIDs)
+            ->leftJoin('fasilitas', 'peminjaman_fasilitas.id_fasilitas', '=', 'fasilitas.id')
+            ->select('peminjaman_fasilitas.id', 'peminjaman_fasilitas.id_peminjaman', 'peminjaman_fasilitas.id_fasilitas', 'fasilitas.nama', 'peminjaman_fasilitas.jumlah')
+            ->get();
+
         return response()->json([
             'status' => true,
             'message' => 'data ditemukan',
-            'data' => $datapeminjaman,
+            'data' => [$datapeminjaman, $datafasilitas],
         ], 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //tambah data peminjaman
-        $rules = [
-            'nama_lembaga' => 'required',
-            'kegiatan' => 'required',
-            'tgl_mulai' => 'required',
-            'tgl_selesai' => 'required',
-            'feedback' => 'nullable',
-            'dokumen_pendukung' => 'nullable',
-            'user_id' => 'required',
-            'id_ruangan' => 'required',
-        ];
 
-        //validasi data yang di insert
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'prsoses ajukan peminjaman gagal',
-                'data' => $validator->errors()
-            ], 422);
-        }
-
-
-        $ruangan = $request->id_ruangan;
-        $tgl_mulai = $request->tgl_mulai;
-        $tgl_selesai = $request->tgl_selesai;
-
-        //cek apakah sudah ada yang meminjam ruangan tsb
-        $CekDB = Peminjaman::where('id_ruangan', $ruangan)
-            ->whereIn('status', ['disetujui', 'di prosess'])
-            ->where(function ($query) use ($tgl_mulai, $tgl_selesai) {
-                $query->where(function ($query) use ($tgl_mulai, $tgl_selesai) {
-                    $query->whereBetween('tgl_mulai', [$tgl_mulai, $tgl_selesai])
-                        ->orWhereBetween('tgl_selesai', [$tgl_mulai, $tgl_selesai]);
-                })
-                    ->orWhere(function ($query) use ($tgl_mulai, $tgl_selesai) {
-                        $query->where('tgl_mulai', '>=', $tgl_mulai)
-                            ->where('tgl_selesai', '<=', $tgl_selesai);
-                    });
-            })
-            ->exists();
-
-        if (!$CekDB) {
-            $datapeminjaman = new Peminjaman;
-            $datapeminjaman->nama_lembaga = $request->nama_lembaga;
-            $datapeminjaman->kegiatan = $request->kegiatan;
-            $datapeminjaman->tgl_mulai = $request->tgl_mulai;
-            $datapeminjaman->tgl_selesai = $request->tgl_selesai;
-            $datapeminjaman->feedback = $request->feedback;
-            $datapeminjaman->user_id = $request->user_id;
-            $datapeminjaman->id_ruangan = $ruangan;
-
-
-            if ($request->hasFile('dokumen_pendukung')) {
-                $dokumen_pendukung = $request->file('dokumen_pendukung');
-                $namadokumen = time() . '.' . $dokumen_pendukung->getClientOriginalExtension();
-                $dokumen_pendukung->move(public_path('assets/images/bukti_pendukung'), $namadokumen);
-                $datapeminjaman->dokumen_pendukung = $namadokumen;
-            }
-
-            //masukkan ke DB
-            $datapeminjaman->save();
-
-            return response()->json([
-                'status' => true,
-                'message' => 'prsoses ajukan peminjaman ruangan berhasil',
-            ], 201);
-        } else {
-            return response()->json([
-                'status' => false,
-                'message' => 'Ruangan sudah ada yang meminjam',
-            ], 409);
-        }
-    }
 
     public function storefasilitas(Request $request)
     {
@@ -199,14 +131,55 @@ class PeminjamanController extends Controller
             // Simpan data fasilitas yang diasosiasikan dengan peminjaman
             $id_fasilitas_array = explode('"', $request->id_fasilitas);
             $jumlah_array = explode('"', $request->jumlah);
+
+
+            $errorMessages = [];
+            $jmlFasilitasKurang = false;
+
             foreach ($id_fasilitas_array ?? [] as $key => $fasilitasId) {
                 if (!is_null($fasilitasId)) { // Pastikan nilai tidak null
-                    $detailPeminjaman = new PeminjamanFasilitas;
-                    $detailPeminjaman->id_peminjaman = $datapeminjaman->id;
-                    $detailPeminjaman->id_fasilitas = $fasilitasId;
-                    $detailPeminjaman->jumlah = $jumlah_array[$key] ?? 0; // Default ke 0 jika jumlah kosong
-                    $detailPeminjaman->save();
+                    // Periksa apakah jumlah fasilitas yang diminta lebih besar dari yang tersedia
+                    $jumlahDiminta = $jumlah_array[$key] ?? 0;
+                    $fasilitas = Fasilitas::find($fasilitasId);
+                    $jumlahTersedia = $fasilitas->jumlah;
+
+                    // Jika jumlah fasilitas yang diminta lebih besar dari yang tersedia, tambahkan pesan kesalahan
+                    if ($jumlahDiminta > $jumlahTersedia) {
+                        $errorMessages[] = "Jumlah fasilitas '{$fasilitas->nama}' yang tersedia tidak mencukupi untuk dipinjam.";
+                        $jmlFasilitasKurang = true;
+                    }
                 }
+            }
+
+            if ($jmlFasilitasKurang == false) {
+                foreach ($id_fasilitas_array ?? [] as $key => $fasilitasId) {
+                    if (!is_null($fasilitasId)) { // Pastikan nilai tidak null
+                        // Periksa apakah jumlah fasilitas yang diminta lebih besar dari yang tersedia
+                        $jumlahDiminta = $jumlah_array[$key] ?? 0;
+                        $fasilitas = Fasilitas::find($fasilitasId);
+                        $jumlahTersedia = $fasilitas->jumlah;
+
+                        $detailPeminjaman = new PeminjamanFasilitas;
+                        $detailPeminjaman->id_peminjaman = $datapeminjaman->id;
+                        $detailPeminjaman->id_fasilitas = $fasilitasId;
+                        $detailPeminjaman->jumlah = $jumlahDiminta;
+                        $detailPeminjaman->save();
+                    }
+                }
+            }
+
+            // Jika ada pesan kesalahan, kembalikan respons dengan pesan kesalahan
+            // ganti arayy menjadi string
+            $errorString = implode("\n", $errorMessages);
+            if (!empty($errorMessages)) {
+                $peminjaman = Peminjaman::findOrFail($datapeminjaman->id);
+                // Hapus peminjaman
+                $peminjaman->delete();
+                return response()->json([
+                    'status' => false,
+                    'message' => $errorString,
+                    'errors' => $errorMessages
+                ], 422);
             }
 
             return response()->json([
@@ -249,10 +222,10 @@ class PeminjamanController extends Controller
                 'users.telp'
             )->find($id);
 
-            $datafasilitas = PeminjamanFasilitas::where('id_peminjaman', $id)
-                ->leftjoin('fasilitas', 'peminjaman_fasilitas.id_fasilitas', '=', 'fasilitas.id')
-                ->select('peminjaman_fasilitas.id','peminjaman_fasilitas.id_peminjaman','peminjaman_fasilitas.id_fasilitas','fasilitas.nama','peminjaman_fasilitas.jumlah')
-                ->get();
+        $datafasilitas = PeminjamanFasilitas::where('id_peminjaman', $id)
+            ->leftjoin('fasilitas', 'peminjaman_fasilitas.id_fasilitas', '=', 'fasilitas.id')
+            ->select('peminjaman_fasilitas.id', 'peminjaman_fasilitas.id_peminjaman', 'peminjaman_fasilitas.id_fasilitas', 'fasilitas.nama', 'peminjaman_fasilitas.jumlah')
+            ->get();
 
         //memberi url foto
         if (!empty($datapeminjaman['dokumen_pendukung'])) {
@@ -270,7 +243,7 @@ class PeminjamanController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'data ditemukan',
-            'data' => [$datapeminjaman,$datafasilitas]
+            'data' => [$datapeminjaman, $datafasilitas]
         ], 200);
     }
 
@@ -380,6 +353,34 @@ class PeminjamanController extends Controller
                 'request' => $request->all(),
             ], 400);
         }
+
+        //ketika status di prosess maka
+        if ($request->status == 'di prosess') {
+            $pmjfasilitas = PeminjamanFasilitas::where('id_peminjaman', $id)->get();
+            foreach ($pmjfasilitas as $peminjaman_fasilitas) {
+                $id_fasilitas = $peminjaman_fasilitas->id_fasilitas;
+                $jumlah_peminjaman = $peminjaman_fasilitas->jumlah;
+
+                $fasilitas = Fasilitas::find($id_fasilitas);
+                $fasilitas->jumlah -= $jumlah_peminjaman;
+                $fasilitas->save();
+            }
+        }
+
+        //ketika status selesai
+        if ($request->status == 'selesai') {
+            $pmjfasilitas = PeminjamanFasilitas::where('id_peminjaman', $id)->get();
+            foreach ($pmjfasilitas as $peminjaman_fasilitas) {
+                $id_fasilitas = $peminjaman_fasilitas->id_fasilitas;
+                $jumlah_peminjaman = $peminjaman_fasilitas->jumlah;
+
+                $fasilitas = Fasilitas::find($id_fasilitas);
+                $fasilitas->jumlah += $jumlah_peminjaman;
+                $fasilitas->save();
+            }
+        }
+
+
         $datapeminjaman->status = $request->status;
         $datapeminjaman->feedback = $request->feedback;
         $datapeminjaman->save();
@@ -485,13 +486,23 @@ class PeminjamanController extends Controller
                 'ruangans.nama as nama_ruangan',
                 'users.nim',
                 'users.email',
-                'users.telp'
+                'users.telp',
             )->where('peminjamen.status', '=', 'disetujui')
             ->get();
+
+        // Mengambil ID peminjaman
+        $peminjamanIDs = $datapeminjaman->pluck('id');
+
+        //query peminjaman fasilitas dan fasilitas
+        $datafasilitas = PeminjamanFasilitas::whereIn('id_peminjaman', $peminjamanIDs)
+            ->leftJoin('fasilitas', 'peminjaman_fasilitas.id_fasilitas', '=', 'fasilitas.id')
+            ->select('peminjaman_fasilitas.id', 'peminjaman_fasilitas.id_peminjaman', 'peminjaman_fasilitas.id_fasilitas', 'fasilitas.nama', 'peminjaman_fasilitas.jumlah')
+            ->get();
+
         return response()->json([
             'status' => true,
             'message' => 'data ditemukan',
-            'data' => $datapeminjaman,
+            'data' => [$datapeminjaman, $datafasilitas],
         ], 200);
     }
 
@@ -519,10 +530,20 @@ class PeminjamanController extends Controller
             )
             ->where('peminjamen.status', '=', 'di prosess')
             ->get();
+
+        // Mengambil ID peminjaman
+        $peminjamanIDs = $datapeminjaman->pluck('id');
+
+        //query peminjaman fasilitas dan fasilitas
+        $datafasilitas = PeminjamanFasilitas::whereIn('id_peminjaman', $peminjamanIDs)
+            ->leftJoin('fasilitas', 'peminjaman_fasilitas.id_fasilitas', '=', 'fasilitas.id')
+            ->select('peminjaman_fasilitas.id', 'peminjaman_fasilitas.id_peminjaman', 'peminjaman_fasilitas.id_fasilitas', 'fasilitas.nama', 'peminjaman_fasilitas.jumlah')
+            ->get();
+
         return response()->json([
             'status' => true,
             'message' => 'data ditemukan',
-            'data' => $datapeminjaman,
+            'data' => [$datapeminjaman, $datafasilitas],
         ], 200);
     }
 
@@ -740,8 +761,8 @@ class PeminjamanController extends Controller
 
                     // Menampilkan data dengan status "selesai" hanya jika kolom feedback kosong
                     $query->orWhere(function ($subQuery) {
-                        $subQuery->where('peminjamen.status', 'selesai')
-                            ->whereNotNull('peminjamen.feedback');
+                        $subQuery->where('peminjamen.status', 'selesai');
+                        // ->whereNotNull('peminjamen.feedback');
                     });
                 })
                 ->where(function ($query) use ($keyword) {
@@ -779,8 +800,8 @@ class PeminjamanController extends Controller
 
                     // Menampilkan data dengan status "selesai" hanya jika kolom feedback kosong
                     $query->orWhere(function ($subQuery) {
-                        $subQuery->where('peminjamen.status', 'selesai')
-                            ->whereNotNull('peminjamen.feedback');
+                        $subQuery->where('peminjamen.status', 'selesai');
+                        // ->whereNotNull('peminjamen.feedback');
                     });
                 })
                 ->orderBy('peminjamen.tgl_mulai', 'desc')

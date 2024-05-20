@@ -36,7 +36,15 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card">
-                                @if (session()->has('error'))
+                                @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @elseif (session()->has('error'))
                                     <div class="alert alert-danger">
                                         <strong>{{ session('error') }}</strong>
                                     </div>

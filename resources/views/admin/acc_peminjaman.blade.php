@@ -67,9 +67,10 @@
                                                 <a href="#submitted" data-toggle="tab" aria-expanded="false"
                                                     class="nav-link  active">
                                                     <i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
-                                                    <span class="d-none d-lg-block">submitted
-                                                        @if (count($datapeminjamansubmitted) !== 0)
-                                                            <span class="badge badge-primary notify-no rounded-circle">{{ count($datapeminjamansubmitted) }}</span>
+                                                    <span class="d-none d-lg-block">terkirim
+                                                        @if (count($datapeminjamansubmitted[0]) !== 0)
+                                                            <span
+                                                                class="badge badge-primary notify-no rounded-circle">{{ count($datapeminjamansubmitted[0]) }}</span>
                                                         @endif
                                                     </span>
                                                 </a>
@@ -77,9 +78,10 @@
                                             <li class="nav-item">
                                                 <a href="#approved" data-toggle="tab" aria-expanded="true" class="nav-link">
                                                     <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i>
-                                                    <span class="d-none d-lg-block">approved
-                                                        @if (count($datapmjapprove) !== 0)
-                                                            <span class="badge badge-primary notify-no rounded-circle">{{ count($datapmjapprove) }}</span>
+                                                    <span class="d-none d-lg-block">disetujui
+                                                        @if (count($datapmjapprove[0]) !== 0)
+                                                            <span
+                                                                class="badge badge-primary notify-no rounded-circle">{{ count($datapmjapprove[0]) }}</span>
                                                         @endif
                                                     </span>
                                                 </a>
@@ -88,9 +90,10 @@
                                                 <a href="#inprogress" data-toggle="tab" aria-expanded="false"
                                                     class="nav-link">
                                                     <i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
-                                                    <span class="d-none d-lg-block">in progress
-                                                        @if (count($datapmjinprogress) !== 0)
-                                                            <span class="badge badge-primary notify-no rounded-circle">{{ count($datapmjinprogress) }}</span>
+                                                    <span class="d-none d-lg-block">di proses
+                                                        @if (count($datapmjinprogress[0]) !== 0)
+                                                            <span
+                                                                class="badge badge-primary notify-no rounded-circle">{{ count($datapmjinprogress[0]) }}</span>
                                                         @endif
                                                     </span>
                                                 </a>
@@ -108,6 +111,7 @@
                                                                 <th>Nama Lembaga</th>
                                                                 <th>Nama Kegiatan</th>
                                                                 <th>Ruangan</th>
+                                                                <th>Fasilitas</th>
                                                                 <th>Waktu Mulai</th>
                                                                 <th>Waktu Selesai</th>
                                                                 <th>surat pendukung</th>
@@ -125,13 +129,20 @@
                                                                             yang mengajukan peminjaman ruangan</strong></td>
                                                                 </tr>
                                                             @endif
-                                                            @foreach ($datapeminjamansubmitted as $item)
+                                                            @foreach ($datapeminjamansubmitted[0] as $item)
                                                                 <tr>
                                                                     <td>{{ $no++ }}</td>
                                                                     <td>{{ $item['nama_user'] }}</td>
                                                                     <td>{{ $item['nama_lembaga'] }}</td>
                                                                     <td>{{ $item['kegiatan'] }}</td>
-                                                                    <th>{{ $item['nama_ruangan'] }}</th>
+                                                                    <td>{{ $item['nama_ruangan'] }}</td>
+                                                                    <td>
+                                                                        @foreach ($datapeminjamansubmitted[1] as $itemfasilitas)
+                                                                            @if ($itemfasilitas['id_peminjaman']==$item['id'])
+                                                                            - {{ $itemfasilitas['nama'] }}: {{ $itemfasilitas['jumlah'] }} <br>
+                                                                            @endif
+                                                                        @endforeach
+                                                                    </td>
                                                                     <td class="text-center">
                                                                         {{ date('d-m-Y', strtotime($item['tgl_mulai'])) }}
                                                                         <br>jam:
@@ -143,18 +154,21 @@
                                                                         {{ date('H:i', strtotime($item['jam_selesai'])) }}
                                                                     </td>
                                                                     <td class="text-center"><a
-                                                                            class=" btn btn-circle btn-success" data-toggle="tooltip" data-placement="bottom"
-                                                                            title="" data-original-title="Unduh Surat Pendukung"
+                                                                            class=" btn btn-circle btn-success"
+                                                                            data-toggle="tooltip" data-placement="bottom"
+                                                                            title=""
+                                                                            data-original-title="Unduh Surat Pendukung"
                                                                             href="{{ url('/unduh-file/' . $item['id']) }}"><i
                                                                                 class="fa fa-download"></a></td>
                                                                     <td>{{ $item['status'] }}</td>
                                                                     <td>
                                                                         <form method="POST"
-                                                                            action="{{ route('update-status', ['id' => $item['id'], 'status' => 'approved']) }}">
+                                                                            action="{{ route('update-status', ['id' => $item['id'], 'status' => 'disetujui']) }}">
                                                                             @csrf
                                                                             @method('PUT')
-                                                                            <button class="btn btn-success btn-rounded" data-toggle="tooltip" data-placement="left"
-                                                                            title="" data-original-title="Setujui"
+                                                                            <button class="btn btn-success btn-rounded"
+                                                                                data-toggle="tooltip" data-placement="left"
+                                                                                title="" data-original-title="Setujui"
                                                                                 type="submit"><i
                                                                                     class="fas fa-check"></i></button>
                                                                         </form>
@@ -162,8 +176,9 @@
                                                                             type="button" data-toggle="modal"
                                                                             data-target="#reject-modal"
                                                                             data-id="{{ $item['id'] }}">
-                                                                            <i class="fas fa-times" data-toggle="tooltip" data-placement="left"
-                                                                            title="" data-original-title="Tolak"></i>
+                                                                            <i class="fas fa-times" data-toggle="tooltip"
+                                                                                data-placement="left" title=""
+                                                                                data-original-title="Tolak"></i>
                                                                         </button>
                                                                         <!-- feedback modal content -->
                                                                         <div id="reject-modal" class="modal fade"
@@ -177,14 +192,15 @@
                                                                                         </div>
 
                                                                                         <form class="pl-3 pr-3"
-                                                                                            action="{{ route('update-status', ['id' => $item['id'], 'status' => 'reject']) }}"
+                                                                                            action="{{ route('update-status', ['id' => $item['id'], 'status' => 'ditolak']) }}"
                                                                                             method="POST" id="modal-form">
                                                                                             @csrf
                                                                                             @method('PUT')
                                                                                             <div class="form-group">
                                                                                                 <label
                                                                                                     for="username">Berikan
-                                                                                                    Masukan atau Saran</label>
+                                                                                                    Masukan atau
+                                                                                                    Saran</label>
                                                                                                 <input class="form-control"
                                                                                                     name="feedback"
                                                                                                     required>
@@ -202,8 +218,9 @@
                                                                                 </div><!-- /.modal-content -->
                                                                             </div><!-- /.modal-dialog -->
                                                                         </div><!-- /.modal -->
-                                                                        <a class="btn btn-info btn-rounded" data-toggle="tooltip" data-placement="left"
-                                                                        title="" data-original-title="Detail"
+                                                                        <a class="btn btn-info btn-rounded"
+                                                                            data-toggle="tooltip" data-placement="left"
+                                                                            title="" data-original-title="Detail"
                                                                             href="{{ url('/admin/accpeminjaman/detail/' . $item['id']) }}"><i
                                                                                 class="fas fa-search-plus"></i></a>
                                                                     </td>
@@ -223,6 +240,7 @@
                                                                 <th>Nama Lembaga</th>
                                                                 <th>Nama Kegiatan</th>
                                                                 <th>Ruangan</th>
+                                                                <th>Fasilitas</th>
                                                                 <th>Waktu Mulai</th>
                                                                 <th>Waktu Selesai</th>
                                                                 <th>surat pendukung</th>
@@ -234,13 +252,20 @@
                                                             @php
                                                                 $no = 1;
                                                             @endphp
-                                                            @foreach ($datapmjapprove as $item)
+                                                            @foreach ($datapmjapprove[0] as $item)
                                                                 <tr>
                                                                     <td>{{ $no++ }}</td>
                                                                     <td>{{ $item['nama_user'] }}</td>
                                                                     <td>{{ $item['nama_lembaga'] }}</td>
                                                                     <td>{{ $item['kegiatan'] }}</td>
-                                                                    <th>{{ $item['nama_ruangan'] }}</th>
+                                                                    <td>{{ $item['nama_ruangan'] }}</td>
+                                                                    <td>
+                                                                        @foreach ($datapmjapprove[1] as $itemfasilitas)
+                                                                            @if ($itemfasilitas['id_peminjaman']==$item['id'])
+                                                                            - {{ $itemfasilitas['nama'] }}: {{ $itemfasilitas['jumlah'] }} <br>
+                                                                            @endif
+                                                                        @endforeach
+                                                                    </td>
                                                                     <td class="text-center">
                                                                         {{ date('d-m-Y', strtotime($item['tgl_mulai'])) }}
                                                                         <br>jam:
@@ -252,23 +277,28 @@
                                                                         {{ date('H:i', strtotime($item['jam_selesai'])) }}
                                                                     </td>
                                                                     <td class="text-center"><a
-                                                                            class=" btn btn-circle btn-success" data-toggle="tooltip" data-placement="bottom"
-                                                                            title="" data-original-title="Unduh Surat Pendukung"
+                                                                            class=" btn btn-circle btn-success"
+                                                                            data-toggle="tooltip" data-placement="bottom"
+                                                                            title=""
+                                                                            data-original-title="Unduh Surat Pendukung"
                                                                             href="{{ url('/unduh-file/' . $item['id']) }}"><i
                                                                                 class="fa fa-download"></a></td>
                                                                     <td>{{ $item['status'] }}</td>
                                                                     <td>
                                                                         <form method="POST"
-                                                                            action="{{ route('update-status', ['id' => $item['id'], 'status' => 'in progress']) }}">
+                                                                            action="{{ route('update-status', ['id' => $item['id'], 'status' => 'di prosess']) }}">
                                                                             @csrf
                                                                             @method('PUT')
-                                                                            <button class="btn btn-success btn-rounded" data-toggle="tooltip" data-placement="left"
-                                                                            title="" data-original-title="Di Pinjam"
+                                                                            <button class="btn btn-success btn-rounded"
+                                                                                data-toggle="tooltip"
+                                                                                data-placement="left" title=""
+                                                                                data-original-title="Di Pinjam"
                                                                                 type="submit"><i
                                                                                     class="fas fa-check"></i></button>
                                                                         </form>
-                                                                        <a class="btn btn-info btn-rounded" data-toggle="tooltip" data-placement="left"
-                                                                        title="" data-original-title="Detail"
+                                                                        <a class="btn btn-info btn-rounded"
+                                                                            data-toggle="tooltip" data-placement="left"
+                                                                            title="" data-original-title="Detail"
                                                                             href="{{ url('/admin/accpeminjaman/detail/' . $item['id']) }}"><i
                                                                                 class="fas fa-search-plus"></i></a>
                                                                     </td>
@@ -288,6 +318,7 @@
                                                                 <th>Nama Lembaga</th>
                                                                 <th>Nama Kegiatan</th>
                                                                 <th>Ruangan</th>
+                                                                <th>Fasilitas</th>
                                                                 <th>Waktu Mulai</th>
                                                                 <th>Waktu Selesai</th>
                                                                 <th>surat pendukung</th>
@@ -299,13 +330,21 @@
                                                             @php
                                                                 $no = 1;
                                                             @endphp
-                                                            @foreach ($datapmjinprogress as $item)
+                                                            @foreach ($datapmjinprogress[0] as $item)
                                                                 <tr>
                                                                     <td>{{ $no++ }}</td>
                                                                     <td>{{ $item['nama_user'] }}</td>
                                                                     <td>{{ $item['nama_lembaga'] }}</td>
                                                                     <td>{{ $item['kegiatan'] }}</td>
-                                                                    <th>{{ $item['nama_ruangan'] }}</th>
+                                                                    <td>{{ $item['nama_ruangan'] }}</td>
+                                                                    <td>
+
+                                                                        @foreach ($datapmjinprogress[1] as $itemfasilitas)
+                                                                            @if ($itemfasilitas['id_peminjaman']==$item['id'])
+                                                                            - {{ $itemfasilitas['nama'] }}: {{ $itemfasilitas['jumlah'] }} <br>
+                                                                            @endif
+                                                                        @endforeach
+                                                                    </td>
                                                                     <td class="text-center">
                                                                         {{ date('d-m-Y', strtotime($item['tgl_mulai'])) }}
                                                                         <br>jam:{{ date('H:i', strtotime($item['jam_mulai'])) }}
@@ -316,23 +355,28 @@
                                                                         {{ date('H:i', strtotime($item['jam_selesai'])) }}
                                                                     </td>
                                                                     <td class="text-center"><a
-                                                                            class=" btn btn-circle btn-success" data-toggle="tooltip" data-placement="bottom"
-                                                                            title="" data-original-title="Unduh Surat Pendukung"
+                                                                            class=" btn btn-circle btn-success"
+                                                                            data-toggle="tooltip" data-placement="bottom"
+                                                                            title=""
+                                                                            data-original-title="Unduh Surat Pendukung"
                                                                             href="{{ url('/unduh-file/' . $item['id']) }}"><i
                                                                                 class="fa fa-download"></a></td>
                                                                     <td>{{ $item['status'] }}</td>
                                                                     <td>
                                                                         <form method="POST"
-                                                                            action="{{ route('update-status', ['id' => $item['id'], 'status' => 'completed']) }}">
+                                                                            action="{{ route('update-status', ['id' => $item['id'], 'status' => 'selesai']) }}">
                                                                             @csrf
                                                                             @method('PUT')
-                                                                            <button class="btn btn-success btn-rounded" data-toggle="tooltip" data-placement="left"
-                                                                            title="" data-original-title="Selesai"
+                                                                            <button class="btn btn-success btn-rounded"
+                                                                                data-toggle="tooltip"
+                                                                                data-placement="left" title=""
+                                                                                data-original-title="Selesai"
                                                                                 type="submit"><i
                                                                                     class="fas fa-check"></i></button>
                                                                         </form>
-                                                                        <a class="btn btn-info btn-rounded" data-toggle="tooltip" data-placement="left"
-                                                                        title="" data-original-title="Detail"
+                                                                        <a class="btn btn-info btn-rounded"
+                                                                            data-toggle="tooltip" data-placement="left"
+                                                                            title="" data-original-title="Detail"
                                                                             href="{{ url('/admin/accpeminjaman/detail/' . $item['id']) }}"><i
                                                                                 class="fas fa-search-plus"></i></a>
                                                                     </td>

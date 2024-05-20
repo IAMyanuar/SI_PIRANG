@@ -168,9 +168,10 @@ class PeminjamanController extends Controller
             $response = $e->getResponse();
             $conten = $response->getBody()->getContents();
             $contenarray = json_decode($conten, true);
-            // return redirect()->back()
-            //     ->with('error', $contenarray['message']);
+            return redirect()->back()
+            ->with('error', $contenarray['message']);
             return $contenarray['message'];
+            // dd($contenarray['message']);
         }
     }
 

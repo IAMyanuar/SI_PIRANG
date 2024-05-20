@@ -48,7 +48,7 @@
                                                         <h3 class="card-title">:</h3>
                                                     </div>
                                                     <div class="row col-auto mb-3">
-                                                        <h3>{{ $datapeminjam['nama_user'] }}</h3>
+                                                        <h3>{{ $datapeminjam[0]['nama_user'] }}</h3>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -59,7 +59,7 @@
                                                         <h3 class="card-title">:</h3>
                                                     </div>
                                                     <div class="row col-auto mb-3">
-                                                        <h3>{{ $datapeminjam['nim'] }}</h3>
+                                                        <h3>{{ $datapeminjam[0]['nim'] }}</h3>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -70,7 +70,7 @@
                                                         <h3 class="card-title">:</h3>
                                                     </div>
                                                     <div class="row col-auto mb-3">
-                                                        <h3>{{ $datapeminjam['telp'] }}</h3>
+                                                        <h3>{{ $datapeminjam[0]['telp'] }}</h3>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -81,7 +81,7 @@
                                                         <h3 class="card-title">:</h3>
                                                     </div>
                                                     <div class="row col-auto mb-3">
-                                                        <h3>{{ $datapeminjam['email'] }}</h3>
+                                                        <h3>{{ $datapeminjam[0]['email'] }}</h3>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -92,29 +92,29 @@
                                                         <h3 class="card-title">:</h3>
                                                     </div>
                                                     <div class="row col-auto mb-3">
-                                                        <h3>{{ $datapeminjam['nama_lembaga'] }}</h3>
+                                                        <h3>{{ $datapeminjam[0]['nama_lembaga'] }}</h3>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-3">
-                                                        <h3 class="card-title">Tanggal Dan waktu mulai</h3>
+                                                        <h3 class="card-title">Tanggal dan Waktu Mulai</h3>
                                                     </div>
                                                     <div class="row col-sm-1">
                                                         <h3 class="card-title">:</h3>
                                                     </div>
                                                     <div class="row col-auto mb-3">
-                                                        <h3>{{ date('d-m-Y', strtotime($datapeminjam['tgl_mulai'])) }} | {{ date('H:i', strtotime($datapeminjam['jam_mulai'])) }}</h3>
+                                                        <h3>{{ date('d-m-Y', strtotime($datapeminjam[0]['tgl_mulai'])) }} | {{ date('H:i', strtotime($datapeminjam[0]['jam_mulai'])) }}</h3>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-3">
-                                                        <h3 class="card-title">Tanggal Dan waktu selesai</h3>
+                                                        <h3 class="card-title">Tanggal dan Waktu Selesai</h3>
                                                     </div>
                                                     <div class="row col-sm-1">
                                                         <h3 class="card-title">:</h3>
                                                     </div>
                                                     <div class="row col-auto mb-3">
-                                                        <h3>{{ date('d-m-Y', strtotime($datapeminjam['tgl_selesai'])) }} | {{ date('H:i', strtotime($datapeminjam['jam_selesai'])) }}</h3>
+                                                        <h3>{{ date('d-m-Y', strtotime($datapeminjam[0]['tgl_selesai'])) }} | {{ date('H:i', strtotime($datapeminjam[0]['jam_selesai'])) }}</h3>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -125,7 +125,7 @@
                                                         <h3 class="card-title">:</h3>
                                                     </div>
                                                     <div class="row col-auto mb-3">
-                                                        <h3 class="">{{ $datapeminjam['kegiatan'] }}</h3>
+                                                        <h3 class="">{{ $datapeminjam[0]['kegiatan'] }}</h3>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -136,7 +136,18 @@
                                                         <h3 class="card-title">:</h3>
                                                     </div>
                                                     <div class="row col-auto mb-3">
-                                                        <h3 class="">{{ $datapeminjam['nama_ruangan'] }}</h3>
+                                                        <h3 class="">{{ $datapeminjam[0]['nama_ruangan'] }}</h3>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h3 class="card-title">Ruangan</h3>
+                                                    </div>
+                                                    <div class="row col-sm-1">
+                                                        <h3 class="card-title">:</h3>
+                                                    </div>
+                                                    <div class="row col-auto mb-3">
+                                                        <h3 class="">{{ $datapeminjam[0]['nama_ruangan'] }}</h3>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -146,9 +157,12 @@
                                                     <div class="row col-sm-1">
                                                         <h3 class="card-title">:</h3>
                                                     </div>
+                                                    @foreach ($datapeminjam[1] as $item)
                                                     <div class="row col-auto mb-3">
-                                                        <h3 class="">fasilitas</h3>
+                                                        <h3 class="">{{ $item['nama'] }}&nbsp;</h3>
+                                                        <h3 class="">{{ $item['jumlah']}},&nbsp;</h3>
                                                     </div>
+                                                    @endforeach
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-3">
@@ -157,42 +171,54 @@
                                                     <div class="row col-sm-1">
                                                         <h3 class="card-title">:</h3>
                                                     </div>
-                                                    @if ($datapeminjam['status']=='terkirim')
+                                                    @if ($datapeminjam[0]['status']=='terkirim')
                                                     <div class="row col-auto mb-3">
-                                                        <h3 class="text-secondary font-weight-bold">{{ $datapeminjam['status'] }}</h3>
+                                                        <h3 class="text-secondary font-weight-bold">{{ $datapeminjam[0]['status'] }}</h3>
                                                     </div>
                                                     @endif
-                                                    @if ($datapeminjam['status']=='disetujui')
+                                                    @if ($datapeminjam[0]['status']=='disetujui')
                                                     <div class="row col-auto mb-3">
-                                                        <h3 class="text-success font-weight-bold">{{ $datapeminjam['status'] }}</h3>
+                                                        <h3 class="text-success font-weight-bold">{{ $datapeminjam[0]['status'] }}</h3>
                                                     </div>
                                                     @endif
-                                                    @if ($datapeminjam['status']=='tolak')
+                                                    @if ($datapeminjam[0]['status']=='ditolak')
                                                     <div class="row col-auto mb-3">
-                                                        <h3 class="text-danger font-weight-bold">{{ $datapeminjam['status'] }}</h3>
+                                                        <h3 class="text-danger font-weight-bold">{{ $datapeminjam[0]['status'] }}</h3>
                                                     </div>
                                                     @endif
-                                                    @if ($datapeminjam['status']=='di prosess')
+                                                    @if ($datapeminjam[0]['status']=='di prosess')
                                                     <div class="row col-auto mb-3">
-                                                        <h3 class="text-warning font-weight-bold">{{ $datapeminjam['status'] }}</h3>
+                                                        <h3 class="text-warning font-weight-bold">{{ $datapeminjam[0]['status'] }}</h3>
                                                     </div>
                                                     @endif
-                                                    @if ($datapeminjam['status']=='selesai')
+                                                    @if ($datapeminjam[0]['status']=='selesai')
                                                     <div class="row col-auto mb-3">
-                                                        <h3 class="text-info font-weight-bold">{{ $datapeminjam['status'] }}</h3>
+                                                        <h3 class="text-info font-weight-bold">{{ $datapeminjam[0]['status'] }}</h3>
                                                     </div>
                                                     @endif
-
                                                 </div>
+                                                @if (!empty($datapeminjam[0]['feedback']))
                                                 <div class="row">
                                                     <div class="col-md-3">
-                                                        <h3 class="card-title">Bukti Pendukung Peminjaman</h3>
+                                                        <h3 class="card-title">Feedback</h3>
                                                     </div>
                                                     <div class="row col-sm-1">
                                                         <h3 class="card-title">:</h3>
                                                     </div>
                                                     <div class="row col-auto mb-3">
-                                                        <img src="{{ $datapeminjam['dokumen_pendukung'] }}" width="600">
+                                                        <h3 class="">{{ $datapeminjam[0]['feedback'] }}</h3>
+                                                    </div>
+                                                </div>
+                                                @endif
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h3 class="card-title">Bukti Pendukung / Ijin Kegiatan</h3>
+                                                    </div>
+                                                    <div class="row col-sm-1">
+                                                        <h3 class="card-title">:</h3>
+                                                    </div>
+                                                    <div class="row col-auto mb-3">
+                                                        <img src="{{ $datapeminjam[0]['dokumen_pendukung'] }}" width="600">
                                                     </div>
                                                     </form>
                                                 </div>

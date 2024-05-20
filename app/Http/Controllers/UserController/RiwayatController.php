@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Client;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class RiwayatController extends Controller
 {
@@ -26,7 +27,7 @@ class RiwayatController extends Controller
                 ],]);
                 $conten = $response->getBody()->getContents();
                 $contenarray = json_decode($conten, true);
-                $datariwayat = $contenarray['data'];
+                $data = $contenarray['data'];
         } catch (RequestException $e) {
             $response = $e->getResponse();
             $conten = $response->getBody()->getContents();
@@ -34,9 +35,18 @@ class RiwayatController extends Controller
             return view('user.riwayat',['empty' => $contenarray['message']]);
             // return $contenarray['message'];
         }
+        // Paginasi data
+        $currentPage = $request->query('page', 1);
+        $perPage = 10; // Jumlah data per halaman
+        $offset = ($currentPage - 1) * $perPage;
+        $total = count($data);
 
-        return view('user.riwayat', ['datariwayat' => $datariwayat]);
-        // return $datariwayat;
+        $items = array_slice($data, $offset, $perPage);
+        $paginator = new LengthAwarePaginator($items, $total, $perPage, $currentPage, [
+            'path' => $request->url(),
+            'query' => $request->query(),
+        ]);
 
+        return view('user.riwayat', ['data' => $paginator]);
     }
 }

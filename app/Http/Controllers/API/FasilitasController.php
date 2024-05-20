@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Fasilitas;
+use App\Models\Peminjaman;
+use App\Models\PeminjamanFasilitas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
@@ -20,6 +22,10 @@ class FasilitasController extends Controller
         for ($i = 0; $i < $data->count(); $i++) {
             $data[$i]['foto'] = url('assets/images/fasilitas/' . $data[$i]['foto']);
         }
+
+        // $FasilitasDipinjam = PeminjamanFasilitas::get();
+
+
         return response()->json([
             'status' => true,
             'message' => 'data ditemukan',
