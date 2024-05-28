@@ -69,7 +69,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if (isset($empty))
+                                        @if (!isset($data))
                                             <tr>
                                                 <td colspan="10" class="text-center"><strong>
                                                         {{ $empty }}
@@ -96,9 +96,11 @@
                                                     </td>
                                                     <td>
                                                         @if ($item['status'] == 'reject')
-                                                            <span class="text-danger font-weight-bold">{{ $item['status'] }}</span>
+                                                            <span
+                                                                class="text-danger font-weight-bold">{{ $item['status'] }}</span>
                                                         @elseif ($item['status'] == 'completed')
-                                                            <span class="text-info font-weight-bold">{{ $item['status'] }}</span>
+                                                            <span
+                                                                class="text-info font-weight-bold">{{ $item['status'] }}</span>
                                                         @else
                                                             <span>{{ $item['status'] }}</span>
                                                         @endif
@@ -125,22 +127,25 @@
         </div>
         <div>
             <ul class="pagination justify-content-center">
-                @if ($data->currentPage() > 1)
-                    <li class="page-item"><a class="page-link" href="{{ $data->previousPageUrl() }}" aria-label="Previous">
-                        <span aria-hidden="true"><i class="fas fa-angle-double-left"></i></span>
-                    </a></li>
-                @endif
+                @if (!empty($data))
+                    @if ($data->currentPage() > 1)
+                        <li class="page-item"><a class="page-link" href="{{ $data->previousPageUrl() }}"
+                                aria-label="Previous">
+                                <span aria-hidden="true"><i class="fas fa-angle-double-left"></i></span>
+                            </a></li>
+                    @endif
 
-                @for ($i = 1; $i <= $data->lastPage(); $i++)
-                    <li class="page-item {{ $i == $data->currentPage() ? 'active' : '' }}">
-                        <a class="page-link" href="{{ $data->url($i) }}">{{ $i }}</a>
-                    </li>
-                @endfor
+                    @for ($i = 1; $i <= $data->lastPage(); $i++)
+                        <li class="page-item {{ $i == $data->currentPage() ? 'active' : '' }}">
+                            <a class="page-link" href="{{ $data->url($i) }}">{{ $i }}</a>
+                        </li>
+                    @endfor
 
-                @if ($data->hasMorePages())
-                    <li class="page-item"><a class="page-link" href="{{ $data->nextPageUrl() }}" aria-label="Next">
-                        <span aria-hidden="true"><i class="fas fa-angle-double-right"></i></span>
-                    </a></li>
+                    @if ($data->hasMorePages())
+                        <li class="page-item"><a class="page-link" href="{{ $data->nextPageUrl() }}" aria-label="Next">
+                                <span aria-hidden="true"><i class="fas fa-angle-double-right"></i></span>
+                            </a></li>
+                    @endif
                 @endif
             </ul>
         </div>

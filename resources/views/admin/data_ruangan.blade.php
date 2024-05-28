@@ -1,7 +1,7 @@
 @extends('layout.master1')
 
 @section('title')
-SI PIRANG | Data Ruangan
+    SI PIRANG | Data Ruangan
 @stop
 
 @section('css')
@@ -63,7 +63,7 @@ SI PIRANG | Data Ruangan
                                                 <tr>
                                                     <th>No</th>
                                                     <th>Nama Ruangan</th>
-                                                    <th>Fasilitas</th>
+                                                    <th>Deskripsi</th>
                                                     <th>Foto</th>
                                                     <th>Aksi</th>
                                                 </tr>
@@ -74,18 +74,18 @@ SI PIRANG | Data Ruangan
                                                     $no = 1;
                                                 @endphp
                                                 @if (empty($data))
-                                                <tr>
-                                                    <td colspan="10" class="text-center"><strong>Tidak ada
-                                                            data ruangan</strong></td>
-                                                </tr>
-                                            @endif
+                                                    <tr>
+                                                        <td colspan="10" class="text-center"><strong>Tidak ada
+                                                                data ruangan</strong></td>
+                                                    </tr>
+                                                @endif
                                                 @foreach ($data as $item)
                                                     <tr>
                                                         <td>{{ $no++ }}</td>
                                                         <td>{{ $item['nama'] }}</td>
                                                         <td>{{ $item['fasilitas'] }}</td>
-                                                        <td><img src="{{ $item['foto'] }}"
-                                                                width="100"></td>
+                                                        <td><img src="{{ $item['foto'] }}" class="gambar-klik" data-nama="{{ $item['nama'] }}" width="100"
+                                                                data-toggle="modal" data-target="#centermodal"></td>
                                                         <td>
                                                             <a href="{{ url('/DataRuangan/UbahRuangan/' . $item['id']) }}"
                                                                 class="btn btn-rounded btn-warning text-white">Ubah</a>
@@ -93,6 +93,37 @@ SI PIRANG | Data Ruangan
                                                     </tr>
                                                 @endforeach
                                             </tbody>
+                                            <div class="modal fade" id="centermodal" tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title" id="modalNama"></h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                        </div>
+                                                        <div class="modal-body center">
+                                                            <img id="gambarModal" >
+                                                        </div>
+                                                    </div><!-- /.modal-content -->
+                                                </div><!-- /.modal-dialog -->
+                                            </div>
+
                                         </table>
                                     </div>
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function () {
+                                            const modalNama = document.getElementById('modalNama');
+                                            const gambarModal = document.getElementById('gambarModal');
+                                            const gambarKlik = document.querySelectorAll('.gambar-klik');
+
+                                            gambarKlik.forEach(gambar => {
+                                                gambar.addEventListener('click', function () {
+                                                    const src = this.src;
+                                                    const nama = this.getAttribute('data-nama');
+
+                                                    modalNama.textContent = nama;
+                                                    gambarModal.src = src;
+                                                });
+                                            });
+                                        });
+                                    </script>
                                 @endsection

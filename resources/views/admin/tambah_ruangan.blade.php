@@ -60,7 +60,7 @@
                                             <input type="text" class="form-control" name="nama">
                                         </div>
                                         <div class="form-group">
-                                            <label>Fasilitas</label>
+                                            <label>Deskripsi</label>
                                             <input type="text" class="form-control" name="fasilitas">
                                         </div>
                                         <div class="form-group">

@@ -38,7 +38,7 @@ Route::post('logout',[authController::class, 'Logout'])->middleware('auth:sanctu
 
 
 //admin
-Route::get('ruangan',[RuanganController::class, 'index'])->middleware('auth:sanctum');//menampilkan data ruangan
+Route::get('ruangan',[RuanganController::class, 'index']);//menampilkan data ruangan
 Route::post('tambahruangan',[RuanganController::class, 'store'])->middleware('auth:sanctum','ablity:access-admin');//tambah ruangan
 Route::get('ruangan/{id}',[RuanganController::class,'show'])->middleware('auth:sanctum','ablity:access-admin');//menampilkan data ruangan berdasarkan id
 Route::post('ruangan/{id}',[RuanganController::class,'update'])->middleware('auth:sanctum','ablity:access-admin');//edit ruangan

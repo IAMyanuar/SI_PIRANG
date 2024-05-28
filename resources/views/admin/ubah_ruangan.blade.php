@@ -50,7 +50,7 @@
                                             <input type="text" class="form-control" name="nama" value="{{  $data['nama'] }}">
                                         </div>
                                         <div class="form-group">
-                                            <label>Fasilitas</label>
+                                            <label>Deskripsi</label>
                                             <input type="text" class="form-control" name="fasilitas" value="{{  $data['fasilitas'] }}">
                                         </div>
                                         <div class="form-group">

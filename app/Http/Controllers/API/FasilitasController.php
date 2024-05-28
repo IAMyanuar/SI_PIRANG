@@ -23,7 +23,7 @@ class FasilitasController extends Controller
             $data[$i]['foto'] = url('assets/images/fasilitas/' . $data[$i]['foto']);
         }
 
-        // $FasilitasDipinjam = PeminjamanFasilitas::get();
+        $FasilitasDipinjam = PeminjamanFasilitas::get();
 
 
         return response()->json([

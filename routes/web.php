@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController\PeminjamanController as AdminPeminjaman
 use App\Http\Controllers\AdminController\RiwayatController as AdminRiwayatController;
 use App\Http\Controllers\AdminController\RuanganController as AdminRuanganController;
 use App\Http\Controllers\AdminController\FasilitasController as AdminFasilitasController;
+use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\UserController\DashboardController;
 use App\Http\Controllers\UserController\PeminjamanController;
 use App\Http\Controllers\UserController\RiwayatController;
@@ -25,7 +26,7 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 */
 
 
-Route::get('/', [webAuthController::class, 'landingPage']);
+Route::get('/', [LandingPageController::class, 'index']);
 
 
 //register

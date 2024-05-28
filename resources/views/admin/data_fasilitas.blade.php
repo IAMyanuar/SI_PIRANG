@@ -1,7 +1,7 @@
 @extends('layout.master1')
 
 @section('title')
-SI PIRANG | Data Ruangan
+    SI PIRANG | Data Ruangan
 @stop
 
 @section('css')
@@ -51,7 +51,8 @@ SI PIRANG | Data Ruangan
                                     <div class="form-actions">
                                         <div class="text-right  mb-3">
                                             <a href="/DataFasilitas/TambahFasilitas" type="button"
-                                                class="btn btn-outline-primary btn-rounded"><i class="icon-plus"></i> Tambah Fasilitas</a>
+                                                class="btn btn-outline-primary btn-rounded"><i class="icon-plus"></i> Tambah
+                                                Fasilitas</a>
                                         </div>
                                     </div>
 
@@ -73,28 +74,28 @@ SI PIRANG | Data Ruangan
                                                     $no = 1;
                                                 @endphp
                                                 @if (empty($data))
-                                                <tr>
-                                                    <td colspan="10" class="text-center"><strong>Tidak ada
-                                                            data fasilitas</strong></td>
-                                                </tr>
-                                            @endif
+                                                    <tr>
+                                                        <td colspan="10" class="text-center"><strong>Tidak ada
+                                                                data fasilitas</strong></td>
+                                                    </tr>
+                                                @endif
                                                 @foreach ($data as $item)
                                                     <tr>
                                                         <td>{{ $no++ }}</td>
                                                         <td>{{ $item['nama'] }}</td>
-                                                        <td><img src="{{ $item['foto'] }}"
-                                                                width="100"></td>
+                                                        <td><img src="{{ $item['foto'] }}" width="100"></td>
                                                         <td>
-                                                            Jumlah: {{ $item['jumlah'] }} <br>
-                                                            di Pinjam: <br>
-                                                            Tersedia:
+                                                            {{-- Jumlah:
+                                                            <br>
+                                                            di Pinjam: <br> --}}
+                                                            Tersedia: {{ $item['jumlah'] }}
                                                         </td>
                                                         <td>
                                                             <a href="{{ url('/DataFasilitas/UbahFasilitas/' . $item['id']) }}"
                                                                 class="btn btn-rounded btn-warning text-white">Ubah</a>
                                                         </td>
                                                     </tr>
-                                                 @endforeach
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>

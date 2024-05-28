@@ -92,7 +92,8 @@
                     @foreach ($dataruangan as $data)
                         <div class="col-md-4 mb-4">
                             <div class="card">
-                                <img class="card-img-top img-fluid" src="{{ $data['foto'] }}" alt="Card image cap">
+                                <img class="card-img-top img-fluid gambar-klik" src="{{ $data['foto'] }}" alt="Card image cap" data-nama="{{ $data['nama'] }}"
+                                data-toggle="modal" data-target="#centermodal">
                                 <div class="card-body">
                                     <h4 class="card-title">{{ $data['nama'] }}</h4>
                                     <p class="card-text flex-grow-1">{{ $data['fasilitas'] }}</p>
@@ -101,6 +102,36 @@
                         </div>
                     @endforeach
                 </div>
+                <div class="modal fade" id="centermodal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="modalNama"></h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            </div>
+                            <div class="modal-body center">
+                                <img id="gambarModal" >
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div>
             </div>
         </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const modalNama = document.getElementById('modalNama');
+                const gambarModal = document.getElementById('gambarModal');
+                const gambarKlik = document.querySelectorAll('.gambar-klik');
+
+                gambarKlik.forEach(gambar => {
+                    gambar.addEventListener('click', function () {
+                        const src = this.src;
+                        const nama = this.getAttribute('data-nama');
+
+                        modalNama.textContent = nama;
+                        gambarModal.src = src;
+                    });
+                });
+            });
+        </script>
     @endsection
