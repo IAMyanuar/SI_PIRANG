@@ -67,8 +67,10 @@
                                                 <tr>
                                                     <th>No</th>
                                                     <th>Nama Peminjam</th>
-                                                    <th>Program Studi</th>
+                                                    <th>Nama Lembaga</th>
                                                     <th>Nama Kegiatan</th>
+                                                    <th>Ruangan</th>
+                                                    <th>Fasilitas</th>
                                                     <th>Waktu Mulai</th>
                                                     <th>Waktu Selesai</th>
                                                     <th>Status</th>
@@ -86,12 +88,20 @@
                                                     @php
                                                         $no = 1;
                                                     @endphp
-                                                    @foreach ($datapeminjaman as $item)
+                                                    @foreach ($datapeminjaman[0] as $item)
                                                         <tr>
                                                             <td>{{ $no++ }}</td>
                                                             <td>{{ $item['nama_user'] }}</td>
                                                             <td>{{ $item['nama_lembaga'] }}</td>
                                                             <td>{{ $item['kegiatan'] }}</td>
+                                                            <td>{{ $item['nama_ruangan'] }}</td>
+                                                            <td>
+                                                                @foreach ($datapeminjaman[1] as $itemfasilitas)
+                                                                    @if ($itemfasilitas['id_peminjaman']==$item['id'])
+                                                                    - {{ $itemfasilitas['nama'] }}: {{ $itemfasilitas['jumlah'] }} <br>
+                                                                    @endif
+                                                                @endforeach
+                                                            </td>
                                                             <td class="text-center">
                                                                 {{ date('d-m-Y', strtotime($item['tgl_mulai'])) }}
                                                                 <br>jam:{{ date('H:i', strtotime($item['jam_mulai'])) }}

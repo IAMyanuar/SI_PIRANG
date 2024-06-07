@@ -141,17 +141,6 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-3">
-                                                        <h3 class="card-title">Ruangan</h3>
-                                                    </div>
-                                                    <div class="row col-sm-1">
-                                                        <h3 class="card-title">:</h3>
-                                                    </div>
-                                                    <div class="row col-auto mb-3">
-                                                        <h3 class="">{{ $datapeminjam[0]['nama_ruangan'] }}</h3>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-3">
                                                         <h3 class="card-title">Fasilitas</h3>
                                                     </div>
                                                     <div class="row col-sm-1">

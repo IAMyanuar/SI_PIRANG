@@ -41,47 +41,56 @@
             <div class="row">
                 {{-- <div class="col-3"> --}}
                 <div class="card-body mb-3 card border-right ">
-                    <div class="d-flex d-lg-flex d-md-block align-items-center">
-                        <div>
-                            <h2 class="text-dark mb-1 w-100 text-truncate font-weight-medium">{{ count($ruangan) }}</h2>
-                            <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Jumlah Ruangan
-                            </h6>
+                    <a href="/admin/DataRuangan">
+                        <div class="d-flex d-lg-flex d-md-block align-items-center">
+                            <div>
+                                <h2 class="text-dark mb-1 w-100 text-truncate font-weight-medium">{{ count($ruangan) }}</h2>
+                                <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Jumlah Ruangan
+                                </h6>
+                            </div>
+                            <div class="ml-auto mt-md-3 mt-lg-0">
+                                <span class="opacity-7 text-muted"><i data-feather="home"></i></span>
+                            </div>
                         </div>
-                        <div class="ml-auto mt-md-3 mt-lg-0">
-                            <span class="opacity-7 text-muted"><i data-feather="home"></i></span>
-                        </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="card-body mb-3 card border-top">
-                    <div class="d-flex d-lg-flex d-md-block align-items-center">
-                        <div>
-                            <h2 class="text-dark mb-1 w-100 text-truncate font-weight-medium">{{ $peminjamanSubmitted }}
-                            </h2>
-                            <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Pengajuan Belum Dikonfirmasi
-                            </h6>
+                    <a href="/admin/accpeminjaman">
+                        <div class="d-flex d-lg-flex d-md-block align-items-center">
+                            <div>
+                                <h2 class="text-dark mb-1 w-100 text-truncate font-weight-medium">{{ $peminjamanSubmitted }}
+                                </h2>
+                                <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Pengajuan Belum
+                                    Dikonfirmasi
+                                </h6>
+                            </div>
+                            <div class="ml-auto mt-md-3 mt-lg-0">
+                                <span class="opacity-7 text-muted"><i data-feather="clock"></i></span>
+                            </div>
                         </div>
-                        <div class="ml-auto mt-md-3 mt-lg-0">
-                            <span class="opacity-7 text-muted"><i data-feather="clock"></i></span>
-                        </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="card-body mb-3 card border-top">
-                    <div class="d-flex d-lg-flex d-md-block align-items-center">
-                        <div>
-                            <h2 class="text-dark mb-1 w-100 text-truncate font-weight-medium">{{ $peminjamanApprove }}</h2>
-                            <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Pengajuan Di Setujui
-                            </h6>
+                    <a href="/admin/accpeminjaman">
+                        <div class="d-flex d-lg-flex d-md-block align-items-center">
+                            <div>
+                                <h2 class="text-dark mb-1 w-100 text-truncate font-weight-medium">{{ $peminjamanApprove }}
+                                </h2>
+                                <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Pengajuan Di Setujui
+                                </h6>
+                            </div>
+                            <div class="ml-auto mt-md-3 mt-lg-0">
+                                <span class="opacity-7 text-muted"><i data-feather="check-square"></i></span>
+                            </div>
                         </div>
-                        <div class="ml-auto mt-md-3 mt-lg-0">
-                            <span class="opacity-7 text-muted"><i data-feather="check-square"></i></span>
-                        </div>
-                    </div>
+                    </a>
                 </div>
 
                 {{-- </div> --}}
 
                 {{-- <div class="col-3"> --}}
                 <div class="card-body mb-3 card border-top mb-2">
+                    <a href="/admin/riwayat">
                     <div class="d-flex d-lg-flex d-md-block align-items-center">
                         <div>
                             <h2 class="text-dark mb-1 w-100 text-truncate font-weight-medium">{{ $peminjamanReject }}</h2>
@@ -92,6 +101,7 @@
                             <span class="opacity-7 text-muted"><i class="far fa-window-close"></i></span>
                         </div>
                     </div>
+                    </a>
                 </div>
                 <div class="card-body mb-3 card border-right">
                     <div class="d-flex d-lg-flex d-md-block align-items-center">

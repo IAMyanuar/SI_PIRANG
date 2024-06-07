@@ -583,6 +583,16 @@ class PeminjamanController extends Controller
             ->orderBy('peminjamen.id', 'desc')
             ->get();
 
+        // Mengambil ID peminjaman
+        $peminjamanIDs = $datapeminjaman->pluck('id');
+
+        //query peminjaman fasilitas dan fasilitas
+        $datafasilitas = PeminjamanFasilitas::whereIn('id_peminjaman', $peminjamanIDs)
+            ->leftJoin('fasilitas', 'peminjaman_fasilitas.id_fasilitas', '=', 'fasilitas.id')
+            ->select('peminjaman_fasilitas.id', 'peminjaman_fasilitas.id_peminjaman', 'peminjaman_fasilitas.id_fasilitas', 'fasilitas.nama', 'peminjaman_fasilitas.jumlah')
+            ->get();
+
+
         if (empty($datapeminjaman)) {
             return response()->json([
                 'status' => false,
@@ -594,7 +604,7 @@ class PeminjamanController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'data ditemukan',
-            'data' => $datapeminjaman,
+            'data' => [$datapeminjaman, $datafasilitas],
         ], 200);
     }
 

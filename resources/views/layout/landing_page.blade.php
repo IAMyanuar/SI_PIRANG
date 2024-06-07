@@ -41,7 +41,7 @@
                     Temukan kemudahan peminjaman ruang! Booking ruang jadi lebih mudah
                     dan menyenangkan dengan aplikasi kami
                 </p>
-                <a href="/dashboard" class="tombol">Ajukan</a>
+                <a href="/login" class="tombol">Ajukan</a>
                 <a href="{{ url('assets/TATACARA PEMINJAMAN RUANGAN.pdf') }}">Tata Cara</a>
             </section>
         </div>
