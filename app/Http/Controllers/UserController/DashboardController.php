@@ -68,13 +68,13 @@ class DashboardController extends Controller
         $peminjamandisetujui = 0;
         $peminjamanditolak = 0;
         foreach ($datapeminjaman as $value) {
-            if ($value['status'] !== 'submitted') {
+            if ($value['status'] !== 'disetujui') {
                 $peminjamandisetujui++;
             }
         }
 
         foreach ($datariwayat as $value) {
-            if ($value['status'] == 'reject') {
+            if ($value['status'] == 'ditolak') {
                 $peminjamanditolak++;
             }
         }
