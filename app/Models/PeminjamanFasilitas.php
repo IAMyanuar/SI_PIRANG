@@ -10,13 +10,13 @@ class PeminjamanFasilitas extends Model
     use HasFactory;
     protected $fillable= ['jumlah'];
 
-    public function ruangan()
+    public function fasilitas()
     {
-        return $this->belongsTo(Ruangan::class, 'id_ruangan');
+        return $this->belongsTo(Fasilitas::class, 'id_fasilitas');
     }
 
-    public function user()
+    public function peminjamans()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Peminjaman::class, 'id_peminjaman');
     }
 }

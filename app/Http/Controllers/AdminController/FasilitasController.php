@@ -93,14 +93,7 @@ class FasilitasController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Fasilitas $fasilitas)
-    {
-        //
-    }
-
+    
     /**
      * Show the form for editing the specified resource.
      */

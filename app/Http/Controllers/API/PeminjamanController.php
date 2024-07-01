@@ -60,7 +60,7 @@ class PeminjamanController extends Controller
 
 
 
-    public function storefasilitas(Request $request)
+    public function storepeminjaman(Request $request)
     {
         //tambah data peminjaman
         $rules = [

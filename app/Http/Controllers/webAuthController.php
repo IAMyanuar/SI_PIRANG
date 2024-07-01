@@ -9,9 +9,7 @@ use GuzzleHttp\Exception\RequestException;
 
 class webAuthController extends Controller
 {
-    public function landingPage(){
-        return view('layout.landing_page');
-    }
+  
     public function viewLogin()
     {
         return view('layout.login');

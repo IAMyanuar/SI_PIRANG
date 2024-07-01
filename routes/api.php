@@ -56,7 +56,7 @@ Route::get('fasilitas/{id}',[FasilitasController::class,'show']);
 Route::post('fasilitas/{id}',[FasilitasController::class,'update']);
 
 //user
-Route::post('peminjaman',[PeminjamanController::class, 'storefasilitas']);//tambah peminjaman
+Route::post('peminjaman',[PeminjamanController::class, 'storepeminjaman']);//tambah peminjaman
 Route::get('peminjamanbyuser/{id}',[PeminjamanController::class,'peminjamanByUser'])->middleware('auth:sanctum','ablity:access-peminjam');//menampilkan data berdasarkan id user
 Route::post('EditPeminjaman/{id}',[PeminjamanController::class,'update'])->middleware('auth:sanctum','ablity:access-peminjam');//edit ruangan
 Route::patch('peminjaman/{id}/feedback',[PeminjamanController::class,'feedback'])->middleware('auth:sanctum','ablity:access-peminjam');//feedback dari user

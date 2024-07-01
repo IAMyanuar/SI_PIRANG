@@ -69,7 +69,7 @@ Route::middleware('checkToken')->group(function () {
     Route::post('/EditPeminjaman/{id}', [PeminjamanController::class, 'update'])->name('ubah_pengajuan');
     Route::patch('/PengajuanPeminjaman/{id}', [PeminjamanController::class, 'updateStatus'])->name('ulasan');
     Route::get('/riwayat', [RiwayatController::class, 'riwayatPeminjaman'])->name('riwayatku_search');
-    Route::get('/kalender', [DashboardController::class, 'KalenderPeminjaman']);
+    // Route::get('/kalender', [DashboardController::class, 'KalenderPeminjaman']);
 
 
 

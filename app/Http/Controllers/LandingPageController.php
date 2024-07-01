@@ -12,16 +12,11 @@ class LandingPageController extends Controller
         //
         //menampilkan semua data
         $apiUrl = env('API_URL');
-        $apiToken = session('api_token');
-        $id_user = session('id_user');
+        
         // try {
         $client = new Client();
         $url1 = $apiUrl . "/api/ruangan";
-        $response1 = $client->request('GET', $url1, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $apiToken
-            ],
-        ]);
+        $response1 = $client->request('GET', $url1);
         $dataruangan = [];
         $conten = $response1->getBody()->getContents();
         $contenarray = json_decode($conten, true);

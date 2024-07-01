@@ -11,8 +11,8 @@ class Fasilitas extends Model
     protected $table = 'fasilitas';
     protected $fillable=['nama','foto','jumlah'];
 
-    public function peminjamans()
+    public function peminjamanFasilitas()
     {
-        return $this->hasMany(Peminjaman::class, 'id_fasilitas');
+        return $this->hasMany(PeminjamanFasilitas::class, 'id_fasilitas');
     }
 }

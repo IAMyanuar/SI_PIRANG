@@ -40,10 +40,10 @@ class DashboardController extends Controller
                 'Authorization' => 'Bearer ' . $apiToken
             ],]
         );
-        $datapeminjaman = [];
-        $conten = $response2->getBody()->getContents();
-        $contenarray = json_decode($conten, true);
-        $datapeminjaman = $contenarray['data'];
+        // $datapeminjaman = [];
+        $conten1 = $response2->getBody()->getContents();
+        $contenarray1 = json_decode($conten1, true);
+        $datapeminjaman = $contenarray1['data'];
 
         //riwayat
         $url3 = $apiUrl . '/api/peminjaman/riwayat/' . $id_user;
@@ -67,11 +67,23 @@ class DashboardController extends Controller
 
         $peminjamandisetujui = 0;
         $peminjamanditolak = 0;
-        foreach ($datapeminjaman as $value) {
-            if ($value['status'] !== 'disetujui') {
-                $peminjamandisetujui++;
+        // return $datapeminjaman;
+
+            foreach ($datapeminjaman[0] as $value) {
+                if ($value['status'] == 'disetujui' || $value['status'] == 'diprosess') {
+                    $peminjamandisetujui++;
+                }
+            }
+
+
+        $total= 0;
+        if (!empty($datapeminjaman['status'])) {
+            foreach ($datapeminjaman as $value) {
+                    $total++;
             }
         }
+
+
 
         foreach ($datariwayat as $value) {
             if ($value['status'] == 'ditolak') {
@@ -83,10 +95,10 @@ class DashboardController extends Controller
         return view('user.dashboard', ['dataruangan' => $dataruangan, 'datapeminjaman'=>$datapeminjaman ,'peminjamandisetujui' => $peminjamandisetujui, 'peminjamanditolak' => $peminjamanditolak]);
     }
 
-    public function KalenderPeminjaman()
-    {
-        // Mengirimkan data ke halaman Blade
-        return view('user.kalender');
+    // public function KalenderPeminjaman()
+    // {
+    //     // Mengirimkan data ke halaman Blade
+    //     return view('user.kalender');
 
-    }
+    // }
 }

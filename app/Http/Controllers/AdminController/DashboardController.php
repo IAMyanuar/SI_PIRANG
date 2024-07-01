@@ -44,7 +44,7 @@ class DashboardController extends Controller
             //mengambil data peminjaman status[complited, in progress]
             $peminjamanFinal=[];
             foreach ($datapeminjaman as $data) {
-                if ($data['status'] == 'completed' || $data['status'] == 'in progress') {
+                if ($data['status'] == 'selesai' || $data['status'] == 'di poroses') {
                     $peminjamanFinal[] = $data;
                 }
             }
@@ -52,7 +52,7 @@ class DashboardController extends Controller
             //mengambil data peminjaman status [reject]
             $peminjamanReject = 0;
             foreach ($datapeminjaman as $data) {
-                if ($data['status'] == 'reject') {
+                if ($data['status'] == 'ditolak') {
                     $peminjamanReject++;
                 }
             }
@@ -60,7 +60,7 @@ class DashboardController extends Controller
             //mengambil data peminjaman status [submitted]
             $peminjamanSubmited = 0;
             foreach ($datapeminjaman as $data) {
-                if ($data['status'] == 'submitted') {
+                if ($data['status'] == 'terkirim') {
                     $peminjamanSubmited++;
                 }
             }
@@ -68,7 +68,7 @@ class DashboardController extends Controller
             //mengambil data peminjaman status di[approved]
             $peminjamanApprove = 0;
             foreach ($datapeminjaman as $data) {
-                if ($data['status'] == 'approved' || $data['status'] == 'in progress' || $data['status'] == 'completed') {
+                if ($data['status'] == 'disetujui') {
                     $peminjamanApprove++;
                 }
             }
@@ -76,7 +76,7 @@ class DashboardController extends Controller
             //mengambil data peminjaman terkonfirmasi
             $peminjamanTKF = 0;
             foreach ($datapeminjaman as $data) {
-                if ($data['status'] !== 'submitted') {
+                if ($data['status'] !== 'disetujui') {
                     $peminjamanTKF++;
                 }
             }
