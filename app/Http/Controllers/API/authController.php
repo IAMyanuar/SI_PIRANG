@@ -16,11 +16,12 @@ class authController extends Controller
         try {
             $datauser = new User();
             $rules = [
-                'nim' => 'required',
-                'nama' => 'required',
-                'email' => 'required|email',
-                'password' => 'required',
-                'telp' => 'required',
+                'nim' => 'required|string|max:13',
+                'nama' => 'required|string|max:40',
+                'email' => 'required|email|max:64|unique:users,email',
+                'password' => 'required|string|min:8|max:70|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/',
+                'telp' => 'required|numeric|digits_between:10,15|unique:users,telp',
+                'foto_bwp' => 'required|image|mimes:jpeg,png,jpg'
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -28,14 +29,21 @@ class authController extends Controller
                 return response()->json([
                     'status' => false,
                     'message' => 'prsoses validasi gagal',
+                    'cekdata' => $request->all(),
                     'data' => $validator->errors()
                 ], 422); // Menggunakan kode status 422 untuk Unprocessable Entity
             }
+
+            $foto = $request->file('foto_bwp');
+            $namabwp = time() . '.' . $foto->getClientOriginalExtension();
+            $foto->move(public_path('assets/images/foto_bwp/'), $namabwp);
+
             $datauser->nim = $request->nim;
             $datauser->nama = $request->nama;
             $datauser->email = $request->email;
             $datauser->password = Hash::make($request->password);
-            $datauser->telp =  $request->telp;
+            $datauser->telp = $request->telp;
+            $datauser->foto_bwp = $namabwp;
             $datauser->save();
 
             return response()->json([
@@ -55,6 +63,44 @@ class authController extends Controller
                 ], 409); // Menggunakan kode status 409 Conflict
             }
         }
+    }
+
+    public function listDataUser()
+    {
+        //menampilkan semua data fasilitas
+        $data = User::where('status_user','=','belum_dikonfirmasi')->get();
+        for ($i = 0; $i < $data->count(); $i++) {
+            $data[$i]['foto_bwp'] = url('assets/images/foto_bwp/' . $data[$i]['foto_bwp']);
+        }
+        return response()->json([
+            'status' => true,
+            'message' => 'data ditemukan',
+            'data' => $data,
+        ], 200);
+    }
+
+    public function confirmRegister(Request $request, $id)
+    {
+        $rules = [
+            'status_user' => 'required',
+        ];
+        $datauser = User::find($id);
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'konfirmasi user gagal',
+                'data' => $validator->errors()
+            ], 400);
+        }
+
+        $datauser->status_user = $request->status_user;
+        $datauser->save();
+        return response()->json([
+            'status' => true,
+            'message' => 'berhasil mengonfirmasi user baru',
+        ], 201);
     }
 
     public function Login(Request $request)

@@ -32,6 +32,7 @@ Route::get('/', [LandingPageController::class, 'index']);
 //register
 Route::get('/daftar', [webAuthController::class, 'viewRegister']);
 Route::post('/daftar', [webAuthController::class, 'Register'])->name('register');
+Route::patch('/admin/confirmregister/{id}', [webAuthController::class, 'confirmRegister'])->name('update-status-user');
 
 //login
 Route::get('/login', [webAuthController::class, 'viewLogin']);
@@ -40,6 +41,7 @@ Route::post('/login', [webAuthController::class, 'Login']);
 Route::middleware('checkToken')->group(function () {
     //admin
     Route::get('/admin/dashboard', [AdminDashboardController::class,'index']);
+    Route::get('/admin/konfirmasiuserbaru', [webAuthController::class,'viewConfirmRegister']);
     Route::get('/admin/DataRuangan', [AdminRuanganController::class, 'index']); //data ruangan
     Route::get('/DataRuangan/TambahRuangan', [AdminRuanganController::class, 'create']);
     Route::post('/DataRuangan/TambahRuangan', [AdminRuanganController::class, 'store'])->name('tambah_ruangan');

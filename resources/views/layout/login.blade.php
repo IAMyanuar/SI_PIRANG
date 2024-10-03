@@ -61,7 +61,7 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-12 text-center">
-                                    <button name="submit" class="btn btn-block btn-primary">Simpan</button>
+                                    <button name="submit" class="btn btn-block btn-primary">Masuk</button>
                                 </div>
                                 <div class="col-lg-12 text-center mt-4">
                                     Tidak punya Akun? <a href="{{ url('/daftar') }}" class="text-danger">Daftar</a>

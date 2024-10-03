@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('password',70);
             $table->char('telp',15)->unique();
             $table->enum('role_user',['admin','peminjam'])->default('peminjam');
+            $table->string('foto_bwp',100);
+            $table->enum('status_user',['belum_dikonfirmasi','terkonfirmasi','tidak_dikonfirmasi'])->default('belum_dikonfirmasi');
             $table->rememberToken();
             $table->timestamps();
         });

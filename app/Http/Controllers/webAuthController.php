@@ -9,7 +9,7 @@ use GuzzleHttp\Exception\RequestException;
 
 class webAuthController extends Controller
 {
-  
+
     public function viewLogin()
     {
         return view('layout.login');
@@ -62,13 +62,39 @@ class webAuthController extends Controller
     public function Register(Request $request)
     {
         $apiUrl = env('API_URL');
+        $messages = [
+            'password.required' => 'Password harus diisi.',
+            'password.regex' => 'Password harus mengandung setidaknya satu huruf kecil, satu huruf besar, dan satu angka.',
+            'password.min' => 'Password harus memiliki minimal 8 karakter.',
+            'password.max' => 'Password tidak boleh lebih dari 70 karakter.',
+            'password.string' => 'Password harus berupa string.',
+            'foto_bwp.required' => 'Foto harus diupload.',
+            'foto_bwp.image' => 'File yang diupload harus berupa gambar.',
+            'foto_bwp.mimes' => 'Format gambar harus jpeg, png, atau jpg.',
+            'telp.required' => 'Nomor telepon harus diisi.',
+            'telp.numeric' => 'Nomor telepon harus berupa angka.',
+            'telp.digits_between' => 'Nomor telepon harus terdiri dari :min hingga :max digit.',
+            'nim.required' => 'NIM harus diisi.',
+            'nim.numeric' => 'NIM harus berupa angka.',
+            'nim.digits_between' => 'NIM harus terdiri dari :min hingga :max digit.',
+            'nama.required' => 'Nama harus diisi.',
+            'nama.string' => 'Nama harus berupa string.',
+            'nama.max' => 'Nama tidak boleh lebih dari :max karakter.',
+            'email.required' => 'Email harus diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.max' => 'Email tidak boleh lebih dari :max karakter.',
+            'email.unique' => 'Email sudah terdaftar.',
+        ];
         $validatedData = $request->validate([
-            'nim' => 'required',
-            'nama' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-            'telp' => 'required',
-        ]);
+            'nim' => 'required|numeric|digits_between:8,13',
+            'nama' => 'required|string|max:40',
+            'email' => 'required|email|max:64|unique:users,email',
+            'password' => 'required|string|min:8|max:70|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/',
+            'telp' => 'required|numeric|digits_between:10,15|unique:users,telp',
+            'foto_bwp' => 'required|image|mimes:jpeg,png,jpg'
+        ],$messages);
+
+
 
         try {
             $options = [
@@ -92,9 +118,22 @@ class webAuthController extends Controller
                     [
                         'name' => 'telp',
                         'contents' => $validatedData['telp']
-                    ]
+                    ],
+
                 ]
             ];
+            if ($request->hasFile('foto_bwp')) {
+                $foto = $request->file('foto_bwp');
+                // Tambahkan 'foto' ke $options jika ada
+                $options['multipart'][] = [
+                    'name' => 'foto_bwp',
+                    'contents' => fopen($foto->getPathname(), 'r'),
+                    'filename' => $foto->getClientOriginalName(),
+                    'headers' => [
+                        'Content-Type' => '<Content-type header>'
+                    ]
+                ];
+            }
 
             $client = new Client();
             $url = $apiUrl . "/api/registerUser";
@@ -102,13 +141,62 @@ class webAuthController extends Controller
             $conten = $response->getBody()->getContents();
             return redirect()->to('/')
                 ->with('success', 'Pendaftaran Berhasil');
-
         } catch (RequestException $e) {
             $response = $e->getResponse();
             $conten = $response->getBody()->getContents();
             $contenarray = json_decode($conten, true);
             return redirect()->back()
                 ->with('error', $contenarray['message']);
+        }
+    }
+
+    public function viewConfirmRegister()
+    {
+        $apiUrl = env('API_URL');
+        try {
+            $apiToken = session('api_token');
+            $client = new Client();
+            $url = $apiUrl . "/api/user";
+            $response = $client->request('GET', $url, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $apiToken
+                ],
+            ]);
+            $conten = $response->getBody()->getContents();
+            $contenarray = json_decode($conten, true);
+            $data = $contenarray['data'];
+            return view('admin.konfirmasi_user_baru', ['data' => $data]);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+    }
+
+    public function confirmRegister(Request $request, $id)
+    {
+        try {
+            $apiUrl = env('API_URL');
+            $apiToken = session('api_token');
+            $datadiubah = [
+                'Authorization' => 'Bearer ' . $apiToken,
+                'status_user' => $request->input('status_user'),
+            ];
+
+
+            // Kirim permintaan PUT ke API dengan status yang sesuai
+            $client = new Client();
+            $url = $apiUrl . "/api/confirmregister/{$id}";
+            $response = $client->request('PATCH', $url, ['json' =>  $datadiubah, 'headers' => [
+                'Authorization' => 'Bearer ' . $apiToken,
+            ],]);
+
+            // Periksa respons dari API
+            if ($response->getStatusCode() === 201) {
+                return redirect()->back()->with('success', 'Status User berhasil di ubah');
+            } else {
+                return redirect()->back()->with('error', 'Gagal merubah status User');
+            }
+        } catch (\Throwable $th) {
+            // return redirect()->back()->withErrors('error', 'Access Denied');
         }
     }
 

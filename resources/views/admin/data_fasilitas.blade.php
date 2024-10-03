@@ -1,7 +1,7 @@
 @extends('layout.master1')
 
 @section('title')
-    SI PIRANG | Data Ruangan
+    SI PIRANG | Data Fasilitas
 @stop
 
 @section('css')

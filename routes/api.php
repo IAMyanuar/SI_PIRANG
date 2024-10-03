@@ -33,6 +33,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //auth
 Route::post('registerUser',[authController::class, 'RegisterUser']);//register
+Route::patch('confirmregister/{id}',[authController::class, 'confirmRegister']); //confirm register
 Route::post('login',[authController::class, 'Login']);//login
 Route::post('logout',[authController::class, 'Logout'])->middleware('auth:sanctum');//logout
 
@@ -66,3 +67,6 @@ Route::delete('peminjaman/{id}',[PeminjamanController::class, 'destroy'])->middl
 
 //kalender
 Route::get('kalender',[PeminjamanController::class,'KalenderPeminjaman']);
+
+//list user
+Route::get('user',[authController::class, 'listDataUser'])->middleware('auth:sanctum','ablity:access-admin');
