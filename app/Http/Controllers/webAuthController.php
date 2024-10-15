@@ -87,8 +87,8 @@ class webAuthController extends Controller
         ];
         $validatedData = $request->validate([
             'nim' => 'required|numeric|digits_between:8,13',
-            'nama' => 'required|string|max:40',
-            'email' => 'required|email|max:64|unique:users,email',
+            'nama' => ['required', 'string', 'max:30', 'min:3', 'regex:/^[a-zA-Z\s]*$/'],
+            'email' => 'required|email|min:5|max:64|unique:users,email',
             'password' => 'required|string|min:8|max:70|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/',
             'telp' => 'required|numeric|digits_between:10,15|unique:users,telp',
             'foto_bwp' => 'required|image|mimes:jpeg,png,jpg'
@@ -140,7 +140,7 @@ class webAuthController extends Controller
             $response = $client->request('POST', $url, $options);
             $conten = $response->getBody()->getContents();
             return redirect()->to('/')
-                ->with('success', 'Pendaftaran Berhasil');
+                ->with('success', 'Pendaftaran Berhasil, Silahkan Tunggu Akun Anda Di Konfirmasi');
         } catch (RequestException $e) {
             $response = $e->getResponse();
             $conten = $response->getBody()->getContents();

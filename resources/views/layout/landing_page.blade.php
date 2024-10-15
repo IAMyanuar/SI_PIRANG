@@ -17,6 +17,11 @@
 </head>
 
 <body>
+    @if (session('success'))
+        <script>
+            alert("{{ session('success') }}");
+        </script>
+    @endif
     <nav class="landingpage-nav">
         <div class="container_landing">
             <div class="nav_brand">
@@ -73,16 +78,17 @@
             <h2 class="text-truncate text-dark conten-center text-center font-weight-bold">Daftar Ruangan</h2>
             <div class="card-deck mt-4">
                 @foreach ($dataruangan as $data)
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img class="card-img-top img-fluid gambar-klik" src="{{ $data['foto'] }}" alt="Card image cap"
-                            data-nama="{{ $data['nama'] }}" data-toggle="modal" data-target="#centermodal">
-                        <div class="card-body">
-                            <h4 class="card-title">{{ $data['nama'] }}</h4>
-                            <p class="card-text flex-grow-1">{{ $data['fasilitas'] }}</p>
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <img class="card-img-top img-fluid gambar-klik" src="{{ $data['foto'] }}"
+                                alt="Card image cap" data-nama="{{ $data['nama'] }}" data-toggle="modal"
+                                data-target="#centermodal">
+                            <div class="card-body">
+                                <h4 class="card-title">{{ $data['nama'] }}</h4>
+                                <p class="card-text flex-grow-1">{{ $data['fasilitas'] }}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
                 @endforeach
             </div>
             <div class="modal fade" id="centermodal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -101,13 +107,13 @@
         </div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const modalNama = document.getElementById('modalNama');
             const gambarModal = document.getElementById('gambarModal');
             const gambarKlik = document.querySelectorAll('.gambar-klik');
 
             gambarKlik.forEach(gambar => {
-                gambar.addEventListener('click', function () {
+                gambar.addEventListener('click', function() {
                     const src = this.src;
                     const nama = this.getAttribute('data-nama');
 

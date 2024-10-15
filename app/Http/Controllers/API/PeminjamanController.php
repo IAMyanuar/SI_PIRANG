@@ -12,6 +12,7 @@ use App\Models\PeminjamanFasilitas;
 use Doctrine\Inflector\Rules\English\Rules;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PeminjamanController extends Controller
 {
@@ -868,5 +869,55 @@ class PeminjamanController extends Controller
             'message' => 'data ditemukan',
             'data' =>  $datapeminjaman,
         ], 200);
+    }
+
+    public function downloadPeminjamanByMonth(Request $request)
+    {
+        // Validasi input bulan (format: YYYY-MM)
+        $request->validate([
+            'bulan' => 'required|date_format:Y-m',
+        ]);
+
+        // Ambil bulan dari request
+        $bulan = $request->input('bulan');
+
+        // Query data berdasarkan bulan
+        $datapeminjaman = Peminjaman::join('users', 'peminjamen.user_id', '=', 'users.id')
+            ->join('ruangans', 'peminjamen.id_ruangan', '=', 'ruangans.id')
+            ->select(
+                'peminjamen.id',
+                'users.nama as nama_user',
+                'peminjamen.nama_lembaga',
+                'peminjamen.kegiatan',
+                Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
+                Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
+                Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
+                Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
+                'peminjamen.status',
+                'peminjamen.feedback',
+                'peminjamen.dokumen_pendukung',
+                'ruangans.nama as nama_ruangan',
+                'users.nim',
+                'users.email',
+                'users.telp'
+            )
+            ->where(function ($query) {
+                // Menampilkan data dengan status "ditolak" dan "selesai" (jika feedback kosong)
+                $query->where('peminjamen.status', 'ditolak')
+                    ->orWhere(function ($subQuery) {
+                        $subQuery->where('peminjamen.status', 'selesai');
+                        // ->whereNotNull('peminjamen.feedback');
+                    });
+            })
+            ->whereMonth('peminjamen.tgl_mulai', '=', date('m', strtotime($bulan)))
+            ->whereYear('peminjamen.tgl_mulai', '=', date('Y', strtotime($bulan)))
+            ->orderBy('peminjamen.tgl_mulai', 'desc')
+            ->get();
+
+        // Load data ke view untuk PDF
+        $pdf = PDF::loadView('layout.riwayat_pdf', compact('datapeminjaman'))->setPaper('a3');
+
+        // Unduh PDF dengan nama file yang sesuai bulan
+        return $pdf->download('peminjaman_' . $bulan . '.pdf');
     }
 }

@@ -58,6 +58,7 @@
                                                 <tr>
                                                     <th>No</th>
                                                     <th>Nama</th>
+                                                    <th>Email</th>
                                                     <th>Nomer Telp</th>
                                                     <th>Foto BWP</th>
                                                     <th>Aksi</th>
@@ -78,6 +79,7 @@
                                                     <tr>
                                                         <td>{{ $no++ }}</td>
                                                         <td>{{ $item['nama'] }}</td>
+                                                        <td>{{ $item['email'] }}</td>
                                                         <td>{{ $item['telp'] }}</td>
                                                         <td><img src="{{ $item['foto_bwp'] }}" width="100"></td>
                                                         <td>
@@ -99,11 +101,11 @@
                                                                     title="" data-original-title="Tolak Akun"
                                                                     type="submit"><i class="fas fa-times"></i></button>
                                                             </form>
-                                                            <a class="btn btn-info btn-rounded" data-toggle="tooltip"
+                                                            {{-- <a class="btn btn-info btn-rounded" data-toggle="tooltip"
                                                                 data-placement="left" title=""
                                                                 data-original-title="Detail"
                                                                 href="{{ url('/admin/..' . $item['id']) }}"><i
-                                                                    class="fas fa-search-plus"></i></a>
+                                                                    class="fas fa-search-plus"></i></a> --}}
                                                         </td>
                                                     </tr>
                                                 @endforeach

@@ -20,7 +20,7 @@ class authController extends Controller
                 'nama' => 'required|string|max:40',
                 'email' => 'required|email|max:64|unique:users,email',
                 'password' => 'required|string|min:8|max:70|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/',
-                'telp' => 'required|numeric|digits_between:10,15|unique:users,telp',
+                'telp' => 'required|numeric|digits_between:10,15',
                 'foto_bwp' => 'required|image|mimes:jpeg,png,jpg'
             ];
 
@@ -32,6 +32,38 @@ class authController extends Controller
                     'cekdata' => $request->all(),
                     'data' => $validator->errors()
                 ], 422); // Menggunakan kode status 422 untuk Unprocessable Entity
+            }
+
+            // Cek apakah sudah ada user dengan nim atau email yang sama dan status_user selain "belum_dikonfirmasi"
+            $existingUser = User::where(function ($query) use ($request) {
+                $query->where('nim', $request->nim)
+                    ->orWhere('telp', $request->telp) // Perbaikan orWhare menjadi orWhere
+                    ->orWhere('email', $request->email);
+            })->where('status_user', '!=', 'tidak_dikonfirmasi')
+                ->first();
+
+            if ($existingUser) {
+                // Cek kolom mana yang menyebabkan konflik
+                if ($existingUser->nim == $request->nim) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'NIM ' . $existingUser->nim . ' sudah terdaftar dan statusnya: ' . $existingUser->status_user,
+                    ], 409); // Conflict
+                }
+
+                if ($existingUser->email == $request->email) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Email ' . $existingUser->email . ' sudah terdaftar dan statusnya: ' . $existingUser->status_user,
+                    ], 409); // Conflict
+                }
+
+                if ($existingUser->telp == $request->telp) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Nomor telepon ' . $existingUser->telp . ' sudah terdaftar dan statusnya: ' . $existingUser->status_user,
+                    ], 409); // Conflict
+                }
             }
 
             $foto = $request->file('foto_bwp');
@@ -68,7 +100,7 @@ class authController extends Controller
     public function listDataUser()
     {
         //menampilkan semua data fasilitas
-        $data = User::where('status_user','=','belum_dikonfirmasi')->get();
+        $data = User::where('status_user', '=', 'belum_dikonfirmasi')->get();
         for ($i = 0; $i < $data->count(); $i++) {
             $data[$i]['foto_bwp'] = url('assets/images/foto_bwp/' . $data[$i]['foto_bwp']);
         }
@@ -101,6 +133,25 @@ class authController extends Controller
             'status' => true,
             'message' => 'berhasil mengonfirmasi user baru',
         ], 201);
+    }
+
+    public function showUser($id)
+    {
+        //menampilkan data berdasarkan id
+        $data_user = User::find($id);
+        $data_user['foto'] = url('assets/foto_bwp' . $data_user['foto_bwp']);
+
+        if (empty($datadata_user)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data tidak ditemukan',
+            ], 404);
+        }
+        return response()->json([
+            'status' => true,
+            'message' => 'Data dengan id: ' . $id . ' berhasil temukan',
+            'data' => $datadata_user
+        ], 200);
     }
 
     public function Login(Request $request)

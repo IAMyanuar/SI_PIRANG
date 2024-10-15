@@ -33,7 +33,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //auth
 Route::post('registerUser',[authController::class, 'RegisterUser']);//register
-Route::patch('confirmregister/{id}',[authController::class, 'confirmRegister']); //confirm register
+Route::patch('confirmregister/{id}',[authController::class, 'confirmRegister'])->middleware('auth:sanctum','ablity:access-admin'); //confirm register
+Route::get('showuser/{id}',[authController::class, 'showUser'])->middleware('auth:sanctum','ablity:access-admin'); //confirm register
 Route::post('login',[authController::class, 'Login']);//login
 Route::post('logout',[authController::class, 'Logout'])->middleware('auth:sanctum');//logout
 
@@ -55,6 +56,7 @@ Route::get('fasilitas',[FasilitasController::class,'index']);
 Route::post('tambahfasilitas',[FasilitasController::class, 'store']);
 Route::get('fasilitas/{id}',[FasilitasController::class,'show']);
 Route::post('fasilitas/{id}',[FasilitasController::class,'update']);
+Route::post('riwayat/download',[PeminjamanController::class, 'downloadPeminjamanByMonth']);
 
 //user
 Route::post('peminjaman',[PeminjamanController::class, 'storepeminjaman']);//tambah peminjaman

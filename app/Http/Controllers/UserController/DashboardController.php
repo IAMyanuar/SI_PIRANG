@@ -76,13 +76,7 @@ class DashboardController extends Controller
             }
 
 
-        $total= 0;
-        if (!empty($datapeminjaman['status'])) {
-            foreach ($datapeminjaman as $value) {
-                    $total++;
-            }
-        }
-
+        $total= count($datapeminjaman[0]);
 
 
         foreach ($datariwayat as $value) {
@@ -92,7 +86,7 @@ class DashboardController extends Controller
         }
 
 
-        return view('user.dashboard', ['dataruangan' => $dataruangan, 'datapeminjaman'=>$datapeminjaman ,'peminjamandisetujui' => $peminjamandisetujui, 'peminjamanditolak' => $peminjamanditolak]);
+        return view('user.dashboard', ['dataruangan' => $dataruangan, 'datapeminjaman'=>$total ,'peminjamandisetujui' => $peminjamandisetujui, 'peminjamanditolak' => $peminjamanditolak]);
     }
 
     // public function KalenderPeminjaman()

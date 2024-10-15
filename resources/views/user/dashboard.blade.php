@@ -41,7 +41,7 @@
                         <div class="d-flex d-lg-flex d-md-block align-items-center">
                             <div>
                                 <h2 class="text-dark mb-1 w-100 text-truncate font-weight-medium">
-                                    {{ count($datapeminjaman) }}
+                                    {{ $datapeminjaman }}
                                 </h2>
                                 <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Total Pengajuan <br> Peminjaman
                                 </h6>

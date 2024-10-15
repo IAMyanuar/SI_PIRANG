@@ -59,7 +59,7 @@ Route::middleware('checkToken')->group(function () {
     Route::get('/unduh-file/{id}', [AdminPeminjamanController::class, 'unduhfile']); //untuk download bukti peminjaman
     Route::get('/admin/riwayat', [AdminRiwayatController::class, 'riwayat'])->name('riwayat_search');
     Route::get('/admin/kalender', [KalenderController::class, 'index']);
-
+    Route::post('/admin/riwayat', [AdminRiwayatController::class, 'unduhRiwayat'])->name('download_riwayat');
     //user
     Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::get('/PengajuanPeminjaman', [PeminjamanController::class, 'peminjamanku']);

@@ -94,7 +94,7 @@
                             </div>
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label class="text-dark">Foto Bukti Warga Poliwangi</label>
+                                    <label class="text-dark">Kartu Bukti Warga Poliwangi</label>
                                     <input class="form-control" name="foto_bwp" type="file" accept="image/*"
                                         placeholder="Masukkan Foto Bukti Warga Poliwangi" required>
                                 </div>
@@ -106,6 +106,11 @@
                                 <div class="alert alert-danger">
                                     <strong>{{ session('error') }}</strong>
                                 </div>
+                            @endif
+                            @if (session('success'))
+                                <script>
+                                    alert("{{ session('success') }}");
+                                </script>
                             @endif
                         </div>
                     </form>

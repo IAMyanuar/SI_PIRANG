@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->char('nim',15)->unique();
+            $table->char('nim',15);
             $table->string('nama',40);
-            $table->string('email',64)->unique();
+            $table->string('email',64);
             $table->string('password',70);
-            $table->char('telp',15)->unique();
+            $table->char('telp',15);
             $table->enum('role_user',['admin','peminjam'])->default('peminjam');
             $table->string('foto_bwp',100);
             $table->enum('status_user',['belum_dikonfirmasi','terkonfirmasi','tidak_dikonfirmasi'])->default('belum_dikonfirmasi');
