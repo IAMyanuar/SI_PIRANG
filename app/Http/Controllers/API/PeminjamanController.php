@@ -875,12 +875,13 @@ class PeminjamanController extends Controller
     {
         // Validasi input bulan (format: YYYY-MM)
         $request->validate([
-            'bulan' => 'required|date_format:Y-m',
+            'start_date' => 'required',
+            'end_date' => 'required',
         ]);
 
         // Ambil bulan dari request
-        $bulan = $request->input('bulan');
-
+        $tanggalMulai = $request->input('start_date');
+        $tanggalSelesai =$request->input('end_date');
         // Query data berdasarkan bulan
         $datapeminjaman = Peminjaman::join('users', 'peminjamen.user_id', '=', 'users.id')
             ->join('ruangans', 'peminjamen.id_ruangan', '=', 'ruangans.id')
@@ -909,8 +910,10 @@ class PeminjamanController extends Controller
                         // ->whereNotNull('peminjamen.feedback');
                     });
             })
-            ->whereMonth('peminjamen.tgl_mulai', '=', date('m', strtotime($bulan)))
-            ->whereYear('peminjamen.tgl_mulai', '=', date('Y', strtotime($bulan)))
+
+            // ->whereMonth('peminjamen.tgl_mulai', '=', date('m', strtotime($bulan)))
+            // ->whereYear('peminjamen.tgl_mulai', '=', date('Y', strtotime($bulan)))
+            ->whereBetween('peminjamen.tgl_mulai', [$tanggalMulai, $tanggalSelesai])
             ->orderBy('peminjamen.tgl_mulai', 'desc')
             ->get();
 
@@ -918,6 +921,6 @@ class PeminjamanController extends Controller
         $pdf = PDF::loadView('layout.riwayat_pdf', compact('datapeminjaman'))->setPaper('a3');
 
         // Unduh PDF dengan nama file yang sesuai bulan
-        return $pdf->download('peminjaman_' . $bulan . '.pdf');
+        return $pdf->download('peminjaman_' . $tanggalMulai. '-'. $tanggalSelesai . '.pdf');
     }
 }

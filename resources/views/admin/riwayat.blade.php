@@ -55,8 +55,9 @@
                         @endif
                         <div class="card-body">
                             <div class="card-body">
-                                {{-- <!-- Form untuk input range tanggal dan button unduh -->
-                                <form action="" method="GET" class="mb-4">
+                                <!-- Form untuk input range tanggal dan button unduh -->
+                                <form action="{{ route('download_riwayat') }}" method="POST" class="mb-4">
+                                    @csrf
                                     <div class="row">
                                         <div class="col-md-5">
                                             <label for="start_date">Tanggal dan Waktu Mulai</label>
@@ -72,8 +73,8 @@
                                             </button>
                                         </div>
                                     </div>
-                                </form> --}}
-                                <div class="row mb-3 flex-row-reverse">
+                                </form>
+                                {{-- <div class="row mb-3 flex-row-reverse">
                                     <div class="btn-group col-sm-2">
                                         <button type="button" class="btn btn-rounded btn-primary dropdown-toggle"
                                             data-toggle="dropdown" data-display="static" aria-haspopup="true"
@@ -93,7 +94,7 @@
                                             </form>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="table-responsive table-bordered">
                                     <table class="table">
                                         <thead class="bg-primary text-white">

@@ -29,7 +29,7 @@
 </head>
 
 <body>
-    <h1>Data Peminjaman Bulan {{ date('F Y', strtotime(request('bulan'))) }}</h1>
+    <h1>Data Peminjaman {{ date('d-F-Y', strtotime(request('start_date'))). ' Sampai '. date('d-F-Y', strtotime(request('end_date')))  }}</h1>
     <table>
         <thead>
             <tr>

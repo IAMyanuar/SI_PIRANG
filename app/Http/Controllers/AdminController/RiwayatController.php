@@ -75,7 +75,9 @@ class RiwayatController extends Controller
         $apiToken = session('api_token');
         $client = new Client();
         $search = [
-            'bulan' => $request->input('tahun_bulan')
+            // 'bulan' => $request->input('tahun_bulan')
+            'start_date' => $request->input('start_date'),
+            'end_date' => $request->input('end_date')
         ];
         try {
             $url = $apiUrl . '/api/riwayat/download';
