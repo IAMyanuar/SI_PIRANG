@@ -32,13 +32,21 @@ class RuanganController extends Controller
         //
         try {
         $dataruangan = new Ruangan;
+        $messages = [
+            'nama.required' => 'Nama Ruangan harus diisi.',
+            'nama.min' => 'Nama Ruangan minimum 3 karakter',
+            'nama.mix' => 'Nama Ruangan maximum 20 karakter',
+            'fasilitas.required' => 'Deskripsi ruangan wajib isi',
+            'fasilitas.mix' => 'Deskripsi ruangan maksimum 150 karakter',
+            'fasilitas.min' => 'Deskripsi ruangan minimum 50 karakter',
+        ];
         $rules = [
-            'nama' => 'required',
-            'fasilitas' => 'required',
+            'nama' => 'required|string|min:3|max:20',
+            'fasilitas' => 'required|string|max:150|min:50',
             'foto' => 'required|image|mimes:jpeg,png,jpg,gif',
         ];
 
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules,$messages);
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
@@ -109,9 +117,17 @@ class RuanganController extends Controller
         }
 
         // Validasi input
+        $messages = [
+            'nama.required' => 'Nama Ruangan harus diisi.',
+            'nama.min' => 'Nama Ruangan minimum 3 karakter',
+            'nama.min' => 'Nama Ruangan maksimum 20 karakter',
+            'fasilitas.required' => 'Deskripsi ruangan wajib isi',
+            'fasilitas.mix' => 'Deskripsi ruangan maksimum 150 karakter',
+            'fasilitas.min' => 'Deskripsi ruangan minimum 50 karakter',
+        ];
         $rules = [
-            'nama' => 'required',
-            'fasilitas' => 'required',
+            'nama' => 'required|string|min:3|max:20',
+            'fasilitas' => 'required|string|max:150|min:50',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif',
         ];
 

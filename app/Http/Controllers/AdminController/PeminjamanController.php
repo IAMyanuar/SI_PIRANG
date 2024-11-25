@@ -95,8 +95,14 @@ class PeminjamanController extends Controller
             } else {
                 return redirect()->back()->with('error', 'Gagal merubah status');
             }
-        } catch (\Throwable $th) {
-            // return redirect()->back()->withErrors('error', 'Access Denied');
+        //perbaikan bug
+        } catch (RequestException $e) {
+            $response = $e->getResponse();
+            $conten = $response->getBody()->getContents();
+            $contenarray = json_decode($conten, true);
+
+            return redirect()->back()
+                ->with(['error' => $contenarray['message']]);
         }
     }
 

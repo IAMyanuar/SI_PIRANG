@@ -42,15 +42,15 @@
                 <div class="col-lg-4 col-md-4 bg-white rounded-5 border-2 custom-shadow custom-radius">
                     <div class="p-3">
                         <h3 class="mt-3 text-center text-dark font-weight-medium">Masuk</h3>
-                        <p class="text-center">Masukkan NIM/NIP dan Kata Sandi</p>
+                        <p class="text-center">Masukkan NIM/NIDN dan Kata Sandi</p>
                         <form method="post">
                             @csrf
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label class="icon-user" > </label><label class="text-dark">  NIM/NIP</label>
+                                        <label class="icon-user" > </label><label class="text-dark">  NIM/NIDN</label>
                                         <input class="form-control" name="nim" type="text"
-                                            placeholder="Masukkan NIM/NIP">
+                                            placeholder="Masukkan NIM/NIDN">
                                     </div>
                                 </div>
                                 <div class="col-lg-12">

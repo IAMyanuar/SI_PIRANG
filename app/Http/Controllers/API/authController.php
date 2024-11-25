@@ -15,16 +15,38 @@ class authController extends Controller
     {
         try {
             $datauser = new User();
+            $messages = [
+                'password.required' => 'Password harus diisi.',
+                'password.regex' => 'Password harus mengandung setidaknya satu huruf kecil, satu huruf besar, dan satu angka.',
+                'password.min' => 'Password harus memiliki minimal 8 karakter.',
+                'password.max' => 'Password tidak boleh lebih dari 16 karakter.',
+                'password.string' => 'Password harus berupa string.',
+                'foto_bwp.required' => 'Foto harus diupload.',
+                'foto_bwp.image' => 'File yang diupload harus berupa gambar.',
+                'foto_bwp.mimes' => 'Format gambar harus jpeg, png, atau jpg.',
+                'telp.required' => 'Nomor telepon harus diisi.',
+                'telp.numeric' => 'Nomor telepon harus berupa angka.',
+                'telp.digits_between' => 'Nomor telepon harus terdiri dari :min hingga :max digit.',
+                'nim.required' => 'NIM/NIDN harus diisi.',
+                'nim.regex' => 'NIM/NIDN harus berupa angka.',
+                'nim.digits_between' => 'NIM/NIDN harus terdiri dari :min hingga :max digit.',
+                'nama.required' => 'Nama harus diisi.',
+                'nama.string' => 'Nama harus berupa string.',
+                'nama.max' => 'Nama tidak boleh lebih dari :max karakter.',
+                'email.required' => 'Email harus diisi.',
+                'email.email' => 'Format email tidak valid.',
+                'email.max' => 'Email tidak boleh lebih dari :max karakter.',
+            ];
             $rules = [
-                'nim' => 'required|string|max:13',
+                'nim' => 'required|string|max:13|min:8|regex:/[0-9]/',
                 'nama' => 'required|string|max:40',
-                'email' => 'required|email|max:64|unique:users,email',
-                'password' => 'required|string|min:8|max:70|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/',
+                'email' => 'required|email|max:64',
+                'password' => 'required|string|min:8|max:16|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/',
                 'telp' => 'required|numeric|digits_between:10,15',
                 'foto_bwp' => 'required|image|mimes:jpeg,png,jpg'
             ];
 
-            $validator = Validator::make($request->all(), $rules);
+            $validator = Validator::make($request->all(), $rules, $messages);
             if ($validator->fails()) {
                 return response()->json([
                     'status' => false,
@@ -141,7 +163,7 @@ class authController extends Controller
         $data_user = User::find($id);
         $data_user['foto'] = url('assets/foto_bwp' . $data_user['foto_bwp']);
 
-        if (empty($datadata_user)) {
+        if (empty($data_user)) {
             return response()->json([
                 'status' => false,
                 'message' => 'Data tidak ditemukan',
@@ -150,24 +172,34 @@ class authController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Data dengan id: ' . $id . ' berhasil temukan',
-            'data' => $datadata_user
+            'data' => $data_user
         ], 200);
     }
 
     public function Login(Request $request)
     {
+        $messages = [
+            'password.required' => 'Password harus diisi.',
+            'password.regex' => 'Password harus mengandung setidaknya satu huruf kecil, satu huruf besar, dan satu angka.',
+            'password.min' => 'Password harus memiliki minimal 8 karakter.',
+            'password.max' => 'Password tidak boleh lebih dari 16 karakter.',
+            'password.string' => 'Password harus berupa string.',
+            'nim.required' => 'NIM/NIDN harus diisi.',
+            'nim.regex' => 'NIM/NIDN harus berupa angka.',
+            'nim.digits_between' => 'NIM/NIDN harus terdiri dari :min hingga :max digit.',
+        ];
         $rules = [
-            'nim' => 'required',
-            'password' => 'required',
+            'nim' => 'required|string|min:8|max:13|regex:/[0-9]/',
+            'password' => 'required|string|min:8|max:16|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/',
         ];
 
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules,$messages);
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
                 'message' => 'login gagal',
                 'data' => $validator->errors()
-            ], 400); // Menggunakan status 400 Bad Request untuk kesalahan validasi
+            ], 400);
         }
 
         if (!Auth::attempt($request->only(['nim', 'password']))) {

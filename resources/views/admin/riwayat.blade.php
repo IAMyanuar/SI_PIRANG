@@ -61,11 +61,11 @@
                                     <div class="row">
                                         <div class="col-md-5">
                                             <label for="start_date">Tanggal dan Waktu Mulai</label>
-                                            <input type="datetime-local" name="start_date" class="form-control" required>
+                                            <input type="date" name="start_date" class="form-control" required>
                                         </div>
                                         <div class="col-md-5">
                                             <label for="end_date">Tanggal dan Waktu Selesai</label>
-                                            <input type="datetime-local" name="end_date" class="form-control" required>
+                                            <input type="date" name="end_date" class="form-control" required>
                                         </div>
                                         <div class="col-md-2 align-self-end">
                                             <button type="submit" class="btn btn-primary btn-rounded">
@@ -74,27 +74,7 @@
                                         </div>
                                     </div>
                                 </form>
-                                {{-- <div class="row mb-3 flex-row-reverse">
-                                    <div class="btn-group col-sm-2">
-                                        <button type="button" class="btn btn-rounded btn-primary dropdown-toggle"
-                                            data-toggle="dropdown" data-display="static" aria-haspopup="true"
-                                            aria-expanded="false">
-                                            Unduh Laporan
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-lg-right">
-                                            <form action="{{ route('download_riwayat') }}" method="POST">
-                                                @csrf
-                                                @if (!empty($months))
-                                                @foreach ($months as $item)
-                                                <button class="dropdown-item" type="submit" name="tahun_bulan" value="{{ $item['tahun'] }}-{{ $item['bulan'] }}">
-                                                    {{ $item['nama_bulan'] }} {{ $item['tahun'] }}
-                                                </button>
-                                            @endforeach
-                                                @endif
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div> --}}
+                              
                                 <div class="table-responsive table-bordered">
                                     <table class="table">
                                         <thead class="bg-primary text-white">

@@ -59,7 +59,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label class="text-dark">NIM/NIP</label>
+                                    <label class="text-dark">NIM/NIDN</label>
                                     <input class="form-control" name="nim" type="text"
                                         placeholder="Masukkan NIM/NIP" required>
                                 </div>

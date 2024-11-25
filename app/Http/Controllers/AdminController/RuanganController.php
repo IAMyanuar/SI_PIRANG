@@ -86,8 +86,23 @@ class RuanganController extends Controller
             $response->getBody()->getContents();
             return redirect()->to('/admin/DataRuangan')
                 ->with('success', 'ruangan ' . $validatedData['nama'] . ' berhasil ditambahkan');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('RuanganIsExist', 'ruangan ' . $validatedData['nama'] . ' Sudah ada.');
+            // } catch (\Exception $e) {
+            //     return redirect()->back()->with('RuanganIsExist', 'ruangan ' . $validatedData['nama'] . ' Sudah ada.');
+            // }
+        } catch (RequestException $e) {
+            $response = $e->getResponse();
+            $conten = $response->getBody()->getContents();
+            $contenarray = json_decode($conten, true);
+            // perbaikan bug
+            $errorMessages = '';
+            if (!empty($contenarray['data'])) {
+                foreach ($contenarray['data'] as $errors) {
+                    $errorMessages .= implode(" ", $errors) . ", ";
+                }
+            }
+
+            return redirect()->back()
+                ->with(['RuanganIsExist' => $contenarray['message'] . " " . json_encode($errorMessages)]);
         }
     }
 
@@ -100,7 +115,7 @@ class RuanganController extends Controller
             $apiToken = session('api_token');
             $client = new Client();
             $url = $apiUrl . "/api/ruangan/$id";
-            $response = $client->request('GET', $url,[ 'headers' => [
+            $response = $client->request('GET', $url, ['headers' => [
                 'Authorization' => 'Bearer ' . $apiToken,
             ],]);
             $conten = $response->getBody()->getContents();
@@ -136,9 +151,10 @@ class RuanganController extends Controller
                         'name' => 'fasilitas',
                         'contents' => $validatedData['fasilitas']
                     ]
-                    ],'headers' => [
-                        'Authorization' => 'Bearer ' . $apiToken,
-                    ],
+                ],
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $apiToken,
+                ],
 
             ];
             if ($request->hasFile('foto')) {
@@ -161,8 +177,23 @@ class RuanganController extends Controller
             // return $options;
             return redirect()->to('/admin/DataRuangan')
                 ->with('success', 'data ruangan ' . $validatedData['nama'] . ' berhasil di ubah');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('RuanganIsExist', 'ruangan ' . $validatedData['nama'] . ' Sudah ada.');
+            // } catch (\Exception $e) {
+            //     return redirect()->back()->with('RuanganIsExist', 'ruangan ' . $validatedData['nama'] . ' Sudah ada.');
+            // }
+        } catch (RequestException $e) {
+            $response = $e->getResponse();
+            $conten = $response->getBody()->getContents();
+            $contenarray = json_decode($conten, true);
+            // perbaikan bug
+            $errorMessages = '';
+            if (!empty($contenarray['data'])) {
+                foreach ($contenarray['data'] as $errors) {
+                    $errorMessages .= implode(" ", $errors) . ", ";
+                }
+            }
+
+            return redirect()->back()
+                ->with(['RuanganIsExist' => $contenarray['message'] . " " . json_encode($errorMessages)]);
         }
     }
 }

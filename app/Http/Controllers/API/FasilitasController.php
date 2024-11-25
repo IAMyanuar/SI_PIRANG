@@ -129,7 +129,7 @@ class FasilitasController extends Controller
                 'message' => 'Proses ubah data ruangan gagal',
                 'data' => $validator->errors(),
                 'request' => $request->all(),
-            ], 400);
+            ], 422);
         }
 
         if ($request->hasFile('foto')) {

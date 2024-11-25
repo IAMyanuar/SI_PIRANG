@@ -13,6 +13,7 @@ use Doctrine\Inflector\Rules\English\Rules;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 class PeminjamanController extends Controller
 {
@@ -79,6 +80,7 @@ class PeminjamanController extends Controller
             'jumlah.*' => 'nullable',
         ];
 
+
         //validasi data yang di insert
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
@@ -89,9 +91,18 @@ class PeminjamanController extends Controller
             ], 422);
         }
 
+
         $ruangan = $request->id_ruangan;
         $tgl_mulai = $request->tgl_mulai;
         $tgl_selesai = $request->tgl_selesai;
+
+        //penambahan code bug
+        if ($tgl_mulai > $tgl_selesai) {
+            return response()->json([
+                'status' => false,
+                'message' => 'prsoses ajukan peminjaman gagal karena waktu yang tidak falid',
+            ], 400);
+        }
 
         //cek apakah sudah ada yang meminjam ruangan tsb
         $CekPeminjaman = Peminjaman::where('id_ruangan', $ruangan)
@@ -340,9 +351,17 @@ class PeminjamanController extends Controller
             ], 404);
         }
 
-        $rules = [
-            'status' => 'required',
-        ];
+        //perbaikan bug
+        if ($request->input('status') == 'ditolak') {
+            $rules['status'] = 'required';
+            $rules['feedback'] = 'required';
+        } else {
+            $rules = [
+                'status' => 'required',
+            ];
+        }
+
+
 
 
         $validator = Validator::make($request->all(), $rules);
@@ -352,6 +371,18 @@ class PeminjamanController extends Controller
                 'message' => 'Proses ubah status peminjaman gagal',
                 'data' => $validator->errors(),
                 'request' => $request->all(),
+            ], 400);
+        }
+
+        //status untuk menangani bug
+        $currentDate = Carbon::now()->format('Y-m-d H:i:s');
+        $tanggalMulai = Carbon::parse($datapeminjaman->tgl_mulai)->format('Y-m-d H:i:s');
+        // $tanggalMulai = Carbon::parse($request->tgl_mulai);
+        if ($request->status == 'disetujui' && Carbon::parse($currentDate)->greaterThanOrEqualTo($tanggalMulai)) {
+            return response()->json([
+                'message' => 'Status peminjaman tidak dapat diubah menjadi disetujui karena sudah melewati tanggal mulai acara.',
+                $currentDate,
+                $tanggalMulai
             ], 400);
         }
 
@@ -623,7 +654,7 @@ class PeminjamanController extends Controller
         }
 
         $rules = [
-            'feedback' => 'required',
+            'feedback' => 'nullable',
         ];
 
 
@@ -686,7 +717,9 @@ class PeminjamanController extends Controller
                     $query->where('peminjamen.tgl_mulai', 'LIKE', "%" . $keyword . "%")
                         ->orWhere('peminjamen.nama_lembaga', 'LIKE', "%" . $keyword . "%")
                         ->orWhere('peminjamen.kegiatan', 'LIKE', "%" . $keyword . "%")
-                        ->orWhere('ruangans.nama', 'LIKE', "%" . $keyword . "%");
+                        ->orWhere('ruangans.nama', 'LIKE', "%" . $keyword . "%")
+                        //perbaikan bug
+                        ->orWhereRaw("MONTH(tgl_mulai) = ?", [$keyword]);
                 })
                 ->orderBy('peminjamen.id', 'desc')
                 ->get();
@@ -780,7 +813,9 @@ class PeminjamanController extends Controller
                     $query->where('users.nama', 'LIKE', "%" . $keyword . "%")
                         ->orWhere('peminjamen.nama_lembaga', 'LIKE', "%" . $keyword . "%")
                         ->orWhere('peminjamen.kegiatan', 'LIKE', "%" . $keyword . "%")
-                        ->orWhere('ruangans.nama', 'LIKE', "%" . $keyword . "%");
+                        ->orWhere('ruangans.nama', 'LIKE', "%" . $keyword . "%")
+                        //perbaikan bug
+                        ->orWhereRaw("MONTH(tgl_mulai) = ?", [$keyword]);
                 })
                 ->orderBy('peminjamen.tgl_mulai', 'desc')
                 ->get();
@@ -881,7 +916,16 @@ class PeminjamanController extends Controller
 
         // Ambil bulan dari request
         $tanggalMulai = $request->input('start_date');
-        $tanggalSelesai =$request->input('end_date');
+        $tanggalSelesai = $request->input('end_date');
+        //penambahan code bug
+        if ($tanggalMulai > $tanggalSelesai) {
+            return response()->json([
+                'status' => false,
+                'message' => 'waktu yang tidak falid',
+            ], 400);
+        }
+
+
         // Query data berdasarkan bulan
         $datapeminjaman = Peminjaman::join('users', 'peminjamen.user_id', '=', 'users.id')
             ->join('ruangans', 'peminjamen.id_ruangan', '=', 'ruangans.id')
@@ -921,6 +965,6 @@ class PeminjamanController extends Controller
         $pdf = PDF::loadView('layout.riwayat_pdf', compact('datapeminjaman'))->setPaper('a3');
 
         // Unduh PDF dengan nama file yang sesuai bulan
-        return $pdf->download('peminjaman_' . $tanggalMulai. '-'. $tanggalSelesai . '.pdf');
+        return $pdf->download('peminjaman_' . $tanggalMulai . '-' . $tanggalSelesai . '.pdf');
     }
 }

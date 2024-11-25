@@ -49,9 +49,17 @@ class webAuthController extends Controller
                 session(['api_token' => $token]);
                 return redirect('/admin/dashboard');
             }
-        } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => 'Username Or Password Incorrect']);
-        }
+            } catch (\Exception $e) {
+                return redirect()->back()->withErrors(['error' => 'Username Or Password Incorrect']);
+            }
+        // } catch (RequestException $e) {
+        //     $response = $e->getResponse();
+        //     $conten = $response->getBody()->getContents();
+        //     $contenarray = json_decode($conten, true);
+
+        //     return redirect()->back()
+        //         ->withErrors(['error' => $contenarray['message'].json_encode($contenarray['data'])]);
+        // }
     }
 
 
@@ -88,11 +96,11 @@ class webAuthController extends Controller
         $validatedData = $request->validate([
             'nim' => 'required|numeric|digits_between:8,13',
             'nama' => ['required', 'string', 'max:30', 'min:3', 'regex:/^[a-zA-Z\s]*$/'],
-            'email' => 'required|email|min:5|max:64|unique:users,email',
+            'email' => 'required|email|min:5|max:64',
             'password' => 'required|string|min:8|max:70|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/',
-            'telp' => 'required|numeric|digits_between:10,15|unique:users,telp',
+            'telp' => 'required|numeric|digits_between:10,15',
             'foto_bwp' => 'required|image|mimes:jpeg,png,jpg'
-        ],$messages);
+        ], $messages);
 
 
 
