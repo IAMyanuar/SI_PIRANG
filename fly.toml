@@ -1,0 +1,38 @@
+# fly.toml app configuration file generated for sipirang on 2024-11-26T15:54:50+07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'sipirang'
+primary_region = 'sin'
+console_command = 'php /var/www/html/artisan tinker'
+
+[build]
+  [build.args]
+    NODE_VERSION = '18'
+    PHP_VERSION = '8.1'
+
+[env]
+  APP_ENV = 'production'
+  LOG_CHANNEL = 'stderr'
+  LOG_LEVEL = 'info'
+  LOG_STDERR_FORMATTER = 'Monolog\Formatter\JsonFormatter'
+  SESSION_DRIVER = 'cookie'
+  SESSION_SECURE_COOKIE = 'true'
+  DB_CONNECTION='pgsql'
+  DATABASE_URL='postgresql://postgres.jjzpgcumqelkxafzvrwx:2004Citra..-@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres'
+  APP_URL='https://sipirang.fly.dev'
+  API_URL='https://sipirang.fly.dev'
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
