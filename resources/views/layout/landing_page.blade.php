@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Si PIRANG</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="{{ asset('dist/css/style.min.css') }}" />
@@ -63,7 +63,7 @@
     </div>
     <div class="container-fluid">
         <div class="row justify-content-md-center">
-            <div class="col-10">
+            <div class="col-12">
                 {{-- <div class="card"> --}}
                 <div class="card-body calender-sidebar">
                     <div id="calendar"></div>
@@ -74,7 +74,7 @@
     </div>
 
     <div class="row justify-content-md-center">
-        <div class="col-10 mt-5">
+        <div class="col-12 mt-5">
             <h2 class="text-truncate text-dark conten-center text-center font-weight-bold">Daftar Ruangan</h2>
             <div class="card-deck mt-4">
                 @foreach ($dataruangan as $data)
