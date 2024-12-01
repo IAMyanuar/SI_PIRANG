@@ -41,7 +41,7 @@
                 <img src="{{ asset('assets/images/gedung.png') }}" alt="Gedung" />
             </section>
             <section class="right">
-                <h3>Sistem Peminjaman Ruangan - SIPIRANG</h3>
+                <h3>Sistem Peminjaman Ruangan</h3>
                 <p>
                     Temukan kemudahan peminjaman ruang! Booking ruang jadi lebih mudah
                     dan menyenangkan dengan aplikasi kami
