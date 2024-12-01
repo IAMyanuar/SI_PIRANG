@@ -55,7 +55,7 @@
         var $this = this;
         $this.$calendarObj = $this.$calendar.fullCalendar({
             // ... konfigurasi head saat hosting
-            events: "http://127.0.0.1:8000/api/kalender",
+            events: `/api/kalender`,
             height: 500, // Atur tinggi kalender
             width: 600,
             header: {
