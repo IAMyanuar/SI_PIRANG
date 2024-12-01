@@ -74,7 +74,7 @@
                                         </div>
                                     </div>
                                 </form>
-                              
+
                                 <div class="table-responsive table-bordered">
                                     <table class="table">
                                         <thead class="bg-primary text-white">

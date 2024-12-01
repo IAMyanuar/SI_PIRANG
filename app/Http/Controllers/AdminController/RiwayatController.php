@@ -97,6 +97,6 @@ class RiwayatController extends Controller
             // Jika terjadi kesalahan, kembali ke halaman sebelumnya dengan pesan error
             return back()->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
         }
-        
+
     }
 }
