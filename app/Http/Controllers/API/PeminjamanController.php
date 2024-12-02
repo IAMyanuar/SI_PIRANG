@@ -715,11 +715,11 @@ class PeminjamanController extends Controller
                 })
                 ->where(function ($query) use ($keyword) {
                     if (is_numeric($keyword)) {
-                        $query->orWhereRaw("EXTRACT(MONTH FROM peminjaman.tgl_mulai) = ?", [$keyword]);
+                        $query->orWhereRaw("EXTRACT(MONTH FROM peminjamen.tgl_mulai) = ?", [$keyword]);
                     } else {
                         $query->where('users.nama', 'ILIKE', "%" . $keyword . "%")
-                            ->orWhere('peminjaman.nama_lembaga', 'ILIKE', "%" . $keyword . "%")
-                            ->orWhere('peminjaman.kegiatan', 'ILIKE', "%" . $keyword . "%")
+                            ->orWhere('peminjamen.nama_lembaga', 'ILIKE', "%" . $keyword . "%")
+                            ->orWhere('peminjamen.kegiatan', 'ILIKE', "%" . $keyword . "%")
                             ->orWhere('ruangans.nama', 'ILIKE', "%" . $keyword . "%");
                     }
                 })
@@ -813,11 +813,11 @@ class PeminjamanController extends Controller
                 })
                 ->where(function ($query) use ($keyword) {
                     if (is_numeric($keyword)) {
-                        $query->orWhereRaw("EXTRACT(MONTH FROM peminjaman.tgl_mulai) = ?", [$keyword]);
+                        $query->orWhereRaw("EXTRACT(MONTH FROM peminjamen.tgl_mulai) = ?", [$keyword]);
                     } else {
                         $query->where('users.nama', 'ILIKE', "%" . $keyword . "%")
-                              ->orWhere('peminjaman.nama_lembaga', 'ILIKE', "%" . $keyword . "%")
-                              ->orWhere('peminjaman.kegiatan', 'ILIKE', "%" . $keyword . "%")
+                              ->orWhere('peminjamen.nama_lembaga', 'ILIKE', "%" . $keyword . "%")
+                              ->orWhere('peminjamen.kegiatan', 'ILIKE', "%" . $keyword . "%")
                               ->orWhere('ruangans.nama', 'ILIKE', "%" . $keyword . "%");
                     }
                 })
