@@ -714,12 +714,12 @@ class PeminjamanController extends Controller
                     });
                 })
                 ->where(function ($query) use ($keyword) {
-                    $query->where('peminjamen.tgl_mulai', 'LIKE', "%" . $keyword . "%")
-                        ->orWhere('peminjamen.nama_lembaga', 'LIKE', "%" . $keyword . "%")
-                        ->orWhere('peminjamen.kegiatan', 'LIKE', "%" . $keyword . "%")
-                        ->orWhere('ruangans.nama', 'LIKE', "%" . $keyword . "%")
+                    $query->where('users.nama', 'ILIKE', "%" . $keyword . "%")
+                        ->orWhere('peminjamen.nama_lembaga', 'ILIKE', "%" . $keyword . "%")
+                        ->orWhere('peminjamen.kegiatan', 'ILIKE', "%" . $keyword . "%")
+                        ->orWhere('ruangans.nama', 'ILIKE', "%" . $keyword . "%")
                         //perbaikan bug
-                        ->orWhereRaw("MONTH(tgl_mulai) = ?", [$keyword]);
+                        ->orWhereRaw("EXTRACT(MONTH FROM peminjamen.tgl_mulai) = ?", [$keyword]);
                 })
                 ->orderBy('peminjamen.id', 'desc')
                 ->get();
@@ -810,12 +810,12 @@ class PeminjamanController extends Controller
                     });
                 })
                 ->where(function ($query) use ($keyword) {
-                    $query->where('users.nama', 'LIKE', "%" . $keyword . "%")
-                        ->orWhere('peminjamen.nama_lembaga', 'LIKE', "%" . $keyword . "%")
-                        ->orWhere('peminjamen.kegiatan', 'LIKE', "%" . $keyword . "%")
-                        ->orWhere('ruangans.nama', 'LIKE', "%" . $keyword . "%")
+                    $query->where('users.nama', 'ILIKE', "%" . $keyword . "%")
+                        ->orWhere('peminjamen.nama_lembaga', 'ILIKE', "%" . $keyword . "%")
+                        ->orWhere('peminjamen.kegiatan', 'ILIKE', "%" . $keyword . "%")
+                        ->orWhere('ruangans.nama', 'ILIKE', "%" . $keyword . "%")
                         //perbaikan bug
-                        ->orWhereRaw("MONTH(tgl_mulai) = ?", [$keyword]);
+                        ->orWhereRaw("EXTRACT(MONTH FROM peminjamen.tgl_mulai) = ?", [$keyword]);
                 })
                 ->orderBy('peminjamen.tgl_mulai', 'desc')
                 ->get();
