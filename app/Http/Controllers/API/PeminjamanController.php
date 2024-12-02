@@ -31,9 +31,9 @@ class PeminjamanController extends Controller
                 'peminjamen.nama_lembaga',
                 'peminjamen.kegiatan',
                 Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
-                Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
+                Peminjaman::raw('TO_CHAR(peminjamen.tgl_mulai, \'HH24:MI:SS\') as jam_mulai'), // Format waktu untuk PostgreSQL
                 Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
-                Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
+                Peminjaman::raw('TO_CHAR(peminjamen.tgl_selesai, \'HH24:MI:SS\') as jam_selesai'), // Format waktu untuk PostgreSQL
                 'peminjamen.status',
                 'peminjamen.feedback',
                 'peminjamen.dokumen_pendukung',
@@ -221,9 +221,9 @@ class PeminjamanController extends Controller
                 'peminjamen.nama_lembaga',
                 'peminjamen.kegiatan',
                 Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
-                Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
+                Peminjaman::raw('TO_CHAR(peminjamen.tgl_mulai, \'HH24:MI:SS\') as jam_mulai'), // Format waktu untuk PostgreSQL
                 Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
-                Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
+                Peminjaman::raw('TO_CHAR(peminjamen.tgl_selesai, \'HH24:MI:SS\') as jam_selesai'), // Format waktu untuk PostgreSQL
                 'peminjamen.status',
                 'peminjamen.feedback',
                 'peminjamen.dokumen_pendukung',
@@ -509,9 +509,9 @@ class PeminjamanController extends Controller
                 'peminjamen.nama_lembaga',
                 'peminjamen.kegiatan',
                 Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
-                Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
+                Peminjaman::raw('TO_CHAR(peminjamen.tgl_mulai, \'HH24:MI:SS\') as jam_mulai'), // Format waktu untuk PostgreSQL
                 Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
-                Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
+                Peminjaman::raw('TO_CHAR(peminjamen.tgl_selesai, \'HH24:MI:SS\') as jam_selesai'), // Format waktu untuk PostgreSQL
                 'peminjamen.status',
                 'peminjamen.feedback',
                 'peminjamen.dokumen_pendukung',
@@ -549,9 +549,9 @@ class PeminjamanController extends Controller
                 'peminjamen.nama_lembaga',
                 'peminjamen.kegiatan',
                 Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
-                Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
+                Peminjaman::raw('TO_CHAR(peminjamen.tgl_mulai, \'HH24:MI:SS\') as jam_mulai'), // Format waktu untuk PostgreSQL
                 Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
-                Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
+                Peminjaman::raw('TO_CHAR(peminjamen.tgl_selesai, \'HH24:MI:SS\') as jam_selesai'), // Format waktu untuk PostgreSQL
                 'peminjamen.status',
                 'peminjamen.feedback',
                 'peminjamen.dokumen_pendukung',
@@ -590,9 +590,9 @@ class PeminjamanController extends Controller
                 'peminjamen.nama_lembaga',
                 'peminjamen.kegiatan',
                 Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
-                Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
+                Peminjaman::raw('TO_CHAR(peminjamen.tgl_mulai, \'HH24:MI:SS\') as jam_mulai'), // Format waktu untuk PostgreSQL
                 Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
-                Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
+                Peminjaman::raw('TO_CHAR(peminjamen.tgl_selesai, \'HH24:MI:SS\') as jam_selesai'), // Format waktu untuk PostgreSQL
                 'peminjamen.status',
                 'peminjamen.feedback',
                 'peminjamen.dokumen_pendukung',
@@ -691,9 +691,9 @@ class PeminjamanController extends Controller
                     'peminjamen.nama_lembaga',
                     'peminjamen.kegiatan',
                     Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
-                    Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
+                    Peminjaman::raw('TO_CHAR(peminjamen.tgl_mulai, \'HH24:MI:SS\') as jam_mulai'), // Format waktu untuk PostgreSQL
                     Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
-                    Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
+                    Peminjaman::raw('TO_CHAR(peminjamen.tgl_selesai, \'HH24:MI:SS\') as jam_selesai'), // Format waktu untuk PostgreSQL
                     'peminjamen.status',
                     'peminjamen.feedback',
                     'peminjamen.dokumen_pendukung',
@@ -733,9 +733,9 @@ class PeminjamanController extends Controller
                     'peminjamen.nama_lembaga',
                     'peminjamen.kegiatan',
                     Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
-                    Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
+                    Peminjaman::raw('TO_CHAR(peminjamen.tgl_mulai, \'HH24:MI:SS\') as jam_mulai'), // Format waktu untuk PostgreSQL
                     Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
-                    Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
+                    Peminjaman::raw('TO_CHAR(peminjamen.tgl_selesai, \'HH24:MI:SS\') as jam_selesai'), // Format waktu untuk PostgreSQL
                     'peminjamen.status',
                     'peminjamen.feedback',
                     'peminjamen.dokumen_pendukung',
@@ -788,9 +788,9 @@ class PeminjamanController extends Controller
                     'peminjamen.nama_lembaga',
                     'peminjamen.kegiatan',
                     Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
-                    Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
+                    Peminjaman::raw('TO_CHAR(peminjamen.tgl_mulai, \'HH24:MI:SS\') as jam_mulai'), // Format waktu untuk PostgreSQL
                     Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
-                    Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
+                    Peminjaman::raw('TO_CHAR(peminjamen.tgl_selesai, \'HH24:MI:SS\') as jam_selesai'), // Format waktu untuk PostgreSQL
                     'peminjamen.status',
                     'peminjamen.feedback',
                     'peminjamen.dokumen_pendukung',
@@ -935,9 +935,9 @@ class PeminjamanController extends Controller
                 'peminjamen.nama_lembaga',
                 'peminjamen.kegiatan',
                 Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
-                Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
+                Peminjaman::raw('TO_CHAR(peminjamen.tgl_mulai, \'HH24:MI:SS\') as jam_mulai'), // Format waktu untuk PostgreSQL
                 Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
-                Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
+                Peminjaman::raw('TO_CHAR(peminjamen.tgl_selesai, \'HH24:MI:SS\') as jam_selesai'), // Format waktu untuk PostgreSQL
                 'peminjamen.status',
                 'peminjamen.feedback',
                 'peminjamen.dokumen_pendukung',
