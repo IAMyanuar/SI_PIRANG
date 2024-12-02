@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\Auth;
 
 class CheckLogin
 {
-    public function handle(Request $request, Closure $next)
+public function handle(Request $request, Closure $next)
     {
         if (empty(session('api_token'))) {
-            return redirect('/');
+            return redirect('/login');
         }
         return $next($request);
     }
