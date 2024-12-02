@@ -33,8 +33,8 @@ class RiwayatController extends Controller
             $response = $e->getResponse();
             $conten = $response->getBody()->getContents();
             $contenarray = json_decode($conten, true);
-            return view('/admin/riwayat', ['empty' => $contenarray['message']]);
-            // return view('admin.riwayat', ['datariwayat' =>$contenarray['message']]);
+            // return view('/admin/riwayat', ['empty' => $contenarray['message']]);
+            return $contenarray;
         }
         // Paginasi data
         $currentPage = $request->query('page', 1);

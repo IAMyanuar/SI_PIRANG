@@ -90,12 +90,6 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if (empty($data))
-                                                <tr>
-                                                    <td colspan="10" class="text-center"><strong>Tidak ada
-                                                            data riwayat peminjaman</strong></td>
-                                                </tr>
-                                            @endif
                                             @if (!isset($data))
                                                 <tr>
                                                     <td colspan="10" class="text-center"><strong>
