@@ -821,66 +821,36 @@ class PeminjamanController extends Controller
                 ->get();
         } else {
             //menampilkann data riwayat peminjaman seluruh user
-            // $datapeminjaman = Peminjaman::join('users', 'peminjamen.user_id', '=', 'users.id')
-            //     ->join('ruangans', 'peminjamen.id_ruangan', '=', 'ruangans.id')
-            //     ->select(
-            //         'peminjamen.id',
-            //         'users.nama as nama_user',
-            //         'peminjamen.nama_lembaga',
-            //         'peminjamen.kegiatan',
-            //         Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
-            //         Peminjaman::raw('TIME(peminjamen.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
-            //         Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
-            //         Peminjaman::raw('TIME(peminjamen.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
-            //         'peminjamen.status',
-            //         'peminjamen.feedback',
-            //         'peminjamen.dokumen_pendukung',
-            //         'ruangans.nama as nama_ruangan',
-            //         'users.nim',
-            //         'users.email',
-            //         'users.telp'
-            //     )
-            //     ->where(function ($query) {
-            //         // Menampilkan data dengan status "terkirim", "submited", dan "di prosess"
-            //         $query->where('peminjamen.status', 'ditolak');
-
-            //         // Menampilkan data dengan status "selesai" hanya jika kolom feedback kosong
-            //         $query->orWhere(function ($subQuery) {
-            //             $subQuery->where('peminjamen.status', 'selesai');
-            //             // ->whereNotNull('peminjamen.feedback');
-            //         });
-            //     })
-            //     ->orderBy('peminjamen.tgl_mulai', 'desc')
-            //     ->get();
-            $datapeminjaman = Peminjaman::join('users', 'peminjaman.user_id', '=', 'users.id')
-                ->join('ruangans', 'peminjaman.id_ruangan', '=', 'ruangans.id')
+            $datapeminjaman = Peminjaman::join('users', 'peminjamen.user_id', '=', 'users.id')
+                ->join('ruangans', 'peminjamen.id_ruangan', '=', 'ruangans.id')
                 ->select(
-                    'peminjaman.id',
+                    'peminjamen.id',
                     'users.nama as nama_user',
-                    'peminjaman.nama_lembaga',
-                    'peminjaman.kegiatan',
-                    Peminjaman::raw('DATE(peminjaman.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
-                    Peminjaman::raw('TIME(peminjaman.tgl_mulai) as jam_mulai'), // Mengambil waktu saja
-                    Peminjaman::raw('DATE(peminjaman.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
-                    Peminjaman::raw('TIME(peminjaman.tgl_selesai) as jam_selesai'), // Mengambil waktu saja
-                    'peminjaman.status',
-                    'peminjaman.feedback',
-                    'peminjaman.dokumen_pendukung',
+                    'peminjamen.nama_lembaga',
+                    'peminjamen.kegiatan',
+                    Peminjaman::raw('DATE(peminjamen.tgl_mulai) as tgl_mulai'), // Mengambil tanggal saja
+                    Peminjaman::raw('TO_CHAR(peminjamen.tgl_mulai, \'HH24:MI:SS\') as jam_mulai'), // Format waktu untuk PostgreSQL
+                    Peminjaman::raw('DATE(peminjamen.tgl_selesai) as tgl_selesai'), // Mengambil tanggal saja
+                    Peminjaman::raw('TO_CHAR(peminjamen.tgl_selesai, \'HH24:MI:SS\') as jam_selesai'), // Format waktu untuk PostgreSQL
+                    'peminjamen.status',
+                    'peminjamen.feedback',
+                    'peminjamen.dokumen_pendukung',
                     'ruangans.nama as nama_ruangan',
                     'users.nim',
                     'users.email',
                     'users.telp'
                 )
                 ->where(function ($query) {
-                    // Menampilkan data dengan status "ditolak"
-                    $query->where('peminjaman.status', 'ditolak');
+                    // Menampilkan data dengan status "terkirim", "submited", dan "di prosess"
+                    $query->where('peminjamen.status', 'ditolak');
 
-                    // Menampilkan data dengan status "selesai"
+                    // Menampilkan data dengan status "selesai" hanya jika kolom feedback kosong
                     $query->orWhere(function ($subQuery) {
-                        $subQuery->where('peminjaman.status', 'selesai');
+                        $subQuery->where('peminjamen.status', 'selesai');
+                        // ->whereNotNull('peminjamen.feedback');
                     });
                 })
-                ->orderBy('peminjaman.tgl_mulai', 'desc')
+                ->orderBy('peminjamen.tgl_mulai', 'desc')
                 ->get();
         }
 
