@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Peminjaman extends Model
 {
     use HasFactory;
+    protected $table = 'peminjamen';
     protected $fillable = ['kegiatan', 'tgl_mulai', 'tgl_selesai', 'status', 'dokumen_pendukung', 'feedback'];
     protected $dates = ['created_at', 'updated_at'];
 
