@@ -61,7 +61,7 @@
                                 <div class="form-group">
                                     <label class="text-dark">NIM/NIDN</label>
                                     <input class="form-control" name="nim" type="text"
-                                        placeholder="Masukkan NIM/NIP" required>
+                                        placeholder="Masukkan NIM/NIDN" required>
                                 </div>
                             </div>
                             <div class="col-lg-12">
