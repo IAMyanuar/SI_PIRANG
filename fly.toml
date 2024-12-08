@@ -40,7 +40,7 @@ console_command = 'php /var/www/html/artisan tinker'
 
 
 [mounts]
-  source = "myapp_data"
+  source = "sipirang"
   destination = "/public"
   processes= ["app"]
 
