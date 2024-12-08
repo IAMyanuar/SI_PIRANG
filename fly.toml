@@ -37,3 +37,11 @@ console_command = 'php /var/www/html/artisan tinker'
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
+
+
+[mounts]
+  source = "myapp_data"
+  destination = "/public"
+  processes= ["app"]
+
+
