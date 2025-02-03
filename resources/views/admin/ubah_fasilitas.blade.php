@@ -1,7 +1,7 @@
 @extends('layout.master1')
 
 @section('title')
-    SI PIRANG | Ubah Ruangan
+    SI PIRANG | Ubah Fasilitas
 @stop
 
 @section('css')
@@ -16,7 +16,7 @@
         <div class="page-breadcrumb">
             <div class="row">
                 <div class="col-7 align-self-center">
-                    <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">Ubah Ruangan</h3>
+                    <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">Ubah Fasilitas</h3>
                     <div class="d-flex align-items-center">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb m-0 p-0">
