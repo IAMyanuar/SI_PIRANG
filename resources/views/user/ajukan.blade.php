@@ -1,7 +1,7 @@
 @extends('layout.master2')
 
 @section('title')
-    dashboard
+    FORM PEMGAJUAN
 @stop
 
 @section('css')

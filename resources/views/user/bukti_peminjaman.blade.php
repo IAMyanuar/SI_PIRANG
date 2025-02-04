@@ -1,7 +1,7 @@
 @extends('layout.master2')
 
 @section('title')
-    dashboard
+    BUKTI PEMINJAMAN
 @stop
 
 @section('css')
