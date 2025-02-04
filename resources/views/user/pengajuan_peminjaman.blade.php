@@ -1,7 +1,7 @@
 @extends('layout.master2')
 
 @section('title')
-    pengajuan peminjaman
+    dashboard
 @stop
 
 @section('css')
