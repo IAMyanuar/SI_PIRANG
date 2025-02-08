@@ -240,7 +240,7 @@ cmds = [
 
 [phases.setup]
 nixPkgs = [
-    'php81.withExtensions',
+    'php81',
     'nginx',
     'libmysqlclient',
     'php81Packages.composer',
