@@ -1,4 +1,0 @@
-[variables]
-IS_LARAVEL = 'yes'
-NIXPACKS_METADATA = 'php'
-PORT = '80'
