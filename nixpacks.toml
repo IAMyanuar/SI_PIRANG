@@ -240,13 +240,13 @@ cmds = [
 
 [phases.setup]
 nixPkgs = [
-    'php81',
+    'php81.withExtensions (pe: pe.enabled ++ []))',
     'nginx',
-    'libmysqlclient',
+
     'php81Packages.composer',
     'nodejs_18',
 ]
-nixLibs = ['libmysqlclient']
+
 nixOverlays = [
     'https://github.com/railwayapp/nix-npm-overlay/archive/main.tar.gz',
 ]
