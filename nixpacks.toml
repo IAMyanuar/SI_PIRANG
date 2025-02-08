@@ -1,5 +1,4 @@
 [variables]
 IS_LARAVEL = 'yes'
 NIXPACKS_METADATA = 'php'
-NIXPACKS_PHP_ROOT_DIR = '/app/public'
 PORT = '80'
